@@ -44,6 +44,9 @@ yarn
 ```bash
 cd firebase
 firebase init
+cd functions
+yarn
+cd ..
 firebase deploy --only firestore:rules
 cd ..
 ```
