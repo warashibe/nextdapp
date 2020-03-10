@@ -10,11 +10,6 @@
       }
     }
   ],
-  "build":{
-    "env": {
-      "NPM_RC": "@npmrc"
-    }
-  },
   "builds": [
     {
       "src": "next.config.js",
