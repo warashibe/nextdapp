@@ -1,7 +1,8 @@
-import { ofType } from "redux-observable"
 import R from "ramdam"
 import conf from "../conf"
-import { track, tracker, set, epic } from "../../lib/_epic/util"
+
+import { merge, track, tracker, set, epic } from "../../lib/_epic/util"
+
 import {
   login,
   changeUser,
@@ -11,6 +12,7 @@ import {
   unlinkAccount,
   check_alis
 } from "../../lib/_epic/user"
+
 import { hookVeChain } from "../../lib/_epic/vechain"
 
 import {
@@ -18,12 +20,26 @@ import {
   disconnectAuthereum,
   hookWeb3,
   setWallet,
-  removeAddress
+  removeAddress,
+  switchWallet,
+  changeAllowance
 } from "../../lib/_epic/web3"
 
+import {
+  changeUniswapAllowance,
+  uniswap_tokens,
+  checkUniswap
+} from "../../lib/_epic/uniswap"
+
 export {
+  changeAllowance,
+  changeUniswapAllowance,
+  switchWallet,
+  uniswap_tokens,
+  checkUniswap,
   check_alis,
   set,
+  merge,
   changeUser,
   deleteAccount,
   linkAccount,

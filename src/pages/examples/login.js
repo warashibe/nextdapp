@@ -25,7 +25,6 @@ export default binder(
         })
         props.changeUser()
         props.hookWeb3()
-        console.log(props.router)
         props.check_alis({ router: props.router })
       })
     }, [])
@@ -314,6 +313,23 @@ export default binder(
           </Box>
         </Flex>
       ) : null
+    const footer = (
+      <Flex
+        color="white"
+        color="#03414D"
+        bg="#A0F6D2"
+        width={1}
+        flexWrap="wrap"
+        p={3}
+      >
+        <Box textAlign="center" width={1}>
+          <Box color="#03414D" sx={{ textDecoration: "none" }} as="a" href="/">
+            © 2020 Next Dapp by Warashibe
+          </Box>
+        </Box>
+      </Flex>
+    )
+
     return (
       <Box sx={{ position: "relative" }}>
         {processing}
@@ -353,6 +369,7 @@ export default binder(
             </Box>
           </Box>
         </Flex>
+        {footer}
       </Box>
     )
   },

@@ -42,8 +42,28 @@ export default () => {
               bg="#03414D"
               mx={2}
             >
-              Examples
+              Login
             </Box>
+            <Box
+              display="flex"
+              as="a"
+              href="/examples/uniswap"
+              justifyContent="center"
+              alignItems="center"
+              py={2}
+              px={4}
+              sx={{
+                textDecoration: "none",
+                cursor: "pointer",
+                ":hover": { opacity: 0.75 }
+              }}
+              color="white"
+              bg="#03414D"
+              mx={2}
+            >
+              Uniswap
+            </Box>
+
             <Box
               display="flex"
               as="a"
