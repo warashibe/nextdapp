@@ -269,6 +269,11 @@ export default () => {
             key: "orbitdb",
             name: "OrbitDB",
             url: "https://orbitdb.org/"
+          },
+          {
+            key: "uniswap",
+            name: "Uniswap",
+            url: "https://uniswap.io/"
           }
         ])}
       </Flex>
