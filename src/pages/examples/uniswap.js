@@ -232,6 +232,10 @@ export default binder(
     const connectAuth = `${
       R.isNil(props.auth_selected) ? "Connect" : "Disconnect"
     } Authereum`
+    const isSwappable = !R.any(R.equals(0))([
+      +props.uniswap_from_amount,
+      +props.uniswap_to_amount
+    ])
     return (
       <ThemeProvider theme={preset}>
         <Flex flexWrap="wrap">
@@ -387,17 +391,13 @@ export default binder(
                       <Box
                         p={2}
                         color="white"
-                        bg={
-                          props.uniswap_from_amount * 1 === 0
-                            ? "#999"
-                            : "#DC6BE5"
-                        }
-                        sx={{ ...btn }}
+                        bg={isSwappable ? "#DC6BE5" : "#999"}
+                        sx={{ ...(isSwappable ? btn : {}) }}
                         as="td"
                         colSpan={3}
                         textAlign="center"
                         onClick={() => {
-                          if (props.uniswap_from_amount * 1 !== 0) {
+                          if (isSwappable) {
                             props.uniswap_tokens({
                               from:
                                 props.uniswap_from === "ETH"
@@ -427,9 +427,9 @@ export default binder(
                 </Box>
               )}
               <Text lineHeight="150%" color="#DC6BE5">
-                The value of allowance must be equal or greater than the amount
-                of token you are swapping from. Change the allowance first, then
-                try swapping.
+                The value of the allowance must be equal to or greater than the
+                amount of the token you are swapping from. Change the allowance
+                first, then try swapping.
                 <br />
                 The actual swapped amount may vary depending on changes made to
                 the uniswap pools before your transaction.
