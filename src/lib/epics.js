@@ -31,7 +31,10 @@ import {
   checkUniswap
 } from "../../lib/_epic/uniswap"
 
+import { getTokenPrices } from "../../lib/_epic/prices"
+
 export {
+  getTokenPrices,
   changeAllowance,
   changeUniswapAllowance,
   switchWallet,

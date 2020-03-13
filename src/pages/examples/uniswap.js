@@ -176,6 +176,10 @@ export default binder(
         })
 
         props.hookWeb3()
+        props.getTokenPrices({
+          token_ids: ["ethereum", "dai", "chainlink"],
+          currencies: ["usd"]
+        })
       })
     }, [])
     const pics = {
@@ -220,13 +224,41 @@ export default binder(
         </Box>
       </Flex>
     )
+
     const connectAuth = `${
       R.isNil(props.auth_selected) ? "Connect" : "Disconnect"
     } Authereum`
+
     const isSwappable = !R.any(R.equals(0))([
       +props.uniswap_from_amount,
       +props.uniswap_to_amount
     ])
+
+    const token_ids = {
+      ETH: "ethereum",
+      LINK: "chainlink",
+      DAI: "dai"
+    }
+
+    const getPrice = props => {
+      if (+(props.uniswap_from_amount || 0) === 0) {
+        return [0, 0]
+      } else {
+        const per = +props.uniswap_to_amount / +props.uniswap_from_amount
+        const per_rounded = Math.round(per * 1000) / 1000
+        if (R.isNil(props.token_prices[token_ids[props.uniswap_to]])) {
+          return [per_rounded, "-"]
+        } else {
+          const amount =
+            Math.round(
+              per * +props.token_prices[token_ids[props.uniswap_to]].usd * 100
+            ) / 100
+
+          return [per_rounded, amount]
+        }
+      }
+    }
+
     return (
       <ThemeProvider theme={preset}>
         <Flex flexWrap="wrap">
@@ -328,147 +360,163 @@ export default binder(
               sx={{ border: "1px solid #DC6BE5", borderRadius: "3px" }}
             >
               {R.isNil(props.address_in_use) ? null : (
-                <Box as="table" width={1} mb={3}>
-                  <Box as="tbody">
-                    <Box as="tr">
-                      <Box as="td">
-                        <Select
-                          value={props.uniswap_from}
-                          onChange={e =>
-                            props.set(e.target.value, "uniswap_from")
-                          }
-                        >
-                          {R.compose(
-                            R.map(v => {
-                              return <option value={v}>{v}</option>
-                            }),
-                            R.filter(v => v !== props.uniswap_to),
-                            R.concat(["ETH"]),
-                            R.pluck("key")
-                          )(tokens)}
-                        </Select>
-                      </Box>
-                      <Box
-                        as="td"
-                        width="40px"
-                        textAlign="center"
-                        rowSpan={2}
-                        sx={{ ...btn }}
-                        onClick={() => {
-                          props.merge({
-                            uniswap_from: props.uniswap_to,
-                            uniswap_to: props.uniswap_from
-                          })
-                        }}
-                      >
-                        <Box as="i" className="fas fa-angle-double-right" />
-                      </Box>
-                      <Box as="td">
-                        <Select
-                          value={props.uniswap_to}
-                          onChange={e =>
-                            props.set(e.target.value, "uniswap_to")
-                          }
-                        >
-                          {R.compose(
-                            R.map(v => {
-                              return <option value={v}>{v}</option>
-                            }),
-                            R.filter(v => v !== props.uniswap_from),
-                            R.concat(["ETH"]),
-                            R.pluck("key")
-                          )(tokens)}
-                        </Select>
-                      </Box>
-                    </Box>
-                    <Box as="tr">
-                      <Box as="td">
-                        <Input
-                          value={props.uniswap_from_amount}
-                          onChange={e => {
-                            if (R.isNaN(e.target.value * 1) == false) {
-                              props.set(e.target.value, "uniswap_from_amount")
-                              props.checkUniswap({
-                                amount: e.target.value * 1,
-                                from:
-                                  props.uniswap_from === "ETH"
-                                    ? null
-                                    : token_addrs[props.uniswap_from].addr,
-                                to:
-                                  props.uniswap_to === "ETH"
-                                    ? null
-                                    : token_addrs[props.uniswap_to].addr
-                              })
-                            }
-                          }}
-                          placeholder={props.uniswap_from}
-                        />
-                      </Box>
-                      <Box as="td">
-                        <Input
-                          bg="#eee"
-                          value={props.uniswap_to_amount}
-                          disabled="disabled"
-                        />
-                      </Box>
-                    </Box>
-                    <Box as="tr">
-                      {props.ongoing[
-                        `uniswap_tokens_${
-                          props[`${props.address_in_use}_selected`]
-                        }`
-                      ] ? (
-                        <Box
-                          p={2}
-                          color="white"
-                          bg={"#DC6BE5"}
-                          as="td"
-                          colSpan={3}
-                          textAlign="center"
-                        >
-                          <Flex justifyContent="center" alignItems="center">
-                            <Box as="i" className="fas fa-spin fa-sync" />
-                          </Flex>
-                        </Box>
-                      ) : (
-                        <Box
-                          p={2}
-                          color="white"
-                          bg={isSwappable ? "#DC6BE5" : "#999"}
-                          sx={{ ...(isSwappable ? btn : {}) }}
-                          as="td"
-                          colSpan={3}
-                          textAlign="center"
-                          onClick={() => {
-                            if (isSwappable) {
-                              props.uniswap_tokens({
-                                from:
-                                  props.uniswap_from === "ETH"
-                                    ? null
-                                    : token_addrs[props.uniswap_from].addr,
-                                to:
-                                  props.uniswap_to === "ETH"
-                                    ? null
-                                    : token_addrs[props.uniswap_to].addr,
+                <React.Fragment>
+                  <Text lineHeight="150%" color="#DC6BE5" mb={2}>
+                    {R.all(R.xNil)([
+                      props.uniswap_from,
+                      props.uniswap_from_amount,
+                      props.uniswap_to,
+                      props.uniswap_to_amount,
+                      props.token_prices
+                    ]) && +(props.uniswap_from_amount || 0) !== 0
+                      ? `Rate: 1 ${props.uniswap_from} = ${
+                          getPrice(props)[0]
+                        } ${props.uniswap_to} = ${getPrice(props)[1]} USD`
+                      : "Rate: -"}
+                  </Text>
 
-                                amount: props.uniswap_from_amount * 1
-                              })
+                  <Box as="table" width={1} mb={3}>
+                    <Box as="tbody">
+                      <Box as="tr">
+                        <Box as="td">
+                          <Select
+                            value={props.uniswap_from}
+                            onChange={e =>
+                              props.set(e.target.value, "uniswap_from")
                             }
+                          >
+                            {R.compose(
+                              R.map(v => {
+                                return <option value={v}>{v}</option>
+                              }),
+                              R.filter(v => v !== props.uniswap_to),
+                              R.concat(["ETH"]),
+                              R.pluck("key")
+                            )(tokens)}
+                          </Select>
+                        </Box>
+                        <Box
+                          as="td"
+                          width="40px"
+                          textAlign="center"
+                          rowSpan={2}
+                          sx={{ ...btn }}
+                          onClick={() => {
+                            props.merge({
+                              uniswap_from: props.uniswap_to,
+                              uniswap_to: props.uniswap_from
+                            })
                           }}
                         >
-                          <Flex justifyContent="center" alignItems="center">
-                            <Image
-                              src="/static/images/uniswap.png"
-                              mr={2}
-                              height="20px"
-                            />
-                            Swap Tokens
-                          </Flex>
+                          <Box as="i" className="fas fa-angle-double-right" />
                         </Box>
-                      )}
+                        <Box as="td">
+                          <Select
+                            value={props.uniswap_to}
+                            onChange={e =>
+                              props.set(e.target.value, "uniswap_to")
+                            }
+                          >
+                            {R.compose(
+                              R.map(v => {
+                                return <option value={v}>{v}</option>
+                              }),
+                              R.filter(v => v !== props.uniswap_from),
+                              R.concat(["ETH"]),
+                              R.pluck("key")
+                            )(tokens)}
+                          </Select>
+                        </Box>
+                      </Box>
+                      <Box as="tr">
+                        <Box as="td">
+                          <Input
+                            value={props.uniswap_from_amount}
+                            onChange={e => {
+                              if (R.isNaN(e.target.value * 1) == false) {
+                                props.set(e.target.value, "uniswap_from_amount")
+                                props.checkUniswap({
+                                  amount: e.target.value * 1,
+                                  from:
+                                    props.uniswap_from === "ETH"
+                                      ? null
+                                      : token_addrs[props.uniswap_from].addr,
+                                  to:
+                                    props.uniswap_to === "ETH"
+                                      ? null
+                                      : token_addrs[props.uniswap_to].addr
+                                })
+                              }
+                            }}
+                            placeholder={props.uniswap_from}
+                          />
+                        </Box>
+                        <Box as="td">
+                          <Input
+                            bg="#eee"
+                            value={props.uniswap_to_amount}
+                            disabled="disabled"
+                          />
+                        </Box>
+                      </Box>
+                      <Box as="tr">
+                        {props.ongoing[
+                          `uniswap_tokens_${
+                            props[`${props.address_in_use}_selected`]
+                          }`
+                        ] ? (
+                          <Box
+                            p={2}
+                            color="white"
+                            bg={"#DC6BE5"}
+                            as="td"
+                            colSpan={3}
+                            textAlign="center"
+                          >
+                            <Flex justifyContent="center" alignItems="center">
+                              <Box as="i" className="fas fa-spin fa-sync" />
+                            </Flex>
+                          </Box>
+                        ) : (
+                          <Box
+                            p={2}
+                            color="white"
+                            bg={isSwappable ? "#DC6BE5" : "#999"}
+                            sx={{ ...(isSwappable ? btn : {}) }}
+                            as="td"
+                            colSpan={3}
+                            textAlign="center"
+                            onClick={() => {
+                              if (isSwappable) {
+                                props.uniswap_tokens({
+                                  from:
+                                    props.uniswap_from === "ETH"
+                                      ? null
+                                      : token_addrs[props.uniswap_from].addr,
+                                  to:
+                                    props.uniswap_to === "ETH"
+                                      ? null
+                                      : token_addrs[props.uniswap_to].addr,
+
+                                  amount: props.uniswap_from_amount * 1
+                                })
+                              }
+                            }}
+                          >
+                            <Flex justifyContent="center" alignItems="center">
+                              <Image
+                                src="/static/images/uniswap.png"
+                                mr={2}
+                                height="20px"
+                              />
+                              Swap Tokens
+                            </Flex>
+                          </Box>
+                        )}
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
+                </React.Fragment>
               )}
               <Text lineHeight="150%" color="#DC6BE5">
                 The token needs to be unlocked so uniswap is allowed to transfer
@@ -497,7 +545,8 @@ export default binder(
     "new_allowance",
     "auth_init",
     "web3_network",
-    "ongoing"
+    "ongoing",
+    "token_prices"
   ],
   [
     "tracker",
@@ -509,6 +558,7 @@ export default binder(
     "checkUniswap",
     "uniswap_tokens",
     "switchWallet",
-    "changeUniswapAllowance"
+    "changeUniswapAllowance",
+    "getTokenPrices"
   ]
 )
