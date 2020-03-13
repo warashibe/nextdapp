@@ -39,22 +39,9 @@ const tokens = [
 ]
 const token_addrs = R.indexBy(R.prop("key"))(tokens)
 const token_keys = R.indexBy(R.prop("addr"))(tokens)
-const setUniswapFromAmount = async ({ state$, set }) => {
-  const token = state$.value.uniswap_from
-  const balance = state$.value.user_balances[token]
-  if (R.xNil(balance)) {
-    let max = balance.balance * 1
-    if (R.xNil(balance.allowance)) {
-      max = Math.min(max, balance.allowance * 1)
-    }
-    if (max < (state$.value.uniswap_from_amount || 0) * 1) {
-      set(max.toString(), "uniswap_from_amount")
-    }
-  }
-}
 
 const BalanceTable = props =>
-  R.isNil(props.eth_selected) ? null : (
+  R.isNil(props.address_in_use) ? null : (
     <Box p={3}>
       <Box as="table" width={1} textAlign="center" fontSize="14px">
         <Box as="thead">
@@ -151,20 +138,12 @@ export default binder(
                 uniswap: true
               }
             },
-            uniswap_to_amount: {
-              any: [
-                "uniswap_from",
-                "address_in_use",
-                "user_balances",
-                "uniswap_from_amount"
-              ],
-              func: setUniswapFromAmount
-            },
             check_uniswap_rate: {
               any: [
                 "uniswap_from",
                 "uniswap_to",
                 "uniswap_from_amount",
+                "uniswap_to_amount",
                 "eth_updated"
               ],
               func: autoCheckUniswap,
@@ -229,11 +208,15 @@ export default binder(
       R.isNil(props.auth_selected) ? "Connect" : "Disconnect"
     } Authereum`
 
-    const isSwappable = !R.any(R.equals(0))([
-      +props.uniswap_from_amount,
-      +props.uniswap_to_amount
-    ])
-
+    const isSwappable =
+      !R.any(R.equals(0))([
+        +props.uniswap_from_amount,
+        +props.uniswap_to_amount
+      ]) &&
+      R.hasPath(["user_balances", props.uniswap_from, "balance"])(props) &&
+      N(+props.uniswap_from_amount).lte(
+        props.user_balances[props.uniswap_from].balance
+      )
     const token_ids = {
       ETH: "ethereum",
       LINK: "chainlink",
@@ -431,6 +414,19 @@ export default binder(
                       <Box as="tr">
                         <Box as="td">
                           <Input
+                            color={
+                              R.hasPath([
+                                "user_balances",
+                                props.uniswap_from,
+                                "balance"
+                              ])(props) &&
+                              N(+props.uniswap_from_amount).gt(
+                                props.user_balances[props.uniswap_from].balance
+                              )
+                                ? "#FF4C2F"
+                                : "#000"
+                            }
+                            bg={props.input_lock === "from" ? "white" : "#eee"}
                             value={props.uniswap_from_amount}
                             onChange={e => {
                               if (R.isNaN(e.target.value * 1) == false) {
@@ -444,7 +440,8 @@ export default binder(
                                   to:
                                     props.uniswap_to === "ETH"
                                       ? null
-                                      : token_addrs[props.uniswap_to].addr
+                                      : token_addrs[props.uniswap_to].addr,
+                                  lock: "from"
                                 })
                               }
                             }}
@@ -453,9 +450,26 @@ export default binder(
                         </Box>
                         <Box as="td">
                           <Input
-                            bg="#eee"
+                            bg={props.input_lock === "to" ? "white" : "#eee"}
                             value={props.uniswap_to_amount}
-                            disabled="disabled"
+                            onChange={e => {
+                              if (R.isNaN(e.target.value * 1) == false) {
+                                props.set(e.target.value, "uniswap_to_amount")
+                                props.checkUniswap({
+                                  amount: e.target.value * 1,
+                                  from:
+                                    props.uniswap_from === "ETH"
+                                      ? null
+                                      : token_addrs[props.uniswap_from].addr,
+                                  to:
+                                    props.uniswap_to === "ETH"
+                                      ? null
+                                      : token_addrs[props.uniswap_to].addr,
+                                  lock: "to"
+                                })
+                              }
+                            }}
+                            placeholder={props.uniswap_to}
                           />
                         </Box>
                       </Box>
@@ -498,7 +512,8 @@ export default binder(
                                       ? null
                                       : token_addrs[props.uniswap_to].addr,
 
-                                  amount: props.uniswap_from_amount * 1
+                                  amount: props.uniswap_from_amount * 1,
+                                  to_amount: props.uniswap_to_amount * 1
                                 })
                               }
                             }}
@@ -523,7 +538,10 @@ export default binder(
                 on behalf of you. Unlock first, then try swapping. The actual
                 swapped amount may vary depending on changes made to the pools
                 before your transaction. There is also 0.3% transaction fee
-                deducted by Uniswap.
+                deducted by Uniswap. When exchanging ETH with MetaMask, do not
+                enter the maximam amount because you need to pay for the Gas
+                too. Authereum requires no Gas at the moment. The slippage is
+                automatically set to 0.5%.
               </Text>
             </Box>
           </Box>
@@ -546,7 +564,8 @@ export default binder(
     "auth_init",
     "web3_network",
     "ongoing",
-    "token_prices"
+    "token_prices",
+    "input_lock"
   ],
   [
     "tracker",
