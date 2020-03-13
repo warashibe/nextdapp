@@ -1,4 +1,5 @@
 import { Box, Flex, Text, Image, Button } from "rebass"
+import N from "bignumber.js"
 import { ThemeProvider } from "emotion-theming"
 import preset from "@rebass/preset"
 import binder from "../../lib/binder"
@@ -50,6 +51,166 @@ const setUniswapFromAmount = async ({ state$, set }) => {
     }
   }
 }
+const BalanceTable = props =>
+  R.isNil(props.eth_selected) ? null : (
+    <Box p={3}>
+      <Box as="table" width={1} textAlign="center" fontSize="14px">
+        <Box as="thead">
+          <Box as="tr" bg="#4CAF50" color="#eee">
+            <Box as="th" p={2}>
+              Token
+            </Box>
+            <Box as="th" p={2}>
+              Blanace
+            </Box>
+            <Box as="th" p={2}>
+              Allowance
+            </Box>
+            <Box as="th" p={2} />
+            <Box as="th" p={2}>
+              Approve
+            </Box>
+          </Box>
+        </Box>
+        <Box as="tbody">
+          {R.map(v => {
+            return (
+              <Box as="tr" bg="#ddd">
+                <Box as="td" p={2} title={v.key}>
+                  <Image src={`/static/images/${v.img}`} height="25px" />
+                </Box>
+                <Box as="td" p={2}>
+                  {R.isNil(props.user_balances[v.key])
+                    ? 0
+                    : props.user_balances[v.key].balance}
+                </Box>
+                <Box as="td" p={2}>
+                  {v.key === "ETH"
+                    ? "∞"
+                    : R.isNil(props.uniswap_allowances[v.key])
+                      ? 0
+                      : props.uniswap_allowances[v.key].allowance}
+                </Box>
+                <Box as="td" p={2} sx={{ wordBreak: "break-all" }}>
+                  {v.key === "ETH" ? (
+                    ""
+                  ) : (
+                    <Input
+                      width={1}
+                      bg="white"
+                      value={props.new_allowance[v.key]}
+                      onChange={e => {
+                        if (
+                          R.is(Number, +e.target.value) &&
+                          +e.target.value >= 0
+                        ) {
+                          props.set(e.target.value, ["new_allowance", v.key])
+                        }
+                      }}
+                    />
+                  )}
+                </Box>
+                <Box
+                  width="100px"
+                  bg="#4CAF50"
+                  color="white"
+                  as="td"
+                  sx={{
+                    cursor: "pointer",
+                    ":hover": { opacity: 0.75 }
+                  }}
+                  onClick={async () => {
+                    if (v.key === "ETH") return
+                    if (
+                      props.new_allowance[v.key] == "" ||
+                      !R.is(Number, +props.new_allowance[v.key])
+                    ) {
+                      alert("Enter numbers")
+                      return
+                    }
+                    await props.changeUniswapAllowance({
+                      value: props.new_allowance[v.key],
+                      token_address: v.addr
+                    })
+                  }}
+                >
+                  {v.key === "ETH" ? "" : "Change"}
+                </Box>
+              </Box>
+            )
+          })(R.concat([{ key: "ETH", img: "ethereum.png" }], tokens))}
+        </Box>
+      </Box>
+    </Box>
+  )
+
+const BalanceTableUnlimited = props =>
+  R.isNil(props.eth_selected) ? null : (
+    <Box p={3}>
+      <Box as="table" width={1} textAlign="center" fontSize="14px">
+        <Box as="thead">
+          <Box as="tr" bg="#4CAF50" color="#eee">
+            <Box as="th" p={2}>
+              Token
+            </Box>
+            <Box as="th" p={2}>
+              Blanace
+            </Box>
+            <Box as="th" p={2}>
+              Unlock
+            </Box>
+          </Box>
+        </Box>
+        <Box as="tbody">
+          {R.map(v => {
+            return (
+              <Box as="tr" bg="#ddd">
+                <Box as="td" p={2} title={v.key}>
+                  <Image src={`/static/images/${v.img}`} height="25px" />
+                </Box>
+                <Box as="td" p={2}>
+                  {R.isNil(props.user_balances[v.key])
+                    ? 0
+                    : props.user_balances[v.key].balance}
+                </Box>
+
+                {v.key === "ETH" ||
+                (R.hasPath(["uniswap_allowances", v.key, "allowance"])(props) &&
+                  N(+props.uniswap_allowances[v.key].allowance).gt(
+                    Math.pow(2, 100)
+                  )) ? (
+                  <Box as="td" bg="#4CAF50" color="white" p={2}>
+                    <Box as="i" className="fas fa-lock-open" />
+                  </Box>
+                ) : (
+                  <Box
+                    title="unlock"
+                    as="td"
+                    bg="#999"
+                    color="white"
+                    p={2}
+                    sx={{
+                      cursor: "pointer",
+                      ":hover": { bg: "#4CAF50", color: "white" }
+                    }}
+                    onClick={() => {
+                      props.changeUniswapAllowance({
+                        value: N(Math.pow(2, 256)).toFixed(),
+                        token_address: v.addr
+                      })
+                    }}
+                  >
+                    <Box as="i" className="fas fa-lock" />
+                  </Box>
+                )}
+              </Box>
+            )
+          })(R.concat([{ key: "ETH", img: "ethereum.png" }], tokens))}
+        </Box>
+      </Box>
+    </Box>
+  )
+
 export default binder(
   props => {
     useEffect(() => {
@@ -129,97 +290,6 @@ export default binder(
           </Box>
         </Flex>
       )
-    const balance_table = R.isNil(props.eth_selected) ? null : (
-      <Box p={3}>
-        <Box as="table" width={1} textAlign="center" fontSize="14px">
-          <Box as="thead">
-            <Box as="tr" bg="#4CAF50" color="#eee">
-              <Box as="th" p={2}>
-                Token
-              </Box>
-              <Box as="th" p={2}>
-                Blanace
-              </Box>
-              <Box as="th" p={2}>
-                Allowance
-              </Box>
-              <Box as="th" p={2} />
-              <Box as="th" p={2}>
-                Approve
-              </Box>
-            </Box>
-          </Box>
-          <Box as="tbody">
-            {R.map(v => {
-              return (
-                <Box as="tr" bg="#ddd">
-                  <Box as="td" p={2} title={v.key}>
-                    <Image src={`/static/images/${v.img}`} height="25px" />
-                  </Box>
-                  <Box as="td" p={2}>
-                    {R.isNil(props.user_balances[v.key])
-                      ? 0
-                      : props.user_balances[v.key].balance}
-                  </Box>
-                  <Box as="td" p={2}>
-                    {v.key === "ETH"
-                      ? "∞"
-                      : R.isNil(props.uniswap_allowances[v.key])
-                        ? 0
-                        : props.uniswap_allowances[v.key].allowance}
-                  </Box>
-                  <Box as="td" p={2} sx={{ wordBreak: "break-all" }}>
-                    {v.key === "ETH" ? (
-                      ""
-                    ) : (
-                      <Input
-                        width={1}
-                        bg="white"
-                        value={props.new_allowance[v.key]}
-                        onChange={e => {
-                          if (
-                            R.is(Number, +e.target.value) &&
-                            +e.target.value >= 0
-                          ) {
-                            props.set(e.target.value, ["new_allowance", v.key])
-                          }
-                        }}
-                      />
-                    )}
-                  </Box>
-                  <Box
-                    width="100px"
-                    bg="#4CAF50"
-                    color="white"
-                    as="td"
-                    sx={{
-                      cursor: "pointer",
-                      ":hover": { opacity: 0.75 }
-                    }}
-                    onClick={async () => {
-                      if (v.key === "ETH") return
-                      if (
-                        props.new_allowance[v.key] == "" ||
-                        !R.is(Number, +props.new_allowance[v.key])
-                      ) {
-                        alert("Enter numbers")
-                        return
-                      }
-                      await props.changeUniswapAllowance({
-                        value: props.new_allowance[v.key],
-                        token_address: v.addr
-                      })
-                    }}
-                  >
-                    {v.key === "ETH" ? "" : "Change"}
-                  </Box>
-                </Box>
-              )
-            })(R.concat([{ key: "ETH", img: "ethereum.png" }], tokens))}
-          </Box>
-        </Box>
-      </Box>
-    )
     const footer = (
       <Flex color="white" bg="#DC6BE5" width={1} flexWrap="wrap" p={3}>
         <Box textAlign="center" width={1}>
@@ -284,13 +354,13 @@ export default binder(
               </Box>
             </Box>
             <Text color="#4CAF50" mb={2} mt={4}>
-              2. Set Enough Allowances
+              2. Unlock to grant permission to Uniswap
             </Text>
             <Box
               mb={3}
               sx={{ border: "1px solid #4CAF50", borderRadius: "3px" }}
             >
-              {balance_table}
+              <BalanceTableUnlimited {...props} />
             </Box>
           </Box>
           <Box p={3} width={[1, null, 0.5]}>
@@ -427,12 +497,11 @@ export default binder(
                 </Box>
               )}
               <Text lineHeight="150%" color="#DC6BE5">
-                The value of the allowance must be equal to or greater than the
-                amount of the token you are swapping from. Change the allowance
-                first, then try swapping.
-                <br />
-                The actual swapped amount may vary depending on changes made to
-                the uniswap pools before your transaction.
+                The token needs to be unlocked so uniswap is allowed to transfer
+                on behalf of you. Unlock first, then try swapping. The actual
+                swapped amount may vary depending on changes made to the pools
+                before your transaction. There is also 0.3% transaction fee
+                deducted by Uniswap.
               </Text>
             </Box>
           </Box>
