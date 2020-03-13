@@ -9,6 +9,7 @@
     "@rebass/preset": "^4.0.5",
     "authereum": "^0.0.4-beta.101",
     "base64url": "^3.0.1",
+    "bignumber.js": "^9.0.0",
     "did-jwt": "^4.0.0",
     "did-resolver": "^1.1.0",
     "emotion-theming": "^10.0.27",
