@@ -52,100 +52,8 @@ const setUniswapFromAmount = async ({ state$, set }) => {
     }
   }
 }
-const BalanceTable = props =>
-  R.isNil(props.eth_selected) ? null : (
-    <Box p={3}>
-      <Box as="table" width={1} textAlign="center" fontSize="14px">
-        <Box as="thead">
-          <Box as="tr" bg="#4CAF50" color="#eee">
-            <Box as="th" p={2}>
-              Token
-            </Box>
-            <Box as="th" p={2}>
-              Blanace
-            </Box>
-            <Box as="th" p={2}>
-              Allowance
-            </Box>
-            <Box as="th" p={2} />
-            <Box as="th" p={2}>
-              Approve
-            </Box>
-          </Box>
-        </Box>
-        <Box as="tbody">
-          {R.map(v => {
-            return (
-              <Box as="tr" bg="#ddd">
-                <Box as="td" p={2} title={v.key}>
-                  <Image src={`/static/images/${v.img}`} height="25px" />
-                </Box>
-                <Box as="td" p={2}>
-                  {R.isNil(props.user_balances[v.key])
-                    ? 0
-                    : props.user_balances[v.key].balance}
-                </Box>
-                <Box as="td" p={2}>
-                  {v.key === "ETH"
-                    ? "∞"
-                    : R.isNil(props.uniswap_allowances[v.key])
-                      ? 0
-                      : props.uniswap_allowances[v.key].allowance}
-                </Box>
-                <Box as="td" p={2} sx={{ wordBreak: "break-all" }}>
-                  {v.key === "ETH" ? (
-                    ""
-                  ) : (
-                    <Input
-                      width={1}
-                      bg="white"
-                      value={props.new_allowance[v.key]}
-                      onChange={e => {
-                        if (
-                          R.is(Number, +e.target.value) &&
-                          +e.target.value >= 0
-                        ) {
-                          props.set(e.target.value, ["new_allowance", v.key])
-                        }
-                      }}
-                    />
-                  )}
-                </Box>
-                <Box
-                  width="100px"
-                  bg="#4CAF50"
-                  color="white"
-                  as="td"
-                  sx={{
-                    cursor: "pointer",
-                    ":hover": { opacity: 0.75 }
-                  }}
-                  onClick={async () => {
-                    if (v.key === "ETH") return
-                    if (
-                      props.new_allowance[v.key] == "" ||
-                      !R.is(Number, +props.new_allowance[v.key])
-                    ) {
-                      alert("Enter numbers")
-                      return
-                    }
-                    await props.changeUniswapAllowance({
-                      value: props.new_allowance[v.key],
-                      token_address: v.addr
-                    })
-                  }}
-                >
-                  {v.key === "ETH" ? "" : "Change"}
-                </Box>
-              </Box>
-            )
-          })(R.concat([{ key: "ETH", img: "ethereum.png" }], tokens))}
-        </Box>
-      </Box>
-    </Box>
-  )
 
-const BalanceTableUnlimited = props =>
+const BalanceTable = props =>
   R.isNil(props.eth_selected) ? null : (
     <Box p={3}>
       <Box as="table" width={1} textAlign="center" fontSize="14px">
@@ -182,6 +90,14 @@ const BalanceTableUnlimited = props =>
                   )) ? (
                   <Box as="td" bg="#4CAF50" color="white" p={2}>
                     <Box as="i" className="fas fa-lock-open" />
+                  </Box>
+                ) : props.ongoing[
+                  `changeUniswapAllowance_${v.addr}_${
+                    props[`${props.address_in_use}_selected`]
+                  }`
+                ] ? (
+                  <Box as="td" bg="#E69500" color="white" p={2}>
+                    <Box as="i" className="fas fa-spin fa-sync" />
                   </Box>
                 ) : (
                   <Box
@@ -387,7 +303,7 @@ export default binder(
                   {props.auth_init ? (
                     connectAuth
                   ) : (
-                    <Box as="i" className="fa fa-spin fa-spinner" />
+                    <Box as="i" className="fa fa-spin fa-sync" />
                   )}
                 </Box>
               </Box>
@@ -399,7 +315,7 @@ export default binder(
               mb={3}
               sx={{ border: "1px solid #4CAF50", borderRadius: "3px" }}
             >
-              <BalanceTableUnlimited {...props} />
+              <BalanceTable {...props} />
             </Box>
           </Box>
           <Box p={3} width={[1, null, 0.5]}>
@@ -497,40 +413,59 @@ export default binder(
                       </Box>
                     </Box>
                     <Box as="tr">
-                      <Box
-                        p={2}
-                        color="white"
-                        bg={isSwappable ? "#DC6BE5" : "#999"}
-                        sx={{ ...(isSwappable ? btn : {}) }}
-                        as="td"
-                        colSpan={3}
-                        textAlign="center"
-                        onClick={() => {
-                          if (isSwappable) {
-                            props.uniswap_tokens({
-                              from:
-                                props.uniswap_from === "ETH"
-                                  ? null
-                                  : token_addrs[props.uniswap_from].addr,
-                              to:
-                                props.uniswap_to === "ETH"
-                                  ? null
-                                  : token_addrs[props.uniswap_to].addr,
+                      {props.ongoing[
+                        `uniswap_tokens_${
+                          props[`${props.address_in_use}_selected`]
+                        }`
+                      ] ? (
+                        <Box
+                          p={2}
+                          color="white"
+                          bg={"#DC6BE5"}
+                          as="td"
+                          colSpan={3}
+                          textAlign="center"
+                        >
+                          <Flex justifyContent="center" alignItems="center">
+                            <Box as="i" className="fas fa-spin fa-sync" />
+                          </Flex>
+                        </Box>
+                      ) : (
+                        <Box
+                          p={2}
+                          color="white"
+                          bg={isSwappable ? "#DC6BE5" : "#999"}
+                          sx={{ ...(isSwappable ? btn : {}) }}
+                          as="td"
+                          colSpan={3}
+                          textAlign="center"
+                          onClick={() => {
+                            if (isSwappable) {
+                              props.uniswap_tokens({
+                                from:
+                                  props.uniswap_from === "ETH"
+                                    ? null
+                                    : token_addrs[props.uniswap_from].addr,
+                                to:
+                                  props.uniswap_to === "ETH"
+                                    ? null
+                                    : token_addrs[props.uniswap_to].addr,
 
-                              amount: props.uniswap_from_amount * 1
-                            })
-                          }
-                        }}
-                      >
-                        <Flex justifyContent="center" alignItems="center">
-                          <Image
-                            src="/static/images/uniswap.png"
-                            mr={2}
-                            height="20px"
-                          />
-                          Swap Tokens
-                        </Flex>
-                      </Box>
+                                amount: props.uniswap_from_amount * 1
+                              })
+                            }
+                          }}
+                        >
+                          <Flex justifyContent="center" alignItems="center">
+                            <Image
+                              src="/static/images/uniswap.png"
+                              mr={2}
+                              height="20px"
+                            />
+                            Swap Tokens
+                          </Flex>
+                        </Box>
+                      )}
                     </Box>
                   </Box>
                 </Box>
@@ -561,7 +496,8 @@ export default binder(
     "uniswap_allowances",
     "new_allowance",
     "auth_init",
-    "web3_network"
+    "web3_network",
+    "ongoing"
   ],
   [
     "tracker",
