@@ -8,12 +8,13 @@ import { useEffect } from "react"
 import R from "ramdam"
 const btn = { cursor: "pointer", ":hover": { opacity: 0.75 } }
 import Wallet from "../../../components/Wallet"
+import conf from "../../conf"
 import { checkBalance, checkWallet } from "../../../lib/_epic/web3"
 import {
   autoCheckUniswap,
   checkUniswapAllowance
 } from "../../../lib/_epic/uniswap"
-import { socials } from "../../../lib/const"
+import { ethereum_networks, socials } from "../../../lib/const"
 const socials_map = R.indexBy(R.prop("key"))(socials)
 import {
   Switch,
@@ -266,7 +267,11 @@ export default binder(
       auth: "authereum"
     }
     const wallet =
-      R.isNil(props.eth_selected) && R.isNil(props.auth_selected) ? null : (
+      R.isNil(props.eth_selected) && R.isNil(props.auth_selected) ? (
+        <Box color="#FF4C2F" textAlign="center">
+          No Available Wallet Found
+        </Box>
+      ) : (
         <Flex alignItems="center" width={1}>
           <Box flex={1}>
             <Select
@@ -317,7 +322,41 @@ export default binder(
             width={1}
             mb={3}
           >
-            Connect MetaMask to Ropsten Testnet or login with Authereum Ropsten
+            {R.all(R.xNil)([props.web3_network, props.eth_selected]) ? (
+              <React.Fragment>
+                <Box as="i" color="#4CAF50" className="fa fa-circle" mr={1} />
+                MetaMask Connected to {ethereum_networks[props.web3_network]}
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Box as="i" color="#FF4C2F" className="fa fa-circle" mr={1} />
+                Connect MetaMask to{" "}
+                {(ethereum_networks[conf.web3.network] || "").toUpperCase()}
+              </React.Fragment>
+            )}{" "}
+            {R.xNil(props.auth_selected) ? (
+              <React.Fragment>
+                <Box
+                  ml={3}
+                  as="i"
+                  color="#4CAF50"
+                  className="fa fa-circle"
+                  mr={1}
+                />
+                Authereum Connected
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Box
+                  ml={3}
+                  as="i"
+                  color="#FF4C2F"
+                  className="fa fa-circle"
+                  mr={1}
+                />
+                Authereum Not Connected
+              </React.Fragment>
+            )}
           </Box>
           <Box p={3} width={[1, null, 0.5]}>
             <Text color="#FF4C2F" mb={2}>
@@ -521,7 +560,8 @@ export default binder(
     "user_balances",
     "uniswap_allowances",
     "new_allowance",
-    "auth_init"
+    "auth_init",
+    "web3_network"
   ],
   [
     "tracker",
