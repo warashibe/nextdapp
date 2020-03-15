@@ -252,11 +252,13 @@ export default binder(
             bg="#DC6BE5"
             width={1}
             mb={3}
+            lineHeight="180%"
           >
             {R.all(R.xNil)([props.web3_network, props.eth_selected]) ? (
               <React.Fragment>
                 <Box as="i" color="#4CAF50" className="fa fa-circle" mr={1} />
-                MetaMask Connected to {ethereum_networks[props.web3_network]}
+                MetaMask Connected to{" "}
+                {ethereum_networks[props.web3_network].toUpperCase()}
               </React.Fragment>
             ) : (
               <React.Fragment>
@@ -265,25 +267,26 @@ export default binder(
                 {(ethereum_networks[conf.web3.network] || "").toUpperCase()}
               </React.Fragment>
             )}{" "}
+            <Box as="br" display={["block", "none"]} />
             {R.xNil(props.auth_selected) ? (
               <React.Fragment>
                 <Box
-                  ml={3}
                   as="i"
                   color="#4CAF50"
                   className="fa fa-circle"
                   mr={1}
+                  ml={[0, 3]}
                 />
                 Authereum Connected
               </React.Fragment>
             ) : (
               <React.Fragment>
                 <Box
-                  ml={3}
                   as="i"
                   color="#FF4C2F"
                   className="fa fa-circle"
                   mr={1}
+                  ml={[0, 3]}
                 />
                 Authereum Not Connected
               </React.Fragment>
