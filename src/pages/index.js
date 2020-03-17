@@ -63,6 +63,25 @@ export default () => {
             >
               Uniswap
             </Box>
+            <Box
+              display="flex"
+              as="a"
+              href="/examples/dev"
+              justifyContent="center"
+              alignItems="center"
+              py={2}
+              px={4}
+              sx={{
+                textDecoration: "none",
+                cursor: "pointer",
+                ":hover": { opacity: 0.75 }
+              }}
+              color="white"
+              bg="#03414D"
+              mx={2}
+            >
+              DEV
+            </Box>
 
             <Box
               display="flex"
@@ -274,6 +293,11 @@ export default () => {
             key: "uniswap",
             name: "Uniswap",
             url: "https://uniswap.io/"
+          },
+          {
+            key: "dev",
+            name: "Dev Protocol",
+            url: "https://devprtcl.com/"
           }
         ])}
       </Flex>

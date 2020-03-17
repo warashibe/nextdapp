@@ -33,7 +33,12 @@ import {
 
 import { getTokenPrices } from "../../lib/_epic/prices"
 
+import { devStake, devCreateProperty, unlockDev } from "../../lib/_epic/dev"
+
 export {
+  devStake,
+  unlockDev,
+  devCreateProperty,
   getTokenPrices,
   changeAllowance,
   changeUniswapAllowance,
