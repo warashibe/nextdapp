@@ -6508,9 +6508,9 @@ firebase@^7.9.0:
     "@firebase/util" "0.2.41"
 
 firestore-sweet@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/firestore-sweet/-/firestore-sweet-0.4.2.tgz#e89d31a8b8d05527bcdd26ed49ec874c246d24cd"
-  integrity sha512-4okNbgAFvEJ96z5KDD+1RUm929ycsiZP2IgDFZuS00HpWRL1EcDfjUpKQa9mEhOZRp8CDvpKzgSzmSF7n0Xmcg==
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/firestore-sweet/-/firestore-sweet-0.4.3.tgz#e46d14424e7bad7aa9a197faa739079a65a428bb"
+  integrity sha512-tn5lNOqfcN1dJaL7BRyG1hxGdlhzUtONX+/j2RaHilBidxXkHCJPuxCg2XdbAH3XsKXZQCYLzHtKpk2qi6bfzw==
   dependencies:
     ramdam "^1.0.4"
 
@@ -13081,9 +13081,9 @@ rabin-wasm@~0.0.8:
     readable-stream "^2.0.4"
 
 ramda-adjunct@^2.25.0:
-  version "2.25.0"
-  resolved "https://registry.yarnpkg.com/ramda-adjunct/-/ramda-adjunct-2.25.0.tgz#bce71ac6de57d246c3947b2d79c8bc8e6f2ce27d"
-  integrity sha512-N4e0dUgoCMjiGmElZYr3sbwg75nPVIhu10jXot3nY30okFd4+4HWI5UF2+l5xsu8ygSn4Ez3LwakcK1ejJWVHw==
+  version "2.26.0"
+  resolved "https://registry.yarnpkg.com/ramda-adjunct/-/ramda-adjunct-2.26.0.tgz#c74d75afdc0b70c89356b814d85138602f0e3a9c"
+  integrity sha512-E0gVB89iY36X0sNHq0MUhLRzAh0YrKHA0cBKCZma4n1+Y672KrOREXpef89ayW7YhREbb6enMfSBXrkjPt9thA==
 
 ramda-extension@^0.10.1:
   version "0.10.3"

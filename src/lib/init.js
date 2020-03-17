@@ -5,5 +5,6 @@ import { init as web3 } from "../../lib/_epic/web3"
 import { init as prices } from "../../lib/_epic/prices"
 import { init as vechain } from "../../lib/_epic/vechain"
 import { init as uniswap } from "../../lib/_epic/uniswap"
+import { init as dev } from "../../lib/_epic/dev"
 
-export default R.mergeAll([user, util, web3, vechain, uniswap, prices])
+export default R.mergeAll([user, util, web3, vechain, uniswap, prices, dev])
