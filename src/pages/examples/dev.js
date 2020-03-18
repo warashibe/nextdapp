@@ -148,7 +148,7 @@ export default binder(
           Dev Protocol NPM Market Example
         </Flex>
         <Flex flexWrap="wrap">
-          <Status />
+          <Status _network="1" />
           <Box p={3} width={[1, null, 0.5]}>
             <Text color="#FF4C2F" mb={2}>
               1. Choose Wallet (MetaMask or Authereum)
