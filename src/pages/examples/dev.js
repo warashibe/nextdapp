@@ -1,4 +1,5 @@
 import { Box, Flex, Text, Image, Button } from "rebass"
+import moment from "moment"
 import N from "bignumber.js"
 import { ThemeProvider } from "emotion-theming"
 import preset from "@rebass/preset"
@@ -134,6 +135,7 @@ export default binder(
         </Box>
       </Flex>
     )
+    console.log(props)
     return (
       <ThemeProvider theme={preset}>
         <Flex
@@ -185,6 +187,24 @@ export default binder(
                     props[`${props.address_in_use}_selected`]
                   }`
                 ] !== true
+              const showSwappable =
+                R.hasPath(["dev_balances", v.address])(props) &&
+                +props.dev_balances[v.address].withdrawal === 0
+              const isCancellable =
+                R.hasPath(["dev_balances", v.address])(props) &&
+                props.dev_balances[v.address].you > 0 &&
+                +props.dev_balances[v.address].withdrawal === 0
+              const isCancelled =
+                R.hasPath(["dev_balances", v.address])(props) &&
+                props.dev_balances[v.address].you > 0 &&
+                +props.dev_balances[v.address].withdrawal !== 0
+              const isReward =
+                R.hasPath(["dev_balances", v.address])(props) &&
+                +props.dev_balances[v.address].reward !== 0
+              const isWithdrawable =
+                isCancelled &&
+                +props.dev_balances[v.address].withdrawal - props.web3_block <=
+                  0
               const overPrice =
                 R.hasPath(["user_balances", "DEV", "balance"])(props) &&
                 R.hasPath(["dev_amounts", v.address])(props) &&
@@ -230,7 +250,7 @@ export default binder(
                       ml={3}
                     />
                   </Flex>
-                  <Flex p={3} justifyContent="center">
+                  <Flex p={3} justifyContent="center" flexWrap="wrap">
                     <Box display="inline-block" textAlign="center" mr="3">
                       <Box color="#999" fontSize="12px">
                         TOTAL
@@ -257,69 +277,212 @@ export default binder(
                         </Box>
                       </Box>
                     </Box>
+                    <Box display="inline-block" textAlign="center" mr="3">
+                      <Box color="#999" fontSize="12px">
+                        REWARD
+                      </Box>
+                      <Box fontSize="25px" color="#cb3837">
+                        {R.hasPath(["dev_balances", v.address])(props)
+                          ? props.dev_balances[v.address].reward
+                          : 0}{" "}
+                        <Box color="#333" fontSize="16px" as="span">
+                          DEV
+                        </Box>
+                      </Box>
+                    </Box>
+
                     <Flex
+                      width={[1, "auto", 1, "auto"]}
                       display="inline-block"
-                      textAlign="center"
                       alignItems="center"
+                      justifyContent="center"
+                      mt={[3, 0, 3, 0]}
                     >
-                      <Flex alignItems="center">
-                        <Input
-                          color={overPrice ? "#CB3837" : "#333"}
-                          width="70px"
-                          sx={{
-                            border: `1px solid ${
-                              isSwappable ? "#cb3837" : "#999"
-                            }`,
-                            borderRadius: "3px 0 0 3px"
-                          }}
-                          onChange={e => {
-                            if (R.isNaN(e.target.value * 1) == false) {
-                              props.set(e.target.value, [
-                                "dev_amounts",
-                                v.address
-                              ])
-                            }
-                          }}
-                        />
+                      {showSwappable ? (
+                        <Flex alignItems="center">
+                          <Input
+                            color={overPrice ? "#CB3837" : "#333"}
+                            width="70px"
+                            sx={{
+                              border: `1px solid ${
+                                isSwappable ? "#cb3837" : "#999"
+                              }`,
+                              borderRadius: "3px 0 0 3px"
+                            }}
+                            onChange={e => {
+                              if (R.isNaN(e.target.value * 1) == false) {
+                                props.set(e.target.value, [
+                                  "dev_amounts",
+                                  v.address
+                                ])
+                              }
+                            }}
+                          />
+                          <Flex
+                            sx={{
+                              border: `1px solid ${
+                                isSwappable ? "#cb3837" : "#999"
+                              }`,
+                              borderRadius: "0 3px 3px 0",
+                              ...(isSwappable ? btn : {})
+                            }}
+                            alignItems="center"
+                            justifyContent="center"
+                            bg={isSwappable ? "#cb3837" : "#999"}
+                            p={2}
+                            color="white"
+                            onClick={() => {
+                              if (isSwappable) {
+                                props.devStake({
+                                  amount: props.dev_amounts[v.address],
+                                  token_address: v.address
+                                })
+                              }
+                            }}
+                          >
+                            {props.ongoing[
+                              `dev_stake_${v.address}_${
+                                props[`${props.address_in_use}_selected`]
+                              }`
+                            ] ? (
+                              <Box as="i" className="fas fa-spin fa-sync" />
+                            ) : (
+                              "Stake"
+                            )}
+                          </Flex>
+                        </Flex>
+                      ) : null}
+                      {!isCancellable ? null : (
                         <Flex
+                          ml={2}
                           sx={{
                             border: `1px solid ${
-                              isSwappable ? "#cb3837" : "#999"
+                              isCancellable ? "#cb3837" : "#999"
                             }`,
-                            borderRadius: "0 3px 3px 0",
-                            ...(isSwappable ? btn : {})
+                            borderRadius: "3px",
+                            ...(isCancellable ? btn : {})
                           }}
                           alignItems="center"
                           justifyContent="center"
-                          bg={isSwappable ? "#cb3837" : "#999"}
+                          bg={isCancellable ? "#cb3837" : "#999"}
                           p={2}
                           color="white"
-                          placeholder="DEV"
                           onClick={() => {
-                            if (isSwappable) {
-                              props.devStake({
-                                amount: props.dev_amounts[v.address],
+                            if (isCancellable) {
+                              props.devCancel({
                                 token_address: v.address
                               })
                             }
                           }}
                         >
                           {props.ongoing[
-                            `dev_stake_${v.address}_${
+                            `dev_cancel_${v.address}_${
                               props[`${props.address_in_use}_selected`]
                             }`
                           ] ? (
                             <Box as="i" className="fas fa-spin fa-sync" />
                           ) : (
-                            "Stake"
+                            "Cancel"
                           )}
                         </Flex>
-                      </Flex>
+                      )}
+                      {!isReward ? null : (
+                        <Flex
+                          ml={2}
+                          sx={{
+                            border: `1px solid #cb3837`,
+                            borderRadius: "3px",
+                            ...btn
+                          }}
+                          alignItems="center"
+                          justifyContent="center"
+                          bg={"#cb3837"}
+                          p={2}
+                          color="white"
+                          onClick={() => {
+                            if (isReward) {
+                              props.devWithdrawInterest({
+                                token_address: v.address
+                              })
+                            }
+                          }}
+                        >
+                          {props.ongoing[
+                            `dev_withdrawInterest_${v.address}_${
+                              props[`${props.address_in_use}_selected`]
+                            }`
+                          ] ? (
+                            <Box as="i" className="fas fa-spin fa-sync" />
+                          ) : (
+                            "Get"
+                          )}
+                        </Flex>
+                      )}
+                      {!isWithdrawable ? null : (
+                        <Flex
+                          ml={2}
+                          sx={{
+                            border: `1px solid #cb3837`,
+                            borderRadius: "3px",
+                            ...btn
+                          }}
+                          alignItems="center"
+                          justifyContent="center"
+                          bg={"#cb3837"}
+                          p={2}
+                          color="white"
+                          onClick={() => {
+                            if (isWithdrawable) {
+                              props.devWithdraw({
+                                token_address: v.address
+                              })
+                            }
+                          }}
+                        >
+                          {props.ongoing[
+                            `dev_withdraw_${v.address}_${
+                              props[`${props.address_in_use}_selected`]
+                            }`
+                          ] ? (
+                            <Box as="i" className="fas fa-spin fa-sync" />
+                          ) : (
+                            "Withdraw"
+                          )}
+                        </Flex>
+                      )}
                     </Flex>
+                    {isCancelled ? (
+                      <Flex
+                        color="#cb3837"
+                        justifyContent="center"
+                        pt={2}
+                        width={1}
+                        flexWrap="wrap"
+                      >
+                        <Text textAlign="center">
+                          {+props.dev_balances[v.address].withdrawal -
+                            props.web3_block}{" "}
+                          blocks to withdrawal
+                        </Text>
+                      </Flex>
+                    ) : null}
                   </Flex>
                 </Box>
               )
             })(properties_sorted)}
+            <Box mb={2} color="#CB3837" lineHeight="150%">
+              Once you stake, you can cancell it anytime but you will only be
+              able to withdraw your stake 1 month after the cancellation. Read
+              the{" "}
+              <Box
+                as="a"
+                href="https://github.com/dev-protocol/protocol/blob/master/docs/WHITEPAPER.md"
+                target="_blank"
+              >
+                whitepaper
+              </Box>{" "}
+              carefully for how it works.
+            </Box>
           </Box>
         </Flex>
         {footer}
@@ -327,6 +490,7 @@ export default binder(
     )
   },
   [
+    "web3_block",
     "address_in_use",
     "eth_selected",
     "auth_selected",
@@ -347,6 +511,8 @@ export default binder(
   ],
   [
     "devStake",
+    "devWithdraw",
+    "devWithdrawInterest",
     "tracker",
     "connectAuthereum",
     "disconnectAuthereum",
@@ -360,6 +526,7 @@ export default binder(
     "uniswap_tokens",
     "getTokenPrices",
     "checkUniswap",
-    "uniswap_tokens"
+    "uniswap_tokens",
+    "devCancel"
   ]
 )

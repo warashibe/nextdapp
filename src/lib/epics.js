@@ -33,9 +33,19 @@ import {
 
 import { getTokenPrices } from "../../lib/_epic/prices"
 
-import { devStake, devCreateProperty, unlockDev } from "../../lib/_epic/dev"
+import {
+  devCancel,
+  devStake,
+  devCreateProperty,
+  unlockDev,
+  devWithdrawInterest,
+  devWithdraw
+} from "../../lib/_epic/dev"
 
 export {
+  devWithdrawInterest,
+  devWithdraw,
+  devCancel,
   devStake,
   unlockDev,
   devCreateProperty,
