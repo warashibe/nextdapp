@@ -41,6 +41,7 @@ module.exports = {
     property_factory: "0xcB90FC08D405B75f5242cfE8f8D0397dE19D149c",
     npm_market: "0x88c7B1f41DdE50efFc25541a2E0769B887eB2ee7",
     lockup: "0x3d40fab11ee30E3aa1900cCfAFD190F0851a6157",
+    lockup_storage: "0x5376872A5882e828680979683388DC143C251FF2",
     dev: "0x5cAf454Ba92e6F2c929DF14667Ee360eD9fD5b26"
   }
 }
