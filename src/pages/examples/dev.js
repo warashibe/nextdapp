@@ -135,7 +135,6 @@ export default binder(
         </Box>
       </Flex>
     )
-    console.log(props)
     return (
       <ThemeProvider theme={preset}>
         <Flex
