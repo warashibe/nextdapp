@@ -43,5 +43,8 @@ module.exports = {
     lockup: "0x3d40fab11ee30E3aa1900cCfAFD190F0851a6157",
     lockup_storage: "0x5376872A5882e828680979683388DC143C251FF2",
     dev: "0x5cAf454Ba92e6F2c929DF14667Ee360eD9fD5b26"
+  },
+  blog: {
+    root: "https://next-dapp.warashibe.market/examples/blog"
   }
 }

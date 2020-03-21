@@ -42,7 +42,25 @@ import {
   devWithdraw
 } from "../../lib/_epic/dev"
 
+import {
+  blogLoadArticle,
+  createArticle,
+  postBlog,
+  blogLoadHistory,
+  blogSwitchAccess,
+  blogDeleteArticle,
+  blogPreviewArticle,
+  blogSwitchModes
+} from "../../lib/_epic/blog"
+
 export {
+  blogDeleteArticle,
+  blogSwitchModes,
+  blogSwitchAccess,
+  blogLoadArticle,
+  createArticle,
+  blogLoadHistory,
+  postBlog,
   devWithdrawInterest,
   devWithdraw,
   devCancel,
