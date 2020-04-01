@@ -164,7 +164,6 @@ export default binder(
           Warashibe Editor
         </Flex>
         <Flex width={1}>
-          <GithubMarkdown />
           <Box width={0.5} sx={{ borderRight: "1px solid #ccc" }}>
             <Box
               width={1}

@@ -36,10 +36,20 @@ const SelectWallet = binder(
               onChange={e => props.switchWallet({ type: e.target.value })}
             >
               {R.isNil(props.eth_selected) ? null : (
-                <option value="eth">{props.eth_selected}</option>
+                <option
+                  value="eth"
+                  selected={props.address_in_use === "eth" ? "selected" : ""}
+                >
+                  {props.eth_selected}
+                </option>
               )}
               {R.isNil(props.auth_selected) ? null : (
-                <option value="auth">{props.auth_selected}</option>
+                <option
+                  value="auth"
+                  selected={props.address_in_use === "auth" ? "selected" : ""}
+                >
+                  {props.auth_selected}
+                </option>
               )}
             </Select>
           </Box>

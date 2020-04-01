@@ -22,8 +22,11 @@ export default ({ init, assoc = {}, mod = {} }) => {
         reds = R.mergeLeft(mod, {
           setter: ({ val: { field, val } }) =>
             R.assocPath(R.is(Array, field) ? field : R.of(field), val),
-          set: ({ val: { field, val } }) =>
-            R.assocPath(R.is(Array, field) ? field : R.of(field), val),
+          set: ({ val: { field, val } }) => {
+            return field == undefined
+              ? R.mergeLeft(val)
+              : R.assocPath(R.is(Array, field) ? field : R.of(field), val)
+          },
           merge: ({ val: { val } }) => R.mergeLeft(val)
         })
       } catch (e) {
