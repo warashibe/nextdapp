@@ -67,6 +67,7 @@ export default ({
     return (
       <React.Fragment>
         <Head>
+          <meta charset="utf-8" />
           <title>{conf.html.title}</title>
           <meta name="description" content={conf.html.description} />
           <link

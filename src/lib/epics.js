@@ -1,7 +1,14 @@
 import R from "ramdam"
 import conf from "../conf"
 
-import { merge, track, tracker, set, epic } from "../../lib/_epic/util"
+import {
+  merge,
+  track,
+  tracker,
+  set,
+  epic,
+  checkHeight
+} from "../../lib/_epic/util"
 
 import {
   login,
@@ -44,21 +51,30 @@ import {
 
 import {
   blogLoadArticle,
+  blogLoadDir,
   createArticle,
+  createArticleList,
   postBlog,
   blogLoadHistory,
   blogSwitchAccess,
   blogDeleteArticle,
   blogPreviewArticle,
-  blogSwitchModes
+  blogSwitchModes,
+  blogChangeListTitle,
+  blogDeleteList,
+  connect_to_3box_public
 } from "../../lib/_epic/blog"
 
 export {
+  blogDeleteList,
+  blogChangeListTitle,
   blogDeleteArticle,
   blogSwitchModes,
   blogSwitchAccess,
   blogLoadArticle,
+  blogLoadDir,
   createArticle,
+  createArticleList,
   blogLoadHistory,
   postBlog,
   devWithdrawInterest,
@@ -89,5 +105,7 @@ export {
   setWallet,
   hookVeChain,
   connectAuthereum,
-  disconnectAuthereum
+  disconnectAuthereum,
+  checkHeight,
+  connect_to_3box_public
 }

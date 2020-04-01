@@ -3,7 +3,7 @@ import reducer from "../../components/_app/reducer"
 
 // global css can only be imported in /pages/_app.js
 import "normalize.css"
-
+import "draft-js/dist/Draft.css"
 import conf from "../conf"
 import init from "../lib/init"
 import assoc from "../lib/assoc"

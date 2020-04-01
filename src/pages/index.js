@@ -101,6 +101,25 @@ export default () => {
             >
               BLOG
             </Box>
+            <Box
+              display="flex"
+              as="a"
+              href="/examples/editor"
+              justifyContent="center"
+              alignItems="center"
+              py={2}
+              px={4}
+              sx={{
+                textDecoration: "none",
+                cursor: "pointer",
+                ":hover": { opacity: 0.75 }
+              }}
+              color="white"
+              bg="#03414D"
+              mx={2}
+            >
+              Editor
+            </Box>
 
             <Box
               display="flex"
