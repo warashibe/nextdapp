@@ -371,7 +371,7 @@ const makeSide = (num, props) => {
     if (cursor !== 0) {
       smenu.unshift({
         key: "up",
-        icon: faAngleDoubleUp,
+        awesome_icon: "far fa-angle-double-up",
         color: "#333",
         onClick: props => () => {
           let to
@@ -393,7 +393,7 @@ const makeSide = (num, props) => {
       smenu.pop()
       smenu.push({
         key: "down",
-        icon: faAngleDoubleDown,
+        awesome_icon: "far fa-angle-double-down",
         color: "#333",
         onClick: props => () => {
           let to

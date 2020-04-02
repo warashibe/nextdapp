@@ -90,6 +90,7 @@ const Editor = binder(
   [],
   ["set"]
 )
+
 import ReactHtmlParser from "react-html-parser"
 const marked = require("marked")
 const Preview = props => {
@@ -184,6 +185,7 @@ const Preview = props => {
     </Box>
   )
 }
+
 export default binder(
   props => {
     const checkHeight = () => {
@@ -229,7 +231,7 @@ export default binder(
             article_id: blogger_article_id
           })
         } else {
-          props.hookWeb3()
+          props.hookWeb3({ _network: "1" })
         }
       })
     }, [])
@@ -332,6 +334,7 @@ export default binder(
         awesome_icon: "fas fa-newspaper"
       })
     }
+
     let smenu = [
       {
         text: "Articles",
@@ -352,6 +355,14 @@ export default binder(
           props.set("connection", "tab")
         }
       })
+      smenu.push({
+        text: "Info",
+        key: "info",
+        awesome_icon: "fas fa-info",
+        onClick: props => () => {
+          props.set("info", "tab")
+        }
+      })
     } else {
       smenu.push({
         text: "Edit Yours",
@@ -362,7 +373,38 @@ export default binder(
       })
     }
     let main = null
-    if (props.tab === "default" && R.isNil(props.blog_selected_article)) {
+    if (props.tab === "info") {
+      main = (
+        <Flex flexWrap="wrap" width={1}>
+          <Box lineHeight="150%" p={4} width={1}>
+            <Box mb={2} color="#232538">
+              You can access your articles written on the previous version at
+            </Box>
+            <Box
+              display="block"
+              p={3}
+              color="white"
+              bg="#BF731C"
+              sx={{
+                borderRadius: "3px",
+                ...btn,
+                wordBreak: "break-all"
+              }}
+              as="a"
+              target="_blank"
+              href={`https://next-dapp-adc2h9t9w.now.sh/examples/blog`}
+            >
+              <Box color="white" sx={{ textDecoration: "none" }}>
+                https://next-dapp-adc2h9t9w.now.sh/examples/blog
+              </Box>
+            </Box>
+          </Box>
+        </Flex>
+      )
+    } else if (
+      props.tab === "default" &&
+      R.isNil(props.blog_selected_article)
+    ) {
       main = (
         <Flex flexWrap="wrap">
           {props.blog_mine !== true ? null : (
@@ -371,10 +413,12 @@ export default binder(
                 flex={1}
                 textAlign="center"
                 onClick={() => {
-                  props.blogSwitchAccess({
-                    access: "public",
-                    blogger_address: blogger_address
-                  })
+                  if (props.blog_3box_status === 3) {
+                    props.blogSwitchAccess({
+                      access: "public",
+                      blogger_address: blogger_address
+                    })
+                  }
                 }}
                 sx={{ ...btn }}
                 p={2}
@@ -388,10 +432,12 @@ export default binder(
                 textAlign="center"
                 bg={props.blog_access === "private" ? "teal" : "#666"}
                 onClick={() => {
-                  props.blogSwitchAccess({
-                    access: "private",
-                    blogger_address: blogger_address
-                  })
+                  if (props.blog_3box_status === 3) {
+                    props.blogSwitchAccess({
+                      access: "private",
+                      blogger_address: blogger_address
+                    })
+                  }
                 }}
                 sx={{ ...btn }}
                 p={2}
@@ -522,7 +568,11 @@ export default binder(
                             <Box
                               width="50px"
                               as="td"
-                              bg="#198643"
+                              bg={
+                                v.id === props.blog_edit_list_name
+                                  ? "#BF731C"
+                                  : "#198643"
+                              }
                               sx={{ ...btn }}
                               textAlign="center"
                               onClick={e => {
@@ -558,7 +608,7 @@ export default binder(
                               }}
                             >
                               <Box
-                                color="white "
+                                color="white"
                                 as="i"
                                 className={`far fa-${
                                   v.id === props.blog_edit_list_name
@@ -676,6 +726,8 @@ export default binder(
               </Box>
             )}
             {props.blog_ready === true &&
+            props.blog_mine &&
+            props.blog_selected_dir !== null &&
             (props.blog_articles || []).length === 0 ? (
               <Box
                 textAlign="center"
@@ -735,7 +787,7 @@ export default binder(
     } else if (props.tab === "connection") {
       main = (
         <Flex flexWrap="wrap">
-          <Status />
+          <Status _network="1" />
           <Box p={3} width={1}>
             <SelectWallet />
           </Box>
@@ -879,7 +931,9 @@ export default binder(
                     <Box height={props.height} sx={{ overflow: "auto" }} p={3}>
                       <Editor
                         editor_style={{ height: "100%" }}
-                        key={`editor-${props.blog_history_cursor}`}
+                        key={`editor-${props.blog_history_cursor}-${
+                          props.blog_updated
+                        }`}
                         init_value={props.blog_editor_value}
                       />
                     </Box>
@@ -1102,30 +1156,52 @@ export default binder(
           after_title="BLOG"
           side_selected={R.xNil(props.blog_selected_article) ? null : props.tab}
         >
-          <GithubMarkdown />
-          <Dracula />
-          {main}
-          {R.xNil(props.blog_note) ? (
-            <Box
-              px={3}
-              py={2}
-              bg={props.blog_note.bg || "teal"}
-              title="click to close"
-              sx={{
-                ...btn,
-                position: "absolute",
-                right: "20px",
-                bottom: "100px",
-                borderRadius: "3px"
-              }}
-              color="white"
-              onClick={() => {
-                props.set(null, "blog_note")
-              }}
-            >
-              {props.blog_note.text}
-            </Box>
-          ) : null}
+          <Box sx={{ position: "relative" }}>
+            <GithubMarkdown />
+            <Dracula />
+            {main}
+            {props.blog_loading ? (
+              <Flex
+                fontSize="25px"
+                justifyContent="center"
+                alignItems="center"
+                bg="#000"
+                width={1}
+                height="100%"
+                sx={{
+                  opacity: 0.5,
+                  position: "absolute",
+                  top: 0,
+                  left: 0
+                }}
+                color="white"
+              >
+                <Box as="i" className="fa fa-spin fa-sync" mr={2} />
+                Loading...
+              </Flex>
+            ) : null}
+            {R.xNil(props.blog_note) ? (
+              <Box
+                px={3}
+                py={2}
+                bg={props.blog_note.bg || "teal"}
+                title="click to close"
+                sx={{
+                  ...btn,
+                  position: "absolute",
+                  right: "20px",
+                  bottom: R.xNil(props.blog_selected_article) ? "50px" : "20px",
+                  borderRadius: "3px"
+                }}
+                color="white"
+                onClick={() => {
+                  props.set(null, "blog_note")
+                }}
+              >
+                {props.blog_note.text}
+              </Box>
+            ) : null}
+          </Box>
           {footer}
         </Nav>
       </ThemeProvider>
@@ -1167,7 +1243,8 @@ export default binder(
     "blog_3box_status",
     "blog_edit_list_name",
     "blog_edit_list_name_value",
-    "blog_note"
+    "blog_note",
+    "blog_loading"
   ],
   [
     "blogChangeListTitle",
