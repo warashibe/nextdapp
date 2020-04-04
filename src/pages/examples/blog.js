@@ -198,6 +198,9 @@ export default binder(
     const blogger_list_id = props.router.query.list
     const blogger_article_id = props.router.query.article
     const [mounted, setMounted] = useState(false)
+    const share_root = R.xNil(props.url)
+      ? props.url.protocol + "//" + props.url.host + props.url.pathname
+      : conf.blog.root
     useEventListener("resize", checkHeight)
     useEffect(() => {
       props.set(props.router, "router")
@@ -211,7 +214,12 @@ export default binder(
             user: {
               any: ["address_in_use", "eth_selected", "auth_selected"],
               func: connect_to_3box,
-              args: { access: "public", blogger_address: blogger_address }
+              args: {
+                access: "public",
+                blogger_address: blogger_address,
+                article_id: blogger_article_id,
+                dir_id: blogger_list_id
+              }
             },
             height: {
               any: ["blog_selected_article", "tab"],
@@ -224,7 +232,8 @@ export default binder(
             }
           }
         })
-        if (R.xNil(blogger_address)) {
+        props.getURL()
+        if (R.xNil(blogger_address) && false) {
           props.connect_to_3box_public({
             blogger_address,
             dir_id: blogger_list_id,
@@ -378,9 +387,29 @@ export default binder(
         <Flex flexWrap="wrap" width={1}>
           <Box lineHeight="150%" p={4} width={1}>
             <Box mb={2} color="#232538">
-              You can access your articles written on the previous version at
+              [Breaking Changes] You can access your articles written on the
+              previous version at
             </Box>
             <Box
+              display="block"
+              p={3}
+              color="white"
+              bg="#BF731C"
+              sx={{
+                borderRadius: "3px",
+                ...btn,
+                wordBreak: "break-all"
+              }}
+              as="a"
+              target="_blank"
+              href={`https://next-dapp-ri4hh3s26.now.sh/examples/blog`}
+            >
+              <Box color="white" sx={{ textDecoration: "none" }}>
+                v0.2 [https://next-dapp-ri4hh3s26.now.sh/examples/blog]
+              </Box>
+            </Box>
+            <Box
+              mt={3}
               display="block"
               p={3}
               color="white"
@@ -395,7 +424,7 @@ export default binder(
               href={`https://next-dapp-adc2h9t9w.now.sh/examples/blog`}
             >
               <Box color="white" sx={{ textDecoration: "none" }}>
-                https://next-dapp-adc2h9t9w.now.sh/examples/blog
+                v0.1 [https://next-dapp-adc2h9t9w.now.sh/examples/blog]
               </Box>
             </Box>
           </Box>
@@ -670,16 +699,14 @@ export default binder(
                           }}
                           as="a"
                           target="_blank"
-                          href={`${conf.blog.root}?address=${
-                            props.blog_address
-                          }${
+                          href={`${share_root}?address=${props.blog_address}${
                             R.xNil(props.blog_selected_dir)
                               ? `&list=${props.blog_selected_dir}`
                               : ""
                           }`}
                         >
                           <Box color="white" sx={{ textDecoration: "none" }}>
-                            {conf.blog.root}
+                            {share_root}
                             ?address=
                             {props.blog_address}
                             {R.xNil(props.blog_selected_dir)
@@ -1052,14 +1079,14 @@ export default binder(
                       }}
                       as="a"
                       target="_blank"
-                      href={`${conf.blog.root}?address=${props.blog_address}${
+                      href={`${share_root}?address=${props.blog_address}${
                         R.xNil(props.blog_selected_dir)
                           ? `&list=${props.blog_selected_dir}`
                           : ""
                       }&article=${props.blog_selected_article}`}
                     >
                       <Box color="white" sx={{ textDecoration: "none" }}>
-                        {conf.blog.root}
+                        {share_root}
                         ?address=
                         {props.blog_address}
                         {R.xNil(props.blog_selected_dir)
@@ -1152,8 +1179,8 @@ export default binder(
           side_width={200}
           TMENU={tmenu}
           SMENU={smenu}
-          pre_title="IPFS"
-          after_title="BLOG"
+          pre_title="BLOG"
+          after_title="v0.3"
           side_selected={R.xNil(props.blog_selected_article) ? null : props.tab}
         >
           <Box sx={{ position: "relative" }}>
@@ -1244,7 +1271,8 @@ export default binder(
     "blog_edit_list_name",
     "blog_edit_list_name_value",
     "blog_note",
-    "blog_loading"
+    "blog_loading",
+    "url"
   ],
   [
     "blogChangeListTitle",
@@ -1266,6 +1294,7 @@ export default binder(
     "switchWallet",
     "blogLoadHistory",
     "checkHeight",
-    "connect_to_3box_public"
+    "connect_to_3box_public",
+    "getURL"
   ]
 )

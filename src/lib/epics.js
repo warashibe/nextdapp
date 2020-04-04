@@ -7,7 +7,8 @@ import {
   tracker,
   set,
   epic,
-  checkHeight
+  checkHeight,
+  getURL
 } from "../../lib/_epic/util"
 
 import {
@@ -107,5 +108,6 @@ export {
   connectAuthereum,
   disconnectAuthereum,
   checkHeight,
-  connect_to_3box_public
+  connect_to_3box_public,
+  getURL
 }
