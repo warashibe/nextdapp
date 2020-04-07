@@ -45,6 +45,8 @@ module.exports = {
     dev: "0x5cAf454Ba92e6F2c929DF14667Ee360eD9fD5b26"
   },
   blog: {
-    root: "https://next-dapp.warashibe.market/examples/blog"
+    root: "https://next-dapp.warashibe.market/examples/blog",
+    pinningNode:
+      "/dnsaddr/wss.warashibe.market/tcp/443/wss/ipfs/QmWKTFrvoLHsvbcN87MccjuvvRLzWmduTLMnXG8z25oJB7"
   }
 }
