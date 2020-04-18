@@ -273,35 +273,40 @@ export default binder(
         ) {
           try {
             const $ = cheerio.load(`<div id="outerHTML">${__html}</div>`)
-            $("code").each(function() {
-              let language
-              try {
-                const classes = $(this)
-                  .attr("class")
-                  .split(" ")
-                for (let v of classes) {
-                  if (v.match(/language-/) !== null) {
-                    language = v
-                      .split("-")
-                      .slice(1)
-                      .join("-")
+            $("pre").each(function() {
+              $(this)
+                .find("code")
+                .each(function() {
+                  let language
+                  try {
+                    const classes = $(this)
+                      .attr("class")
+                      .split(" ")
+                    for (let v of classes) {
+                      if (v.match(/language-/) !== null) {
+                        language = v
+                          .split("-")
+                          .slice(1)
+                          .join("-")
+                      }
+                    }
+                  } catch (e) {}
+                  $(this).addClass("hljs")
+                  try {
+                    $(this).html(
+                      R.isNil(language)
+                        ? hljs.highlightAuto(
+                            entities.decodeHTML($(this).html())
+                          ).value
+                        : hljs.highlight(
+                            language,
+                            entities.decodeHTML($(this).html())
+                          ).value
+                    )
+                  } catch (e) {
+                    console.log(e)
                   }
-                }
-              } catch (e) {}
-              $(this).addClass("hljs")
-              try {
-                $(this).html(
-                  R.isNil(language)
-                    ? hljs.highlightAuto(entities.decodeHTML($(this).html()))
-                        .value
-                    : hljs.highlight(
-                        language,
-                        entities.decodeHTML($(this).html())
-                      ).value
-                )
-              } catch (e) {
-                console.log(e)
-              }
+                })
             })
             let i = 0
             $("h1,h2").each(function(e) {
