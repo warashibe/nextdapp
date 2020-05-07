@@ -41,7 +41,6 @@ export default binder(
         side_width={220}
         side_height={45}
         chosen={`top-3`}
-        index={2}
         TMENU={tmenu}
         SMENU={smenu}
         side_selected="side-3"
