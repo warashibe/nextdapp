@@ -462,7 +462,9 @@ const makeSide = (num, props) => {
         props.setter(false, "open")
         props.setPnum(R.not(props.open), props.breakpoint)
       }
-      const border = v.border ? "1px solid #555" : null
+      const border = v.border
+        ? `1px solid ${props.side_border_color || "#555"}`
+        : null
       const text_color =
         props.side_selected === v.key
           ? props.side_selected_color || "#A2C856"
