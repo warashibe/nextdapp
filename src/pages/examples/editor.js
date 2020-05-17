@@ -1,4 +1,6 @@
 import { Box, Flex, Text, Image, Button } from "rebass"
+import Nav from "../../../components/Nav"
+import { SMENU } from "../../lib/const"
 import useEventListener from "@use-it/event-listener"
 import React, { useEffect, useMemo, useState } from "react"
 import moment from "moment"
@@ -136,7 +138,7 @@ export default binder(
       <Flex
         id="footer"
         color="white"
-        bg="#198643"
+        bg="#03414D"
         width={1}
         flexWrap="wrap"
         p={3}
@@ -148,59 +150,76 @@ export default binder(
         </Box>
       </Flex>
     )
+    const TMENU = [
+      {
+        index: 1,
+        text: `WARASHIBE Editor`,
+        icon: "/static/images/warashibe.png"
+      }
+    ]
+
     return (
-      <ThemeProvider theme={preset}>
-        <GithubMarkdown />
-        <Flex
-          id="header"
-          width={1}
-          bg="#198643"
-          color="white"
-          p={3}
-          fontSize="18px"
-          justifyContent="center"
-          fontWeight="bold"
-        >
-          Warashibe Editor
-        </Flex>
-        <Flex width={1}>
-          <Box width={0.5} sx={{ borderRight: "1px solid #ccc" }}>
-            <Box
-              width={1}
-              p={2}
-              textAlign="center"
-              bg="#eee"
-              id="markdown-header"
-            >
-              Markdown
-            </Box>
-            <Box width={1} p={3} height={height} sx={{ overflow: "auto" }}>
-              <Slate
-                editor={editor}
-                value={value}
-                onChange={onChange}
-                placeholder="start typing..."
+      <Nav
+        side_border_color="#008080"
+        side_selected={`editor`}
+        outerElms={["nav", "footer"]}
+        side_width={225}
+        side_text_color="#03414D"
+        size="sx"
+        SMENU={SMENU}
+        TMENU={TMENU}
+        side_selected_color="#008080"
+        pre_title="Next"
+        pre_title_color="rgb(240, 236, 212)"
+        post_title="Dapp"
+        fontSize="18px"
+        bg_side="#72DFD0"
+        regular_border="#008080"
+        selected_border="#3A7CEC"
+        bg_top="#03414D"
+        title_logo="/static/images/icon-128x128.png"
+      >
+        <ThemeProvider theme={preset}>
+          <GithubMarkdown />
+          <Flex width={1}>
+            <Box width={0.5} sx={{ borderRight: "1px solid #ccc" }}>
+              <Box
+                width={1}
+                p={2}
+                textAlign="center"
+                bg="#eee"
+                id="markdown-header"
               >
-                <Editable />
-              </Slate>
+                Markdown
+              </Box>
+              <Box width={1} p={3} height={height} sx={{ overflow: "auto" }}>
+                <Slate
+                  editor={editor}
+                  value={value}
+                  onChange={onChange}
+                  placeholder="start typing..."
+                >
+                  <Editable />
+                </Slate>
+              </Box>
             </Box>
-          </Box>
-          <Box width={0.5} sx={{ borderLeft: "1px solid #ccc" }}>
-            <Box width={1} p={2} textAlign="center" bg="#eee">
-              Preview
+            <Box width={0.5} sx={{ borderLeft: "1px solid #ccc" }}>
+              <Box width={1} p={2} textAlign="center" bg="#eee">
+                Preview
+              </Box>
+              <Box
+                p={3}
+                className="markdown-body"
+                height={height}
+                sx={{ overflow: "auto" }}
+              >
+                {__html}
+              </Box>
             </Box>
-            <Box
-              p={3}
-              className="markdown-body"
-              height={height}
-              sx={{ overflow: "auto" }}
-            >
-              {__html}
-            </Box>
-          </Box>
-        </Flex>
-        {footer}
-      </ThemeProvider>
+          </Flex>
+          {footer}
+        </ThemeProvider>
+      </Nav>
     )
   },
   [],

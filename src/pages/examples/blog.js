@@ -1,7 +1,8 @@
 import { Box, Flex, Text, Image, Button } from "rebass"
+import Nav from "../../../components/Nav"
+import { SMENU } from "../../lib/const"
 import useEventListener from "@use-it/event-listener"
 import moment from "moment"
-import Nav from "../../../components/Nav"
 import N from "bignumber.js"
 import { ThemeProvider } from "emotion-theming"
 import preset from "@rebass/preset"
@@ -249,7 +250,7 @@ export default binder(
       <Flex
         id="footer"
         color="white"
-        bg="#191919"
+        bg="#03414D"
         width={1}
         flexWrap="wrap"
         p={3}
@@ -386,6 +387,8 @@ export default binder(
         awesome_icon: "fas fa-edit"
       })
     }
+    smenu[smenu.length - 1].border = true
+    smenu = R.concat(smenu, SMENU)
     let main = null
     if (props.tab === "info") {
       main = (
@@ -1185,8 +1188,21 @@ export default binder(
           TMENU={tmenu}
           SMENU={smenu}
           pre_title="BLOG"
-          after_title="v0.3"
+          post_title="v0.3"
           side_selected={R.xNil(props.blog_selected_article) ? null : props.tab}
+          side_border_color="#008080"
+          outerElms={["nav", "footer"]}
+          side_width={225}
+          side_text_color="#03414D"
+          size="sx"
+          side_selected_color="#008080"
+          pre_title_color="rgb(240, 236, 212)"
+          fontSize="18px"
+          bg_side="#72DFD0"
+          regular_border="#008080"
+          selected_border="#3A7CEC"
+          bg_top="#03414D"
+          title_logo="/static/images/icon-128x128.png"
         >
           <Box sx={{ position: "relative" }}>
             <GithubMarkdown />

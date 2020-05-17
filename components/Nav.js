@@ -65,6 +65,7 @@ const TopMenu = ({
   let i = 0
   let len = TMENU.length
   let tnum = TMENU.length
+
   TMENU = R.sortBy(v => {
     i += 1
     const rank = R.xNil(v.index) ? v.index : i + len
