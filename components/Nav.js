@@ -49,6 +49,8 @@ const TopMenu = ({
   breakpoint,
   selected_border,
   regular_border,
+  text_show,
+  text_hide,
   TMENU = [],
   topnum,
   divnum,
@@ -91,7 +93,7 @@ const TopMenu = ({
   }
   const isBreak2 = open && breakpoint == 2
   const text_size =
-    size === "xs" || isBreak2 ? "11px" : ["11px", null, "13px", "16px"]
+    size === "xs" || isBreak2 ? "10px" : ["10px", null, "13px", "16px"]
   const text_width = size == "xs" || isBreak2 ? 1 : [1, 1, "auto"]
   const text_ml = size == "xs" || isBreak2 ? 0 : [0, 0, 2]
   const all_display =
@@ -124,7 +126,7 @@ const TopMenu = ({
         pad.push(
           <Box
             display={all_display}
-            title="閉じる"
+            title={text_hide || "Hide"}
             key="showmore"
             justifyContent="center"
             alignItems="center"
@@ -154,7 +156,7 @@ const TopMenu = ({
               ml={text_ml}
               sx={{ textAlign: "center" }}
             >
-              閉じる
+              {text_hide || "Hide"}
             </Text>
           </Box>
         )
@@ -283,7 +285,7 @@ const TopMenu = ({
           <Fragment>
             <Box
               display={all_display}
-              title="全表示"
+              title={text_show || "Show"}
               key="showmore"
               justifyContent="center"
               alignItems="center"
@@ -313,7 +315,7 @@ const TopMenu = ({
                 ml={text_ml}
                 sx={{ textAlign: "center" }}
               >
-                全表示
+                {text_show || "Show"}
               </Text>
             </Box>
           </Fragment>
@@ -322,7 +324,7 @@ const TopMenu = ({
           islast ? (
             <Box
               display={all_display}
-              title="閉じる"
+              title={text_hide || "Hide"}
               key="showmore"
               justifyContent="center"
               alignItems="center"
@@ -353,7 +355,7 @@ const TopMenu = ({
                 color={selected_border || "#198643"}
                 sx={{ textAlign: "center" }}
               >
-                閉じる
+                {text_hide || "Hide"}
               </Text>
             </Box>
           ) : (
@@ -466,10 +468,14 @@ const makeSide = (num, props) => {
           bg={v.color || props.bg_side || leftover}
         >
           <Text
-            fontSize="16px"
+            fontSize={props.side_fontSize || "16px"}
             fontWeight="bold"
             px="5px"
-            sx={{ whiteSpace: "nowrap", overflow: "hidden" }}
+            sx={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis"
+            }}
           >
             {v.text}
           </Text>
@@ -542,8 +548,15 @@ const Nav = props => {
   const tnum = (props.TMENU || []).length
   const def = { color: "#eee" }
   const [num, setNum] = useState(null)
-  const bp = ["360px", "600px", "1010px", "1280px", "1600px", "1900px"]
-  const bp2 = [0, 700, 1010]
+  const bp = props.bp || [
+    "360px",
+    "600px",
+    "1010px",
+    "1280px",
+    "1600px",
+    "1900px"
+  ]
+  const bp2 = props.bp2 || [0, 700, 1010]
   const bg_img_top = props.bg_img_top || null
   const bg_top = R.xNil(bg_img_top)
     ? null
