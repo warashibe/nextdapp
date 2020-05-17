@@ -67,23 +67,42 @@ export default ({
     return (
       <React.Fragment>
         <Head>
-          <meta charset="utf-8" />
-          <title>{conf.html.title}</title>
-          <meta name="description" content={conf.html.description} />
+          <meta key="charset" charset="utf-8" />
+          <title key="title">{conf.html.title}</title>
+          <meta
+            key="description"
+            name="description"
+            content={conf.html.description}
+          />
           <link
+            key="shortcut-icon"
             rel="shortcut icon"
             href={`/static/favicon.ico`}
             type="image/x-icon"
           />
-          <link rel="icon" href={`/static/favicon.ico`} type="image/x-icon" />
           <link
+            key="icon"
+            rel="icon"
+            href={`/static/favicon.ico`}
+            type="image/x-icon"
+          />
+          <link
+            key="icon-192"
             rel="icon"
             sizes="192x192"
             href="/static/images/icon-192x192.png"
           />
-          <link rel="apple-touch-icon" href="/static/images/icon-192x192.png" />
-          <link rel="manifest" href="/static/manifest.json" />
-          <meta name="theme-color" content={conf.html["theme-color"]} />
+          <link
+            key="apple-touch-icon"
+            rel="apple-touch-icon"
+            href="/static/images/icon-192x192.png"
+          />
+          <link key="manifest" rel="manifest" href="/static/manifest.json" />
+          <meta
+            key="theme-color"
+            name="theme-color"
+            content={conf.html["theme-color"]}
+          />
 
           <meta
             key="twitter:card"
@@ -113,9 +132,10 @@ export default ({
             content={conf.html.description}
           />
           <meta key="og:image" property="og:image" content={conf.html.image} />
-          {R.map(v => <link {...v} />)(links)}
-          {R.map(v => (
+          {R.addIndex(R.map)((v, i) => <link key={`css-${i}`} {...v} />)(links)}
+          {R.addIndex(R.map)((v, i) => (
             <link
+              key={`font-${i}`}
               href={`https://fonts.googleapis.com/css?family=${v}`}
               rel="stylesheet"
               type="text/css"
