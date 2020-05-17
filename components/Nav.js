@@ -5,6 +5,7 @@ import { ThemeProvider } from "emotion-theming"
 const isFirebase = require("../lib/firestore-short/isFirebase")
 const R = require("ramdam")
 import binder from "../src/lib/binder"
+
 import {
   Switch,
   Label,
@@ -14,7 +15,9 @@ import {
   Radio,
   Checkbox
 } from "@rebass/forms"
+
 import preset from "@rebass/preset"
+
 const getElementOffset = element => {
   if (R.isNil(element)) {
     return { top: 0, left: 0 }
@@ -25,6 +28,7 @@ const getElementOffset = element => {
   var left = box.left + window.pageXOffset - de.clientLeft
   return { top: top, left: left }
 }
+
 const offsetTop = () => {
   var supportPageOffset = window.pageXOffset !== undefined
   var isCSS1Compat = (document.compatMode || "") === "CSS1Compat"
@@ -211,9 +215,13 @@ const TopMenu = ({
                   }
                 }}
                 onClick={() => {
-                  const x = getElementOffset(document.getElementById(v.key))
-                  if (R.isNotNil(document.getElementById(v.key))) {
-                    window.scrollTo({ top: x.top - 50, behavior: "smooth" })
+                  if (R.xNil(v.onClick)) {
+                    v.onClick()
+                  } else {
+                    const x = getElementOffset(document.getElementById(v.key))
+                    if (R.isNotNil(document.getElementById(v.key))) {
+                      window.scrollTo({ top: x.top - 50, behavior: "smooth" })
+                    }
                   }
                 }}
               >
@@ -234,7 +242,12 @@ const TopMenu = ({
                     />
                   ) : (
                     <Box
-                      mt={size === "xs" || breakpoint === 1 || isBreak2 ? 1 : 0}
+                      mt={[
+                        1,
+                        null,
+                        open ? 1 : 0,
+                        size === "xs" || breakpoint === 1 || isBreak2 ? 1 : 0
+                      ]}
                       as="i"
                       className={v.awesome_icon || "fas fa-home"}
                     />
@@ -245,7 +258,12 @@ const TopMenu = ({
                   fontSize={text_size}
                   width={text_width}
                   ml={text_ml}
-                  mb={size === "xs" || breakpoint === 1 || isBreak2 ? 1 : 0}
+                  mb={[
+                    1,
+                    null,
+                    open ? 1 : 0,
+                    size === "xs" || breakpoint === 1 || isBreak2 ? 1 : 0
+                  ]}
                   sx={{
                     textAlign: "center",
                     textOverflow: "ellipsis",
@@ -470,7 +488,7 @@ const makeSide = (num, props) => {
           ? props.side_selected_color || "#A2C856"
           : v.disabled
             ? "#555"
-            : "#F7F4F6"
+            : props.side_text_color || "#F7F4F6"
       return (
         <Flex
           {...extra}
@@ -529,14 +547,24 @@ const Nav = props => {
   const bg_img_top = props.bg_img_top || null
   const bg_top = R.xNil(bg_img_top)
     ? null
-    : props.bg_top || regular_border || "#191919"
+    : props.bg_top || props.regular_border || "#191919"
   const selected_border = props.selected_border || "#03414D"
   const regular_border = props.regular_border || "#222"
 
   const checkBP = () => {
     let op = props.open
     let _bp = props.breakpoint
-    props.setter(window.innerHeight, "height")
+    let innerHeight = window.innerHeight
+    let mainHeight = window.innerHeight
+    props.setter(innerHeight, "height")
+    mainHeight -= document.getElementById("nav").offsetHeight || 0
+    props.setter(mainHeight, "mainHeight")
+    if (R.xNil(props.outerElms)) {
+      for (const v of props.outerElms) {
+        innerHeight -= document.getElementById(v).offsetHeight || 0
+      }
+    }
+    props.setter(innerHeight, "innerHeight")
     return R.compose(
       R.tap(() => {
         const new_num = Math.floor(window.innerHeight / side_height)
@@ -805,7 +833,7 @@ const Nav = props => {
     />
   )
   const modal = (
-    <Flex>
+    <Flex sx={{ height: "100%" }}>
       <Box
         width={phWidth}
         {...def}
@@ -814,7 +842,7 @@ const Nav = props => {
           transitionDuration: "0.5s"
         }}
       />
-      <Box flex={1} pt="50px" id="main_area">
+      <Box flex={1} pt="50px" id="main_area" sx={{ height: "100%" }}>
         <Box
           onClick={() => {
             props.setter(false, "showModal")
@@ -920,6 +948,15 @@ const Nav = props => {
   )
   return (
     <ThemeProvider theme={{ breakpoints: bp }}>
+      <style global jsx>{`
+        html,
+        body {
+          height: 100%;
+        }
+        #__next {
+          height: 100%;
+        }
+      `}</style>
       {cover}
       <Flex>
         {side}
@@ -943,7 +980,9 @@ export default binder(
     "showModal",
     "showModal_send",
     "modalContent",
-    "eth_selected"
+    "eth_selected",
+    "innerHeight",
+    "mainHeight"
   ],
   ["login", "logout", "setter", "setPnum", "set"]
 )
