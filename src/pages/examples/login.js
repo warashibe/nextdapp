@@ -5,11 +5,13 @@ import binder from "../../lib/binder"
 const isFirebase = require("../../../lib/firestore-short/isFirebase")
 import { useEffect } from "react"
 import R from "ramdam"
+import Nav from "../../../components/Nav"
 const btn = { cursor: "pointer", ":hover": { opacity: 0.75 } }
 import Wallet from "../../../components/Wallet"
 import { checkBalance, checkWallet } from "../../../lib/_epic/web3"
 import { socials } from "../../../lib/const"
 const socials_map = R.indexBy(R.prop("key"))(socials)
+import { SMENU } from "../../lib/const"
 export default binder(
   props => {
     useEffect(() => {
@@ -177,7 +179,7 @@ export default binder(
           <Flex width={1} flexWrap="wrap">
             {R.map(v => (
               <Flex
-                width={[1 / 2, 1 / 3, null, 1 / 4, 1 / 5]}
+                width={[1 / 2, null, 1 / 3, 1 / 2, 1 / 3]}
                 color="white"
                 p={2}
                 alignItems="center"
@@ -217,7 +219,7 @@ export default binder(
                 v =>
                   R.includes(v)(["authereum", "metamask"]) ? null : (
                     <Flex
-                      width={[1 / 2, 1 / 3, null, 1 / 4, 1 / 5]}
+                      width={[1 / 2, null, 1 / 3, 1 / 2, 1 / 3]}
                       color="white"
                       p={2}
                       alignItems="center"
@@ -251,7 +253,7 @@ export default binder(
             {R.compose(
               R.map(v => (
                 <Flex
-                  width={[1 / 2, 1 / 3, null, 1 / 4, 1 / 5]}
+                  width={[1 / 2, null, 1 / 3, 1 / 2, 1 / 3]}
                   color="white"
                   p={2}
                   alignItems="center"
@@ -315,6 +317,7 @@ export default binder(
       ) : null
     const footer = (
       <Flex
+        id="footer"
         color="white"
         color="#03414D"
         bg="#A0F6D2"
@@ -330,47 +333,90 @@ export default binder(
       </Flex>
     )
 
+    const TMENU = R.isNil(props.user)
+      ? [
+          {
+            index: 1,
+            text: ``,
+            key: ``
+          }
+        ]
+      : [
+          {
+            index: 1,
+            text: `Logout`,
+            key: `logout`,
+            awesome_icon: "fas fa-sign-out-alt",
+            onClick: () => {
+              props.logout()
+            }
+          }
+        ]
     return (
-      <Box sx={{ position: "relative" }}>
-        {processing}
-        <Flex flexWrap="wrap">
-          <Box
-            p={3}
-            textAlign="center"
-            color="#03414D"
-            bg="#A0F6D2"
-            width={1}
-            mb={3}
-          >
-            Connect MetaMask to Ropsten Testnet or login with Authereum Ropsten
-          </Box>
-          <Box width={[1, 1, 0.5]}>{R.xNil(uport_qr) ? uport_qr : logins}</Box>
-          <Box width={[1, 1, 0.5]}>
-            {profile}
-            <Wallet />
-            <Box width={1} px={3} mb={3}>
-              <Box
-                sx={{ ...btn }}
-                p={2}
-                textAlign="center"
-                bg="#FF4C2F"
-                color="white"
-                onClick={() => {
-                  props[
-                    R.isNil(props.auth_selected)
-                      ? "connectAuthereum"
-                      : "disconnectAuthereum"
-                  ]({ user: props.user })
-                }}
-              >
-                {R.isNil(props.auth_selected) ? "Connect" : "Disconnect"}{" "}
-                Authereum
+      <Nav
+        side_border_color="#008080"
+        side_selected={`login`}
+        outerElms={["nav", "footer"]}
+        side_width={225}
+        side_text_color="#03414D"
+        size="sx"
+        SMENU={SMENU}
+        TMENU={TMENU}
+        side_selected_color="#008080"
+        pre_title="Next"
+        pre_title_color="rgb(240, 236, 212)"
+        post_title="Dapp"
+        fontSize="18px"
+        bg_side="#72DFD0"
+        regular_border="#008080"
+        selected_border="#3A7CEC"
+        bg_top="#03414D"
+        title_logo="/static/images/icon-128x128.png"
+      >
+        <Box sx={{ position: "relative" }}>
+          {processing}
+          <Flex flexWrap="wrap">
+            <Box
+              p={3}
+              textAlign="center"
+              color="#03414D"
+              bg="#A0F6D2"
+              width={1}
+              mb={3}
+            >
+              Connect MetaMask to Ropsten Testnet or login with Authereum
+              Ropsten
+            </Box>
+            <Box width={[1, null, null, 1 / 2]}>
+              {R.xNil(uport_qr) ? uport_qr : logins}
+            </Box>
+            <Box width={[1, null, null, 1 / 2]}>
+              {profile}
+              <Wallet />
+              <Box width={1} px={3} mb={3}>
+                <Box
+                  sx={{ ...btn }}
+                  p={2}
+                  textAlign="center"
+                  bg="#FF4C2F"
+                  color="white"
+                  onClick={() => {
+                    props[
+                      R.isNil(props.auth_selected)
+                        ? "connectAuthereum"
+                        : "disconnectAuthereum"
+                    ]({ user: props.user })
+                  }}
+                >
+                  {R.isNil(props.auth_selected) ? "Connect" : "Disconnect"}{" "}
+                  Authereum
+                </Box>
               </Box>
             </Box>
-          </Box>
-        </Flex>
-        {footer}
-      </Box>
+          </Flex>
+          {footer}
+        </Box>
+      </Nav>
     )
   },
   [
