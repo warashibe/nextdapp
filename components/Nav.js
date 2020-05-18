@@ -575,7 +575,9 @@ const Nav = props => {
     props.setter(mainHeight, "mainHeight")
     if (R.xNil(props.outerElms)) {
       for (const v of props.outerElms) {
-        innerHeight -= document.getElementById(v).offsetHeight || 0
+        if (R.xNil(document.getElementById(v))) {
+          innerHeight -= document.getElementById(v).offsetHeight || 0
+        }
       }
     }
     props.setter(innerHeight, "innerHeight")
