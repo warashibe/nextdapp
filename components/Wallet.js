@@ -45,11 +45,11 @@ const Wallet = binder(
                   <Box as="tr" bg="#4CAF50" color="#eee">
                     {R.isNil(props.user) ? null : (
                       <Box as="th" p={2} width="50px">
-                        受取用
+                        {props.text_use || "Main"}
                       </Box>
                     )}
                     <Box as="th" p={2}>
-                      アドレス
+                      {props.text_address || "Address"}
                     </Box>
                     <Box as="th" p={2} />
                     {R.isNil(props.user) ? null : <Box as="th" p={2} />}
