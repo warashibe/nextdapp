@@ -55,6 +55,7 @@ import {
   blogLoadDir,
   createArticle,
   createArticleList,
+  createArticleListFB,
   postBlog,
   blogLoadHistory,
   blogSwitchAccess,
@@ -62,11 +63,26 @@ import {
   blogPreviewArticle,
   blogSwitchModes,
   blogChangeListTitle,
+  blogChangeListTitleFB,
   blogDeleteList,
-  connect_to_3box_public
+  connect_to_3box_public,
+  getMyArticles,
+  createBlankArticle,
+  loadPostedArticle,
+  deleteFromWarashibe,
+  postToWarashibe,
+  getArticle
 } from "../../lib/_epic/blog"
 
 export {
+  blogChangeListTitleFB,
+  createArticleListFB,
+  loadPostedArticle,
+  deleteFromWarashibe,
+  postToWarashibe,
+  getArticle,
+  createBlankArticle,
+  getMyArticles,
   blogDeleteList,
   blogChangeListTitle,
   blogDeleteArticle,

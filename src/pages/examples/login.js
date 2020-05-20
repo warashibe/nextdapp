@@ -11,7 +11,11 @@ import Wallet from "../../../components/Wallet"
 import { checkBalance, checkWallet } from "../../../lib/_epic/web3"
 import { socials } from "../../../lib/const"
 const socials_map = R.indexBy(R.prop("key"))(socials)
+import Login from "../../../components/Login"
+import UPort from "../../../components/UPort"
 import { SMENU } from "../../lib/const"
+import Status from "../../../components/Status"
+import Footer from "../../components/Footer"
 export default binder(
   props => {
     useEffect(() => {
@@ -84,8 +88,8 @@ export default binder(
             <Box p={2} width={0.5}>
               <Box
                 textAlign="center"
-                p={1}
-                sx={{ ...btn }}
+                p={2}
+                sx={{ ...btn, borderRadius: "3px" }}
                 width={1}
                 onClick={props.logout}
                 bg="orange"
@@ -97,9 +101,9 @@ export default binder(
             <Box p={2} width={0.5}>
               <Box
                 textAlign="center"
-                p={1}
+                p={2}
                 width={1}
-                sx={{ ...btn }}
+                sx={{ ...btn, borderRadius: "3px" }}
                 onClick={() => {
                   if (confirm("Are you sure?")) {
                     props.deleteAccount({
@@ -117,98 +121,9 @@ export default binder(
         </Box>
       </Flex>
     )
-    const uport_qr = R.xNil(props.uport) ? (
-      <Flex justifyContent="center" flexWrap="wrap" px={3}>
-        <Box width={1} textAlign="center">
-          <Image mt={2} width="300px" src={props.uport.qr} />
-        </Box>
-        <Box textAlign="center" mb={3} width={1}>
-          Scan QR Code with your uPort App.
-        </Box>
-        <Box textAlign="center" mb={3} width={1}>
-          You need a crypto-antique certificate for testnet. Get one{" "}
-          <Box
-            as="a"
-            target="_blank"
-            href="https://testnet-ssi.warashibe.market/"
-          >
-            here
-          </Box>
-          .
-        </Box>
-        <Flex width={1} px={3} justifyContent="center" alignItems="flex-start">
-          <Flex
-            flex={1}
-            color="white"
-            height="38px"
-            mx={2}
-            bg={socials_map["uport"].bg}
-            sx={{ ...btn, borderRadius: "3px" }}
-            onClick={() => {
-              props.set(null, "uport")
-            }}
-            justifyContent="center"
-            alignItems="center"
-          >
-            Back
-          </Flex>
-          <Box
-            sx={{ ...btn }}
-            as="a"
-            href="https://play.google.com/store/apps/details?id=com.uportMobile&hl=ja"
-            target="_blank"
-            mx={2}
-          >
-            <Image src="/static/images/android.svg" />
-          </Box>
-          <Box
-            sx={{ ...btn }}
-            as="a"
-            href="https://itunes.apple.com/jp/app/uport-id/id1123434510?mt=8"
-            target="_blank"
-            mx={2}
-          >
-            <Image src="/static/images/apple.svg" />
-          </Box>
-        </Flex>
-      </Flex>
-    ) : null
+    const uport_qr = R.xNil(props.uport) ? <UPort /> : null
     const logins = R.isNil(props.user) ? (
-      <Flex textAlign="center">
-        <Box p={3} width={1}>
-          <Flex width={1} flexWrap="wrap">
-            {R.map(v => (
-              <Flex
-                width={[1 / 2, null, 1 / 3, 1 / 2, 1 / 3]}
-                color="white"
-                p={2}
-                alignItems="center"
-              >
-                <Box
-                  onClick={() => props.login({ provider: v })}
-                  flex={1}
-                  p={3}
-                  bg={socials_map[v].bg}
-                  sx={{ ...btn, borderRadius: "3px" }}
-                >
-                  <Image
-                    src={`/static/images/${socials_map[v].key}-white.png`}
-                    height={["50px"]}
-                  />
-                  <Text mt={1}>
-                    <Box fontSize="18px" fontWeight="bold">
-                      {socials_map[v].name}
-                    </Box>
-                    <Box as="span" fontSize="12px">
-                      Login with
-                    </Box>
-                  </Text>
-                </Box>
-              </Flex>
-            ))(R.pluck("key")(socials))}
-          </Flex>
-        </Box>
-      </Flex>
+      <Login />
     ) : (
       <Flex textAlign="center">
         <Box p={3} width={1}>
@@ -299,8 +214,8 @@ export default binder(
             zIndex: 100,
             top: 0,
             left: 0,
-            position: "fixed",
-            opacity: 0.75
+            position: "absolute",
+            opacity: 0.5
           }}
           width="100%"
           height="100%"
@@ -315,30 +230,14 @@ export default binder(
           </Box>
         </Flex>
       ) : null
-    const footer = (
-      <Flex
-        id="footer"
-        color="white"
-        color="#03414D"
-        bg="#A0F6D2"
-        width={1}
-        flexWrap="wrap"
-        p={3}
-      >
-        <Box textAlign="center" width={1}>
-          <Box color="#03414D" sx={{ textDecoration: "none" }} as="a" href="/">
-            © 2020 Next Dapp by Warashibe
-          </Box>
-        </Box>
-      </Flex>
-    )
 
     const TMENU = R.isNil(props.user)
       ? [
           {
             index: 1,
-            text: ``,
-            key: ``
+            text: `User Management Example`,
+            key: `login`,
+            awesome_icon: "fas fa-user"
           }
         ]
       : [
@@ -373,49 +272,23 @@ export default binder(
         bg_top="#03414D"
         title_logo="/static/images/icon-128x128.png"
       >
-        <Box sx={{ position: "relative" }}>
-          {processing}
-          <Flex flexWrap="wrap">
-            <Box
-              p={3}
-              textAlign="center"
-              color="#03414D"
-              bg="#A0F6D2"
-              width={1}
-              mb={3}
-            >
-              Connect MetaMask to Ropsten Testnet or login with Authereum
-              Ropsten
+        <Flex flexDirection="column">
+          <Flex
+            flexWrap="wrap"
+            sx={{ position: "relative", minHeight: props.innerHeight }}
+          >
+            {processing}
+            <Status _network="1" />
+            <Box width={[1, null, null, 1 / 2]}>
+              {profile}
+              <Wallet />
             </Box>
             <Box width={[1, null, null, 1 / 2]}>
               {R.xNil(uport_qr) ? uport_qr : logins}
             </Box>
-            <Box width={[1, null, null, 1 / 2]}>
-              {profile}
-              <Wallet />
-              <Box width={1} px={3} mb={3}>
-                <Box
-                  sx={{ ...btn }}
-                  p={2}
-                  textAlign="center"
-                  bg="#FF4C2F"
-                  color="white"
-                  onClick={() => {
-                    props[
-                      R.isNil(props.auth_selected)
-                        ? "connectAuthereum"
-                        : "disconnectAuthereum"
-                    ]({ user: props.user })
-                  }}
-                >
-                  {R.isNil(props.auth_selected) ? "Connect" : "Disconnect"}{" "}
-                  Authereum
-                </Box>
-              </Box>
-            </Box>
           </Flex>
-          {footer}
-        </Box>
+          <Footer />
+        </Flex>
       </Nav>
     )
   },
@@ -426,7 +299,8 @@ export default binder(
     "user_addresses",
     "uport",
     "user_init",
-    "processing"
+    "processing",
+    "innerHeight"
   ],
   [
     "tracker",

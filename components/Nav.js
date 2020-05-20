@@ -390,6 +390,7 @@ const TopMenu = ({
     </Fragment>
   )
 }
+
 const makeSide = (num, props) => {
   let cursor = props.cursor
   let smenu = R.isNotNil(props.SMENU) ? R.clone(props.SMENU) : []
@@ -543,6 +544,26 @@ const makeSide = (num, props) => {
   return { leftover, sidemenu }
 }
 
+let to
+const getInnerHeight = (outerElms, set) => {
+  let missing = false
+  let innerHeight = window.innerHeight
+  for (const v of outerElms) {
+    if (R.xNil(document.getElementById(v))) {
+      innerHeight -= document.getElementById(v).offsetHeight || 0
+    } else {
+      missing = true
+    }
+  }
+  set(innerHeight, "innerHeight")
+  if (missing) {
+    clearTimeout(to)
+    to = setTimeout(() => {
+      getInnerHeight(outerElms, set)
+    }, 500)
+  }
+}
+
 const Nav = props => {
   const side_width = props.side_width || 250
   const side_height = R.isNil(props.side_height) ? 50 : props.side_height
@@ -568,19 +589,14 @@ const Nav = props => {
   const checkBP = () => {
     let op = props.open
     let _bp = props.breakpoint
-    let innerHeight = window.innerHeight
     let mainHeight = window.innerHeight
-    props.setter(innerHeight, "height")
+    props.setter(window.innerHeight, "height")
     mainHeight -= document.getElementById("nav").offsetHeight || 0
     props.setter(mainHeight, "mainHeight")
     if (R.xNil(props.outerElms)) {
-      for (const v of props.outerElms) {
-        if (R.xNil(document.getElementById(v))) {
-          innerHeight -= document.getElementById(v).offsetHeight || 0
-        }
-      }
+      getInnerHeight(props.outerElms, props.set)
     }
-    props.setter(innerHeight, "innerHeight")
+
     return R.compose(
       R.tap(() => {
         const new_num = Math.floor(window.innerHeight / side_height)
@@ -625,7 +641,7 @@ const Nav = props => {
   useEventListener("resize", checkBP)
   useEffect(() => {
     checkBP()
-  }, [])
+  })
   const onClick = () =>
     R.ifElse(R.includes(R.__, [null, 3]), R.alwaysNull, () => {
       props.setter(R.not(props.open), "open")
@@ -848,6 +864,7 @@ const Nav = props => {
       }}
     />
   )
+
   const modal = (
     <Flex sx={{ height: "100%" }}>
       <Box
@@ -958,7 +975,13 @@ const Nav = props => {
             </Box>
           </Box>
         </Box>
-        {props.children}
+        <Flex
+          width={1}
+          sx={{ height: "100%", position: "relative" }}
+          flexDirection="column"
+        >
+          {props.children}
+        </Flex>
       </Box>
     </Flex>
   )
@@ -974,7 +997,7 @@ const Nav = props => {
         }
       `}</style>
       {cover}
-      <Flex>
+      <Flex key={props.updated || null}>
         {side}
         {top}
       </Flex>
@@ -982,6 +1005,7 @@ const Nav = props => {
     </ThemeProvider>
   )
 }
+
 export default binder(
   Nav,
   [

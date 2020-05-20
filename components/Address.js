@@ -10,11 +10,11 @@ const Address = binder(
     let a = props.a
     let connected = props.connected ? (
       <Text color="#4CAF50" display="inline-block" sx={{ fontSize: "12px" }}>
-        接続中
+        {props.text_connected || "ON"}
       </Text>
     ) : (
       <Text color="#666" display="inline-block" sx={{ fontSize: "12px" }}>
-        未接続
+        {props.text_disconnected || "OFF"}
       </Text>
     )
 
@@ -96,7 +96,10 @@ const Address = binder(
                           uid: props.user.uid
                         })
                       } else {
-                        alert("アカウント登録に使用したアドレスです。")
+                        alert(
+                          props.text_your_primary ||
+                            "You cannot unlink the address used for your sign-up."
+                        )
                       }
                     }
               }
