@@ -5,7 +5,8 @@ import N from "bignumber.js"
 import { ThemeProvider } from "emotion-theming"
 import preset from "@rebass/preset"
 import binder from "../../lib/binder"
-const isFirebase = require("../../../lib/firestore-short/isFirebase")
+import { isFirebase } from "nd-firebase"
+import conf from "../../conf"
 import { useEffect } from "react"
 import R from "ramdam"
 const btn = { cursor: "pointer", ":hover": { opacity: 0.75 } }
@@ -14,7 +15,6 @@ import Balances from "../../../components/Balances"
 import Status from "../../../components/Status"
 import SelectWallet from "../../../components/SelectWallet"
 import Uniswap from "../../../components/Uniswap"
-import conf from "../../conf"
 import { checkBalance, checkWallet } from "../../../lib/_epic/web3"
 import { devCheckBalance } from "../../../lib/_epic/dev"
 import {
@@ -72,7 +72,7 @@ const prop_keys = R.indexBy(R.prop("address"))(properties)
 export default binder(
   props => {
     useEffect(() => {
-      isFirebase().then(async () => {
+      isFirebase(conf).then(async () => {
         props.tracker({
           global: true,
           tracks: {

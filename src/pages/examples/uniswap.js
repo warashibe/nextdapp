@@ -4,7 +4,7 @@ import N from "bignumber.js"
 import { ThemeProvider } from "emotion-theming"
 import preset from "@rebass/preset"
 import binder from "../../lib/binder"
-const isFirebase = require("../../../lib/firestore-short/isFirebase")
+import { isFirebase } from "nd-firebase"
 import { useEffect } from "react"
 import R from "ramdam"
 const btn = { cursor: "pointer", ":hover": { opacity: 0.75 } }
@@ -124,7 +124,7 @@ const BalanceTable = props =>
 export default binder(
   props => {
     useEffect(() => {
-      isFirebase().then(async () => {
+      isFirebase(conf).then(async () => {
         props.tracker({
           global: true,
           tracks: {

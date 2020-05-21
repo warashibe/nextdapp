@@ -33,6 +33,7 @@
     "marked": "ocrybit/marked",
     "moment": "^2.24.0",
     "nd-core": "^0.2.2",
+    "nd-firebase": "^0.1.0",
     "nd-util": "^0.1.2",
     "next": "^9.2.1",
     "next-offline": "^5.0.0",

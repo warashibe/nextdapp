@@ -2,7 +2,6 @@ import { useEffect, useState, Fragment } from "react"
 import { Image, Text, Box, Flex, Button } from "rebass"
 import useEventListener from "@use-it/event-listener"
 import { ThemeProvider } from "emotion-theming"
-const isFirebase = require("../lib/firestore-short/isFirebase")
 const R = require("ramdam")
 import binder from "../src/lib/binder"
 

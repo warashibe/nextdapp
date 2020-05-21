@@ -7,7 +7,7 @@ import N from "bignumber.js"
 import { ThemeProvider } from "emotion-theming"
 import preset from "@rebass/preset"
 import binder from "../../lib/binder"
-const isFirebase = require("../../../lib/firestore-short/isFirebase")
+
 import React, { Fragment, useEffect, useMemo, useState } from "react"
 import R from "ramdam"
 const btn = { cursor: "pointer", ":hover": { opacity: 0.75 } }
@@ -16,6 +16,7 @@ import SelectWallet from "../../../components/SelectWallet"
 import Login from "../../../components/Login"
 import UPort from "../../../components/UPort"
 import Footer from "../../components/Footer"
+import { isFirebase } from "nd-firebase"
 import conf from "../../conf"
 const entities = require("entities")
 import { connect_to_3box } from "../../../lib/_epic/blog"
@@ -1493,7 +1494,7 @@ export default binder(
     useEffect(() => {
       props.set(props.router, "router")
       setMounted(true)
-      isFirebase().then(async () => {
+      isFirebase(conf).then(async () => {
         props.tracker({
           global: true,
           tracks: {

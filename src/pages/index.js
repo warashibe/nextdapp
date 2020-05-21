@@ -1,7 +1,9 @@
 import { useState, useEffect, Fragment } from "react"
 import useEventListener from "@use-it/event-listener"
 import { Box, Flex, Text, Image } from "rebass"
-import { isFirebase, getElementOffset, offsetTop } from "../../lib/util"
+import { getElementOffset, offsetTop } from "../../lib/util"
+import { isFirebase } from "nd-firebase"
+import conf from "../conf"
 import R from "ramdam"
 import Nav from "../../components/Nav"
 import binder from "../lib/binder"
@@ -10,7 +12,7 @@ const btn = { cursor: "pointer", ":hover": { opacity: 0.75 } }
 export default binder(
   props => {
     useEffect(() => {
-      isFirebase().then(async () => {
+      isFirebase(conf).then(async () => {
         props.changeUser()
       })
     })

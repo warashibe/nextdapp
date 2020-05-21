@@ -2,7 +2,8 @@ import { Box, Flex, Text, Image, Button } from "rebass"
 import { ThemeProvider } from "emotion-theming"
 import preset from "@rebass/preset"
 import binder from "../../lib/binder"
-const isFirebase = require("../../../lib/firestore-short/isFirebase")
+import { isFirebase } from "nd-firebase"
+import conf from "../../conf"
 import { useEffect } from "react"
 import R from "ramdam"
 import Nav from "../../../components/Nav"
@@ -19,7 +20,7 @@ import Footer from "../../components/Footer"
 export default binder(
   props => {
     useEffect(() => {
-      isFirebase().then(async () => {
+      isFirebase(conf).then(async () => {
         props.tracker({
           global: true,
           tracks: {
