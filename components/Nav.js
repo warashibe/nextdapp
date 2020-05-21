@@ -416,7 +416,7 @@ const makeSide = (num, props) => {
             to = cursor - many + 1
           }
           if (cursor !== to) {
-            props.setter(to, "cursor")
+            props.set(to, "cursor")
           }
         }
       })
@@ -441,7 +441,7 @@ const makeSide = (num, props) => {
             }
           }
           if (cursor !== to) {
-            props.setter(to, "cursor")
+            props.set(to, "cursor")
           }
         }
       })
@@ -485,7 +485,7 @@ const makeSide = (num, props) => {
       )
       const iconWidth = R.isNil(v.text) ? "100%" : 50
       const setW = () => {
-        props.setter(false, "open")
+        props.set(false, "open")
         props.setPnum(R.not(props.open), props.breakpoint)
       }
       const border = v.border
@@ -590,9 +590,9 @@ const Nav = props => {
     let op = props.open
     let _bp = props.breakpoint
     let mainHeight = window.innerHeight
-    props.setter(window.innerHeight, "height")
+    props.set(window.innerHeight, "height")
     mainHeight -= document.getElementById("nav").offsetHeight || 0
-    props.setter(mainHeight, "mainHeight")
+    props.set(mainHeight, "mainHeight")
     if (R.xNil(props.outerElms)) {
       getInnerHeight(props.outerElms, props.set)
     }
@@ -601,7 +601,7 @@ const Nav = props => {
       R.tap(() => {
         const new_num = Math.floor(window.innerHeight / side_height)
         if (num !== new_num) {
-          props.setter(0, "cursor")
+          props.set(0, "cursor")
         }
         let sub = _bp === 1 || (_bp === 2 && !op) ? side_height : side_width
         if (!R.isNil(props.user)) {
@@ -613,24 +613,24 @@ const Nav = props => {
           showmore = true
         }
         if (props.showmore !== showmore) {
-          props.setter(showmore, "showmore")
+          props.set(showmore, "showmore")
         }
         if (!showmore && props.catopen) {
-          props.setter(false, "catopen")
+          props.set(false, "catopen")
         }
         const divnum = Math.ceil((tnum + 1) / Math.ceil((tnum + 1) / topnum))
         if (props.topnum !== topnum) {
-          props.setter(topnum, "topnum")
+          props.set(topnum, "topnum")
         }
         if (props.divnum !== divnum) {
-          props.setter(divnum, "divnum")
+          props.set(divnum, "divnum")
         }
         setNum(new_num)
         props.setPnum(op, _bp)
       }),
       R.when(R.complement(R.equals(props.breakpoint)), v => {
-        props.setter(v * 1, "breakpoint")
-        props.setter(false, "open")
+        props.set(v * 1, "breakpoint")
+        props.set(false, "open")
         op = false
         _bp = v * 1
       }),
@@ -644,7 +644,7 @@ const Nav = props => {
   })
   const onClick = () =>
     R.ifElse(R.includes(R.__, [null, 3]), R.alwaysNull, () => {
-      props.setter(R.not(props.open), "open")
+      props.set(R.not(props.open), "open")
       props.setPnum(R.not(props.open), props.breakpoint)
     })(props.breakpoint)
   const menuWidth = props.open ? side_width : [0, 0, 50, side_width]
@@ -858,8 +858,8 @@ const Nav = props => {
         cursor: "pointer"
       }}
       onClick={e => {
-        props.setter(false, "open")
-        props.setter(false, "catopen")
+        props.set(false, "open")
+        props.set(false, "catopen")
         props.setPnum(false, props.breakpoint)
       }}
     />
@@ -878,7 +878,7 @@ const Nav = props => {
       <Box flex={1} pt="50px" id="main_area" sx={{ height: "100%" }}>
         <Box
           onClick={() => {
-            props.setter(false, "showModal")
+            props.set(false, "showModal")
           }}
           height="100%"
           bg="rgba(0,0,0,0.75)"
@@ -928,7 +928,7 @@ const Nav = props => {
         </Box>
         <Box
           onClick={() => {
-            props.setter(false, "showModal_send")
+            props.set(false, "showModal_send")
           }}
           height="100%"
           bg="rgba(0,0,0,0.75)"
@@ -1024,5 +1024,5 @@ export default binder(
     "innerHeight",
     "mainHeight"
   ],
-  ["login", "logout", "setter", "setPnum", "set"]
+  ["login", "logout", "setPnum", "set"]
 )

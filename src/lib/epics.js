@@ -1,15 +1,7 @@
 import R from "ramdam"
 import conf from "../conf"
 
-import {
-  merge,
-  track,
-  tracker,
-  set,
-  epic,
-  checkHeight,
-  getURL
-} from "../../lib/_epic/util"
+import { merge, checkHeight, getURL } from "../../lib/_epic/util"
 
 import {
   login,
@@ -20,8 +12,6 @@ import {
   unlinkAccount,
   check_alis
 } from "../../lib/_epic/user"
-
-import { hookVeChain } from "../../lib/_epic/vechain"
 
 import {
   connectAuthereum,
@@ -107,7 +97,6 @@ export {
   uniswap_tokens,
   checkUniswap,
   check_alis,
-  set,
   merge,
   changeUser,
   deleteAccount,
@@ -115,12 +104,9 @@ export {
   unlinkAccount,
   logout,
   login,
-  track,
-  tracker,
   hookWeb3,
   removeAddress,
   setWallet,
-  hookVeChain,
   connectAuthereum,
   disconnectAuthereum,
   checkHeight,

@@ -1,14 +1,13 @@
-import _app from "../../components/_app/_app"
-import reducer from "../../components/_app/reducer"
-
-// global css can only be imported in /pages/_app.js
+import { Fragment } from "react"
+import { Provider } from "react-redux"
+import withRedux from "next-redux-wrapper"
+import { _app, reducer } from "nd-core"
 import "normalize.css"
 import "draft-js/dist/Draft.css"
 import conf from "../conf"
 import init from "../lib/init"
-import assoc from "../lib/assoc"
-import mod from "../lib/mod"
 import * as epics from "../lib/epics"
+
 const links = [
   {
     rel: "stylesheet",
@@ -18,12 +17,24 @@ const links = [
     crossorigin: "anonymous"
   }
 ]
+
 const scripts = []
-export default _app({
+const { initStore, PostScripts, MyHead } = _app({
   conf,
   init,
-  reducer: reducer({ init, assoc, mod }),
+  reducer: reducer({ init }),
   links,
   scripts,
   epics
+})
+export default withRedux(initStore)(({ Component, pageProps, store }) => {
+  return (
+    <Fragment>
+      <MyHead />
+      <Provider store={store}>
+        <Component {...pageProps} _conf={conf} />
+      </Provider>
+      <PostScripts />
+    </Fragment>
+  )
 })

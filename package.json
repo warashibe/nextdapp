@@ -32,6 +32,7 @@
     "jsondiffpatch": "^0.4.1",
     "marked": "ocrybit/marked",
     "moment": "^2.24.0",
+    "nd-core": "^0.2.2",
     "next": "^9.2.1",
     "next-offline": "^5.0.0",
     "next-redux-wrapper": "^4.0.1",
