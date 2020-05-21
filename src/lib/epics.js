@@ -1,7 +1,7 @@
 import R from "ramdam"
 import conf from "../conf"
 
-import { merge, checkHeight, getURL } from "../../lib/_epic/util"
+import { checkHeight, getURL } from "nd-util"
 
 import {
   login,
@@ -97,7 +97,6 @@ export {
   uniswap_tokens,
   checkUniswap,
   check_alis,
-  merge,
   changeUser,
   deleteAccount,
   linkAccount,

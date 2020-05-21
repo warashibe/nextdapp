@@ -111,7 +111,7 @@ const Uniswap = binder(
                       rowSpan={2}
                       sx={{ ...btn }}
                       onClick={() => {
-                        props.merge({
+                        props.set({
                           uniswap_from: props.uniswap_to,
                           uniswap_to: props.uniswap_from
                         })
@@ -282,7 +282,7 @@ const Uniswap = binder(
     "token_prices",
     "input_lock"
   ],
-  ["set", "merge", "getTokenPrices", "checkUniswap", "uniswap_tokens"]
+  ["set", "getTokenPrices", "checkUniswap", "uniswap_tokens"]
 )
 
 export default Uniswap
