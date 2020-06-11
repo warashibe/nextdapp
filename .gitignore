@@ -1,6 +1,8 @@
-.themes
+nd/conf.*
+!nd/conf.sample.js
+firebase/functions/env.json
+
 packages
-src/conf.js
 # Logs
 logs
 *.log
