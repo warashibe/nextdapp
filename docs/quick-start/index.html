@@ -1,0 +1,375 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Quick Start · Next Dapp</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Next Dapp is just a [Next.js](https://nextjs.org) app, but on steroids with [recoil](https://recoiljs.org/) state management library."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Quick Start · Next Dapp"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="Next Dapp is just a [Next.js](https://nextjs.org) app, but on steroids with [recoil](https://recoiljs.org/) state management library."/><meta property="og:image" content="https://your-docusaurus-test-site.com/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://your-docusaurus-test-site.com/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="Next Dapp"/><h2 class="headerTitleWithLogo">Next Dapp</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive siteNavItemActive"><a href="/docs/quick-start" target="_self">Tutorial</a></li><li class=""><a href="/docs/api" target="_self">API</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Tutorial</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Tutorial</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/quick-start">Quick Start</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Quick Start</h1></header><article><div><span><p>Next Dapp is just a <a href="https://nextjs.org">Next.js</a> app, but on steroids with <a href="https://recoiljs.org/">recoil</a> state management library.</p>
+<p>Reactive global state management is out of the box, which usually requires  heavry setups with external libraries such as <code>redux</code>, <code>rxjs</code>, <code>mobX</code> and related libraries.</p>
+<p>Nes Dapp also is a plugin based system, which gives you a jump-start with your dapp development with one command integration with firestore dabase, user management, web3 / blockchain wallets, CMS / blog system and so many more.</p>
+<p>We will call Next Dapp powered apps <strong>nDapps</strong> throughout the docs.</p>
+<h2><a class="anchor" aria-hidden="true" id="setup"></a><a href="#setup" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Setup</h2>
+<h3><a class="anchor" aria-hidden="true" id="installation"></a><a href="#installation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Installation</h3>
+<p>Use <code>npm</code> or <code>yarn</code> to globally install Next Dapp CLI Tools.</p>
+<pre><code class="hljs css language-bash">yarn global add nextdapp
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="create-a-project"></a><a href="#create-a-project" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Create a Project</h3>
+<pre><code class="hljs css language-bash">nextdapp create myapp
+<span class="hljs-built_in">cd</span> myapp
+yarn
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="run-locally"></a><a href="#run-locally" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Run Locally</h3>
+<pre><code class="hljs css language-bash">yarn dev
+</code></pre>
+<p>Now your local app is running at <a href="http://localhost:3000">http://localhost:3000</a></p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="ndapp-tree"></a><a href="#ndapp-tree" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>nDapp Tree</h2>
+<p>Next Dapp is built on top of <a href="https://nextjs.org">Next.js</a> which is based upon <a href="https://reactjs.org">React</a>. You can develop nDapps in the same way you develop Next.js apps.</p>
+<pre><code class="hljs css language-text">.
+├── pages/
+│   └── index.js
+├── public/
+│   └── static/
+│       ├── images/
+│       ├── favicon.ico
+│       └── manifest.json
+├── nd/
+│   ├── core/
+│   ├── conf.js
+│   ├── conf.local.js
+│   ├── .nextdapp.js
+│   ├── .nextdapp-props.js
+│   └── .plugins.json
+├── node_modules/
+├── .gitignore
+├── .nowignore
+├── .bitmap
+├── nd.js
+├── package.json
+├── next.config.js
+├── now.json
+└── jscofig.json
+
+</code></pre>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="app-development"></a><a href="#app-development" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>App Development</h2>
+<h3><a class="anchor" aria-hidden="true" id="hello-world"></a><a href="#hello-world" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Hello, World!</h3>
+<p>Edit <code>/pages/index.js</code> for this tutorial.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> () =&gt; <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Hello, World!<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="bind--set-global-states"></a><a href="#bind--set-global-states" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>bind / set global states</h3>
+<p><code>bind</code> binds a component to global states. <code>count</code> is not a local state. It consists globally.</p>
+<p><code>set</code> can change global states and other components get the state changes.</p>
+<p>Global states are basically <a href="https://recoiljs.org/docs/basic-tutorial/atoms">recoil atoms</a>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { bind } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ set, count }</span>) =&gt;</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+      <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> set((count || 0) + 1, "count")}
+    &gt;
+      add count: {count || 0}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ),
+  [<span class="hljs-string">"count"</span>]
+)
+</code></pre>
+<p>This is not easy to do with a bare React App.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { bind } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+
+<span class="hljs-keyword">const</span> Counter = bind(<span class="hljs-function">(<span class="hljs-params">{ count }</span>) =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{count || 0}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>, [<span class="hljs-string">"count"</span>])
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ set, count }</span>) =&gt;</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+      <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> set((count || 0) + 1, "count")}
+    &gt;
+      click to add count: <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ),
+  [<span class="hljs-string">"count"</span>]
+)
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="predefine-global-states"></a><a href="#predefine-global-states" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Predefine global states</h3>
+<p>Global states can be predefined and initialized in <code>/nd/init.js</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">count1</span> : <span class="hljs-number">1</span>,
+  <span class="hljs-attr">count2</span> : <span class="hljs-number">2</span>
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="bind-functions"></a><a href="#bind-functions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>bind functions</h3>
+<p>You can also bind functions.</p>
+<p>To access global states  via <code>props</code> inside the function, you need to pass the names of the states as the second argument.</p>
+<p>The functions need to be initialized inside the component with <code>init()</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { bind } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+
+<span class="hljs-keyword">const</span> Counter = bind(<span class="hljs-function">(<span class="hljs-params">{ count }</span>) =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{count || 0}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>, [<span class="hljs-string">"count"</span>])
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ init, set, count }</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> fn = init()
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> fn.add(1)}&gt;
+        click to add count: <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  },
+  [
+    <span class="hljs-string">"count"</span>,
+    {
+      <span class="hljs-attr">add</span>: [
+        <span class="hljs-function">(<span class="hljs-params">{ val, props, set }</span>) =&gt;</span> <span class="hljs-keyword">set</span>((props.count || 0) + val, "count"),
+        ["count"]
+      ]
+    }
+  ]
+)
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="predefine-functions"></a><a href="#predefine-functions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Predefine functions</h3>
+<p>Globally shared functions can be predefined in <code>/nd/custom.js</code>. Export as many as you like.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> add = <span class="hljs-function">(<span class="hljs-params">{ val, props, set }</span>) =&gt;</span>
+  <span class="hljs-keyword">set</span>((props.count || 0) + val, "count")
+add.props = ["count"]
+</code></pre>
+<p>Pass the predefined function name as a String value. <code>bind</code> is smart enough to know which are <code>states</code> and which are <code>functions</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { bind } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+<span class="hljs-keyword">const</span> Counter = bind(<span class="hljs-function">(<span class="hljs-params">{ count }</span>) =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{count || 0}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>, [<span class="hljs-string">"count"</span>])
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ init, set, count }</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> fn = init()
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> fn.add(1)}&gt;
+        click to add count: <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  },
+  [ <span class="hljs-string">"count"</span>, <span class="hljs-string">"add"</span> ]
+)
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="computed-states"></a><a href="#computed-states" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Computed states</h3>
+<p>You can also bind computed states which are basically <a href="https://recoiljs.org/docs/basic-tutorial/selectors">recoil selectors</a> and based upon multiple global states.</p>
+<p>Pass a <code>key : value</code> object with a <code>get</code> function inside the <code>value</code> as shown below.</p>
+<p><code>bind</code> will figure out it's a computed state.</p>
+<p>Thes states used to compute the value has to be passed to the component as well. In the example below, <code>sum</code> uses <code>count1</code> and <code>count2</code> so both values are bound to the component. <code>get(count1)</code> returns the current value of <code>count1</code> inside the compute function. See the <a href="https://recoiljs.org/docs/basic-tutorial/selectors">recoil docs</a> for details.</p>
+<p>In the example, <code>sum</code> reactively cumputes the sum of <code>count1</code> and <code>count2</code> as soon as any of them changes.</p>
+<p>If you install <code>react@expoerimental</code> and <code>react-dom@experimental</code>, you can even use <code>async</code> function to compute the value with <a href="https://reactjs.org/docs/concurrent-mode-intro.html">React Concurrent Mode</a> (Suspense), which is not officially out to the stable version yet.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { bind } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+
+<span class="hljs-keyword">const</span> Counter = bind(<span class="hljs-function">(<span class="hljs-params">{ count1 }</span>) =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{count1 || 0}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>, [<span class="hljs-string">"count1"</span>])
+<span class="hljs-keyword">const</span> Counter2 = bind(<span class="hljs-function">(<span class="hljs-params">{ count2 }</span>) =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{count2 || 0}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>, [<span class="hljs-string">"count2"</span>])
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ set, sum, init }</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> fn = init()
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> fn.add({ num: 1, target: "count1" })}&gt;
+          click to add count1: <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> fn.add({ num: 1, target: "count2" })}&gt;
+          click to add count2: <span class="hljs-tag">&lt;<span class="hljs-name">Counter2</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>sum: {sum}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  },
+  [
+    <span class="hljs-string">"count1"</span>,
+    <span class="hljs-string">"count2"</span>,
+    {
+      <span class="hljs-attr">add</span>: [
+        <span class="hljs-function">(<span class="hljs-params">{ val: { num, target }, props, set }</span>) =&gt;</span>
+          <span class="hljs-keyword">set</span>((props[target] || 0) + num, target),
+        ["count1", "count2"]
+      ],
+      sum: {
+        <span class="hljs-attr">get</span>: <span class="hljs-function"><span class="hljs-params">atoms</span> =&gt;</span> <span class="hljs-function">(<span class="hljs-params">{ get }</span>) =&gt;</span> {
+          <span class="hljs-keyword">return</span> (<span class="hljs-keyword">get</span>(atoms.count1) || 0) + (<span class="hljs-keyword">get</span>(atoms.count2) || 0)
+        }
+      }
+    }
+  ]
+)
+</code></pre>
+<p>You can mix as many <code>states</code>, <code>functions</code>, <code>predefined state names</code>, <code>predefined function names</code> and &quot;selectors (computed states)&quot; as you like in any caotic order as the second argument.</p>
+<p><code>bind( Component, [ states, functions, selectors ] )</code></p>
+<h3><a class="anchor" aria-hidden="true" id="tracker"></a><a href="#tracker" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Tracker</h3>
+<p>By inserting <code>Tracker</code> anywhere in your component, you can watch global states (Recoil atoms/selectors) and reactively execute a function when watching states change. This isn't easy to do without external state management libraries and complex setups, but Next Dapp makes it a breeze out of the box.</p>
+<p>You can insert <code>Tracker</code> anywhere in your page components. <code>Tracker</code> doesn't render anything to the UI.</p>
+<pre><code class="hljs css language-javascript">&lt;Tracker
+  name=<span class="hljs-string">"count_tracker"</span>
+  type=<span class="hljs-string">"any"</span>
+  watch={[<span class="hljs-string">"count1"</span>, <span class="hljs-string">"count2"</span>]}
+  props={[<span class="hljs-string">"count1"</span>, <span class="hljs-string">"count2"</span>]}
+  func={({ <span class="hljs-keyword">set</span>, props: { count1, count2 } }) =&gt; {
+    <span class="hljs-keyword">set</span>(count1 * count2, "product")
+  }}
+  /&gt;
+</code></pre>
+<p>A tracker <code>name</code>, <code>func</code> and <code>watch</code> are required.</p>
+<p>You can <code>watch</code> state changes in two ways.</p>
+<p>type <code>all</code>: the function executes after <strong>all</strong> the specified states changed.</p>
+<p>type <code>any</code>: the function executes when <strong>any</strong> one of the specified states changed.</p>
+<p>The function defined as <code>func</code> is the same as custome functions explained above. You can change any global states using <code>set</code>. The function can be <code>async</code> and you can change any global states even if they are not bound to the component.</p>
+<p>Only the states specified in the <code>props</code> array will be passed to the functions as <code>props</code>. You may need different states than <code>watch</code> in the function <code>props</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { bind, Tracker } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+
+<span class="hljs-keyword">const</span> Counter = bind(<span class="hljs-function">(<span class="hljs-params">{ count1 }</span>) =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{count1 || 0}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>, [<span class="hljs-string">"count1"</span>])
+<span class="hljs-keyword">const</span> Counter2 = bind(<span class="hljs-function">(<span class="hljs-params">{ count2 }</span>) =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{count2 || 0}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>, [<span class="hljs-string">"count2"</span>])
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ set, init, sum, product }</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> fn = init()
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> fn.add({ num: 1, target: "count1" })}&gt;
+          click to add count1: <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> fn.add({ num: 1, target: "count2" })}&gt;
+          click to add count2: <span class="hljs-tag">&lt;<span class="hljs-name">Counter2</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>sum: {sum}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>product: {product}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">Tracker</span>
+          <span class="hljs-attr">name</span>=<span class="hljs-string">"count_tracker"</span>
+          <span class="hljs-attr">type</span>=<span class="hljs-string">"any"</span>
+          <span class="hljs-attr">watch</span>=<span class="hljs-string">{[</span>"<span class="hljs-attr">count1</span>", "<span class="hljs-attr">count2</span>"]}
+          <span class="hljs-attr">props</span>=<span class="hljs-string">{[</span>"<span class="hljs-attr">count1</span>", "<span class="hljs-attr">count2</span>"]}
+          <span class="hljs-attr">func</span>=<span class="hljs-string">{({</span> <span class="hljs-attr">set</span>, <span class="hljs-attr">props:</span> { <span class="hljs-attr">count1</span>, <span class="hljs-attr">count2</span> } }) =&gt;</span> {
+            set(count1 * count2, "product")
+          }}
+        /&gt;
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  },
+  [
+    <span class="hljs-string">"count1"</span>,
+    <span class="hljs-string">"count2"</span>,
+    <span class="hljs-string">"product"</span>,
+    {
+      <span class="hljs-attr">add</span>: [
+        <span class="hljs-function">(<span class="hljs-params">{ val: { num, target }, props, set }</span>) =&gt;</span>
+          <span class="hljs-keyword">set</span>((props[target] || 0) + num, target),
+        ["count1", "count2"]
+      ],
+      sum: {
+        <span class="hljs-attr">get</span>: <span class="hljs-function"><span class="hljs-params">atoms</span> =&gt;</span> <span class="hljs-function">(<span class="hljs-params">{ get }</span>) =&gt;</span> {
+          <span class="hljs-keyword">return</span> (<span class="hljs-keyword">get</span>(atoms.count1) || 0) + (<span class="hljs-keyword">get</span>(atoms.count2) || 0)
+        }
+      }
+    }
+  ]
+)
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="global-object"></a><a href="#global-object" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>global object</h3>
+<p>There is a handy <code>global</code> object shared with every <code>bind</code> Component and function. The <code>global</code> object is not reactive but can be used to pass Class instances and large objects with circular structures. Changing <code>global</code> values won't trigger rendering of any components. <code>React</code> doesn't have a handy <code>global</code> object like this, but you don't want to expose anything to <code>window</code> object as it is accessible from the developer console. <code>global</code> is an internal object only shared with <code>Components</code> and <code>functions</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { useEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+<span class="hljs-keyword">import</span> { bind } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+
+<span class="hljs-keyword">const</span> Count = bind(<span class="hljs-function">(<span class="hljs-params">{ updated, set, init, global, conf }</span>) =&gt;</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{global.count}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+))
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ set, init, global, conf }</span>) =&gt;</span> {
+    useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      global.count = <span class="hljs-number">10</span>
+    }, [])
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Count</span> /&gt;</span></span>
+  },
+  [
+    {
+      <span class="hljs-attr">log</span>: <span class="hljs-function">(<span class="hljs-params">{ global, set, props, conf }</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(global.count)
+      }
+    }
+  ]
+)
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="confjs--conflocaljs"></a><a href="#confjs--conflocaljs" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>conf.js / conf.local.js</h3>
+<p>Just like <code>global</code>, configurations defined in <code>/nd/conf.js</code> or <code>/nd/conf.local.js</code> will be passed internally. See how they are passed everywhere in the example above.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { mergeAll } <span class="hljs-keyword">from</span> <span class="hljs-string">"ramda"</span>
+<span class="hljs-keyword">let</span> local = {}
+
+<span class="hljs-keyword">try</span> {
+  local = <span class="hljs-built_in">require</span>(<span class="hljs-string">"nd/conf.local"</span>)
+} <span class="hljs-keyword">catch</span> (e) {}
+
+<span class="hljs-keyword">const</span> prod = {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"next-dapp"</span>,
+  <span class="hljs-attr">html</span>: {
+    <span class="hljs-attr">title</span>: <span class="hljs-string">"Next Dapp | The Bridge between Web 2.0 and 3.0"</span>,
+    <span class="hljs-attr">description</span>:
+      <span class="hljs-string">"Next Dapp is a web framework to progressively connect web 2.0 with 3.0."</span>,
+    <span class="hljs-attr">image</span>: <span class="hljs-string">"https://picsum.photos/1000/500"</span>,
+    <span class="hljs-string">"theme-color"</span>: <span class="hljs-string">"#03414D"</span>
+  }
+}
+<span class="hljs-built_in">module</span>.exports = mergeAll([prod, local])
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="env"></a><a href="#env" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>.env</h3>
+<p>Use <code>/.env</code> to define credentials which shouldn't be exposed in the client app. Don't write these credentials in <code>/nd/conf.js</code> or <code>/nd/conf.local.js</code>. The data in these files will be inlined and exposed in the production app. In <code>Next.js</code> apps, there are places only executed on the server side, where you can use credentials without exposing them such as <code>/pages/api/*</code>, <code>getStaticProps</code>, <code>getStaticPaths</code> and <code>getServerSideProps</code>.</p>
+<pre><code class="hljs css language-text">SECRET=xxx
+SECRET2=xxx
+</code></pre>
+<p>You can access these values as <code>procces.env.SECRET</code> and <code>process.env.SECRET2</code>.</p>
+<h2><a class="anchor" aria-hidden="true" id="plugins"></a><a href="#plugins" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Plugins</h2>
+<p>nDapps get better with a wide range of plugins such as Firestore database, user management, web3 / blockchain integration, CMS with a developer friendly editor and so forth.</p>
+<p>Plugin tutorials are coming soon.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="deploy"></a><a href="#deploy" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Deploy</h2>
+<p>The best place to deploy your app is <a href="https://vercel.com">Vercel Now</a>.</p>
+<pre><code class="hljs css language-bash">now
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#setup">Setup</a><ul class="toc-headings"><li><a href="#installation">Installation</a></li><li><a href="#create-a-project">Create a Project</a></li><li><a href="#run-locally">Run Locally</a></li></ul></li><li><a href="#ndapp-tree">nDapp Tree</a></li><li><a href="#app-development">App Development</a><ul class="toc-headings"><li><a href="#hello-world">Hello, World!</a></li><li><a href="#bind--set-global-states">bind / set global states</a></li><li><a href="#predefine-global-states">Predefine global states</a></li><li><a href="#bind-functions">bind functions</a></li><li><a href="#predefine-functions">Predefine functions</a></li><li><a href="#computed-states">Computed states</a></li><li><a href="#tracker">Tracker</a></li><li><a href="#global-object">global object</a></li><li><a href="#confjs--conflocaljs">conf.js / conf.local.js</a></li><li><a href="#env">.env</a></li></ul></li><li><a href="#plugins">Plugins</a></li><li><a href="#deploy">Deploy</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.ico" alt="Next Dapp" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/quick-start">Tutorial</a><a href="/docs/en/api">API Reference</a></div><div><h5>Community</h5><a href="https://twitter.com/warashibemarket" target="_blank" rel="noreferrer noopener">Twitter</a></div><div><h5>More</h5><a href="https://blog.warashibe.market" target="_blank">Blog</a><a href="https://oss.warashibe.market" target="_blank">OSS Lab</a><a href="https://bit.dev/warashibe/nextdapp">Bit</a><a href="https://github.com/warashibe">GitHub</a><a class="github-button" href="https://github.com/warashibe/next-dapp" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright"><a target="_blank" href="https://warashibe.market" style="color:inherit">Copyright © 2020 Warashibe, Inc.</a></section></footer></div></body></html>
