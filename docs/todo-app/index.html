@@ -1,0 +1,437 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Todo App Example · Next Dapp</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="We will create a very simple todo app using Next Dapp global states. We use [Ramda](https://ramdajs.com) throughout the app for concise data manipulations. Hopefully, it&#x27;s clear and easy enough to understand even if you don&#x27;t know Ramda."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Todo App Example · Next Dapp"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/next-dapp/"/><meta property="og:description" content="We will create a very simple todo app using Next Dapp global states. We use [Ramda](https://ramdajs.com) throughout the app for concise data manipulations. Hopefully, it&#x27;s clear and easy enough to understand even if you don&#x27;t know Ramda."/><meta property="og:image" content="https://your-docusaurus-test-site.com/next-dapp/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://your-docusaurus-test-site.com/next-dapp/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/next-dapp/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/next-dapp/js/scrollSpy.js"></script><link rel="stylesheet" href="/next-dapp/css/main.css"/><script src="/next-dapp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/next-dapp/"><img class="logo" src="/next-dapp/img/favicon.ico" alt="Next Dapp"/><h2 class="headerTitleWithLogo">Next Dapp</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/next-dapp/docs/quick-start" target="_self">Tutorial</a></li><li class=""><a href="/next-dapp/docs/api" target="_self">API</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Tutorial</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Tutorial</h3><ul class=""><li class="navListItem"><a class="navItem" href="/next-dapp/docs/quick-start">Quick Start</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/next-dapp/docs/todo-app">Todo App Example</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Todo App Example</h1></header><article><div><span><p>We will create a very simple todo app using Next Dapp global states. We use <a href="https://ramdajs.com">Ramda</a> throughout the app for concise data manipulations. Hopefully, it's clear and easy enough to understand even if you don't know Ramda.</p>
+<h2><a class="anchor" aria-hidden="true" id="create-an-app-and-run-locally"></a><a href="#create-an-app-and-run-locally" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Create an App and Run Locally</h2>
+<pre><code class="hljs"><span class="hljs-attr">nextdapp</span> <span class="hljs-string">create todo</span>
+<span class="hljs-attr">cd</span> <span class="hljs-string">todo</span>
+<span class="hljs-attr">yarn</span>
+<span class="hljs-attr">yarn</span> <span class="hljs-string">dev</span>
+</code></pre>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="define-todos-global-state"></a><a href="#define-todos-global-state" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Define <code>todos</code> global state</h2>
+<p>For this app, we only use one global state. Define it with an initial value in <code>/nd/init.js</code>. Each todo should have a <code>task</code> field and a unique <code>key</code> to identify.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">todos</span>: [{ <span class="hljs-attr">task</span>: <span class="hljs-string">"Add Todos to This List"</span>, <span class="hljs-attr">key</span>: <span class="hljs-number">1</span> }]
+}
+</code></pre>
+<blockquote>
+<p>Anything you <code>export default</code> from <code>/nd/init.js</code> will be global states the app can watch and track.
+Under the hood, Next Dapp uses <a href="https://recoiljs.org/docs/basic-tutorial/atoms">Recoil Atoms</a> to manage global states.</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="predefined-styles"></a><a href="#predefined-styles" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Predefined Styles</h2>
+<p>For a pleasant presentation, I have predefined some styles to use for the app. Just copy and paste them somewhere above the app components in <code>/pages/index.js</code>. We also use some <code>Ramda</code> functions without any explanation. This part is irrelevant for the app, so please refer to the <a href="https://ramdajs.com/docs/">Ramda Documentation</a> if you need to figure out what the functions do.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { o, map, addIndex, sortBy } <span class="hljs-keyword">from</span> <span class="hljs-string">"ramda"</span>
+
+<span class="hljs-keyword">const</span> btn = {
+  <span class="hljs-attr">width</span>: <span class="hljs-string">"50px"</span>,
+  <span class="hljs-attr">cursor</span>: <span class="hljs-string">"pointer"</span>,
+  <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">"#ddd"</span>,
+  <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>,
+  <span class="hljs-attr">justifyContent</span>: <span class="hljs-string">"center"</span>,
+  <span class="hljs-attr">alignItems</span>: <span class="hljs-string">"center"</span>,
+  <span class="hljs-attr">padding</span>: <span class="hljs-string">"5px"</span>
+}
+
+<span class="hljs-keyword">const</span> style = {
+  <span class="hljs-attr">container</span>: { <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>, <span class="hljs-attr">justifyContent</span>: <span class="hljs-string">"center"</span> },
+  <span class="hljs-attr">todos</span>: {
+    <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">"300px"</span>,
+    <span class="hljs-attr">flexDirection</span>: <span class="hljs-string">"column"</span>,
+    <span class="hljs-attr">margin</span>: <span class="hljs-string">"20px"</span>
+  },
+  <span class="hljs-attr">newTask</span>: { <span class="hljs-attr">width</span>: <span class="hljs-string">"300px"</span>, <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>, <span class="hljs-attr">marginBottom</span>: <span class="hljs-string">"10px"</span> },
+  <span class="hljs-attr">input</span>: { <span class="hljs-attr">width</span>: <span class="hljs-string">"250px"</span>, <span class="hljs-attr">padding</span>: <span class="hljs-string">"5px 10px"</span> },
+  <span class="hljs-attr">add</span>: { ...btn },
+  <span class="hljs-attr">todo</span>: { <span class="hljs-attr">width</span>: <span class="hljs-string">"300px"</span>, <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>, <span class="hljs-attr">margin</span>: <span class="hljs-string">"2px 0"</span> },
+  <span class="hljs-attr">task</span>: {
+    <span class="hljs-attr">width</span>: <span class="hljs-string">"250px"</span>,
+    <span class="hljs-attr">padding</span>: <span class="hljs-string">"5px 10px"</span>,
+    <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>,
+    <span class="hljs-attr">alignItems</span>: <span class="hljs-string">"center"</span>,
+    <span class="hljs-attr">background</span>: <span class="hljs-string">"#eee"</span>
+  },
+  <span class="hljs-attr">emptyBtn</span>: {
+    <span class="hljs-attr">width</span>: <span class="hljs-string">"50px"</span>,
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">"#ddd"</span>,
+    <span class="hljs-attr">padding</span>: <span class="hljs-string">"5px"</span>
+  },
+  <span class="hljs-attr">btn</span>: { ...btn }
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="bind-and-show-todos"></a><a href="#bind-and-show-todos" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>bind</code> and show <code>todos</code></h2>
+<p>You can bind any global states to a react Component with <code>bind</code>. Just pass the name of the global states as the second argument as shown below. If you pass a name of a non-defined state, a new global state will be created on the fly. However, use <code>/nd/init.js</code> to define it whenever possible so you can give it a initial value.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { bind } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+<span class="hljs-keyword">import</span> { map } <span class="hljs-keyword">from</span> <span class="hljs-string">"ramda"</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ todos }</span>) =&gt;</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.container}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todos}</span>&gt;</span>{map(v =&gt; <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{v.task}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>)(todos)}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ),
+  [<span class="hljs-string">"todos"</span>]
+)
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="a-new-task-input-form"></a><a href="#a-new-task-input-form" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>A New Task <code>input</code> form</h2>
+<p>The app should be able to add new tasks. Define an <code>input</code> and a <code>button</code> to add new tasks. For this, we only use a react local <code>state</code> since the input value is only accessed locally within the component. This is a standard react way to use <code>input</code> form. We also check if the input value is blank with <code>isBlank</code>. Leave the acutual part to add a task blank for now. We will fill the <code>/* add task to the todo list */</code> part soon. Right now if you click the <code>Add</code> button, it resets the <code>input</code> form with <code>setNewTask</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+
+<span class="hljs-keyword">const</span> isBlank = <span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> <span class="hljs-regexp">/^\s*$/</span>.test(val)
+
+<span class="hljs-keyword">const</span> NewTask = <span class="hljs-function">(<span class="hljs-params">{ init }</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> [newTask, setNewTask] = useState(<span class="hljs-string">""</span>)
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.newTask}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+        <span class="hljs-attr">style</span>=<span class="hljs-string">{style.input}</span>
+        <span class="hljs-attr">value</span>=<span class="hljs-string">{newTask}</span>
+        <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> {
+          setNewTask(e.target.value)
+        }}
+      /&gt;
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+        <span class="hljs-attr">style</span>=<span class="hljs-string">{style.add}</span>
+        <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> {
+          if (!isBlank(newTask)) {
+            /* add task to the todo list */
+            setNewTask("")
+          }
+        }}
+      &gt;
+        Add
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ todos }</span>) =&gt;</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.container}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todos}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">NewTask</span> /&gt;</span>
+        {map(v =&gt; <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{v.task}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>)(todos)}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ),
+  [<span class="hljs-string">"todos"</span>]
+)
+
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="add-todo-global-function"></a><a href="#add-todo-global-function" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Add Todo Global Function</h2>
+<p>Define <code>addTodo</code> global function in <code>custom.js</code>. Global functions will automatically get handy arguments such as <code>set</code>, <code>props</code>, <code>val</code>.</p>
+<p><code>val</code> : The values passed to the functions will be accessible via <code>val</code>.</p>
+<p><code>set</code> : can change the value of any global state. <code>set(new_value, state_name)</code> is the stardard way, but you can also do <code>set(object)</code> to set multiple states at once.</p>
+<p><code>props</code> : If you need to access any global states inside the function, you need to pre-bind them as <code>props</code> value of the function. This may be a bit odd, but it's valid in Javascript. See below for how it's done. <code>addTodo.props = [&quot;todos&quot;]</code> Only the props pre-bound this way can be passed through the <code>props</code> argument of the function. We use <code>Date.now()</code> to assign an unique key to new tasks.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { findIndex, propEq, append, assocPath } <span class="hljs-keyword">from</span> <span class="hljs-string">"ramda"</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> addTodo = <span class="hljs-function">(<span class="hljs-params">{ props: { todos }, val: { newTask }, set }</span>) =&gt;</span>
+  <span class="hljs-keyword">set</span>(append({ task: newTask, <span class="hljs-attr">key</span>: <span class="hljs-built_in">Date</span>.now() })(todos), <span class="hljs-string">"todos"</span>)
+addTodo.props = [<span class="hljs-string">"todos"</span>]
+</code></pre>
+<blockquote>
+<p>The Functions you <code>export</code> from <code>/nd/custom.js</code> will be global functions that can be bound to any component.
+Functions don't have to be predefined indeed. There is a direct way to bind define and bind on the spot. <a href="/next-dapp/docs/quick-start#bind-functions">See Quick Start</a> for how it's done.</p>
+</blockquote>
+<p>Now bind the <code>addTodo</code> function to the <code>NewTask</code> component by just passing the name of the function. Global functions need to be initialized in side the component with <code>init</code>.</p>
+<p>See the line <code>const fn = init()</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> NewTask = bind(
+  <span class="hljs-function">(<span class="hljs-params">{ init }</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> fn = init()
+    <span class="hljs-keyword">const</span> [newTask, setNewTask] = useState(<span class="hljs-string">""</span>)
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.newTask}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+          <span class="hljs-attr">style</span>=<span class="hljs-string">{style.input}</span>
+          <span class="hljs-attr">value</span>=<span class="hljs-string">{newTask}</span>
+          <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> {
+            setNewTask(e.target.value)
+          }}
+        /&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+          <span class="hljs-attr">style</span>=<span class="hljs-string">{style.add}</span>
+          <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> {
+            if (!isBlank(newTask)) {
+              fn.addTodo({ newTask })
+              setNewTask("")
+            }
+          }}
+        &gt;
+          Add
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  },
+  [<span class="hljs-string">"addTodo"</span>]
+)
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="todo-component"></a><a href="#todo-component" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Todo Component</h2>
+<p>Let's defined a Component for each todo item. We need two sub Components to show done/undone tasks. Make a <code>Done</code> button and define a <code>onClick</code> function which marks a task <code>Done</code>. Leave the function blank for now.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> TodoDone = <span class="hljs-function">(<span class="hljs-params">{ todo }</span>) =&gt;</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todo}</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">s</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.task}</span>&gt;</span>{todo.task}<span class="hljs-tag">&lt;/<span class="hljs-name">s</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.emptyBtn}</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+)
+
+<span class="hljs-keyword">const</span> TodoUndone = <span class="hljs-function">(<span class="hljs-params">{ todo }</span>) =&gt;</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todo}</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.task}</span>&gt;</span>{todo.task}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+      <span class="hljs-attr">style</span>=<span class="hljs-string">{style.btn}</span>
+      <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> {
+        /* mark done */
+      }}
+    &gt;
+      Done
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+)
+
+<span class="hljs-keyword">const</span> Todo = <span class="hljs-function">(<span class="hljs-params">{ todo, todos }</span>) =&gt;</span>
+  todo.done ? <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">TodoDone</span> <span class="hljs-attr">todo</span>=<span class="hljs-string">{todo}</span> /&gt;</span></span> : <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">TodoUndone</span> <span class="hljs-attr">todo</span>=<span class="hljs-string">{todo}</span> /&gt;</span></span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ todos }</span>) =&gt;</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.container}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todos}</span>&gt;</span>{map(v =&gt; <span class="hljs-tag">&lt;<span class="hljs-name">Todo</span> <span class="hljs-attr">todo</span>=<span class="hljs-string">{v}</span> /&gt;</span>)(todos)}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ),
+  [<span class="hljs-string">"todos"</span>]
+)
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="mark-done-global-function"></a><a href="#mark-done-global-function" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Mark Done Global Function</h2>
+<p>Define <code>markDone</code> function in the same way you define <code>addTodo</code> in <code>/nd/custom.js</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { findIndex, propEq, append, assocPath } <span class="hljs-keyword">from</span> <span class="hljs-string">"ramda"</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> markDone = <span class="hljs-function">(<span class="hljs-params">{ props: { todos }, val: { todo }, set }</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> index = findIndex(propEq(<span class="hljs-string">"key"</span>, todo.key))(todos)
+  <span class="hljs-keyword">set</span>(assocPath([index, "done"], true)(todos), "todos")
+}
+markDone.props = ["todos"]
+</code></pre>
+<p>And reflext it in the <code>TodoUndone</code> component.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> TodoUndone = bind(
+  <span class="hljs-function">(<span class="hljs-params">{ init, todo }</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> fn = init()
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todo}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.task}</span>&gt;</span>{todo.task}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.btn}</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> fn.markDone({ todo })}&gt;
+          Done
+        <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  },
+  [<span class="hljs-string">"markDone"</span>]
+)
+</code></pre>
+<p>Now you can cross out tasks by clicking <code>Done</code> button. Let's sort the tasks so done tasks come below undone tasks.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ todos, set }</span>) =&gt;</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.container}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todos}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">NewTask</span> /&gt;</span>
+        {o(
+          map(v =&gt; <span class="hljs-tag">&lt;<span class="hljs-name">Todo</span> <span class="hljs-attr">todo</span>=<span class="hljs-string">{v}</span> /&gt;</span>),
+          sortBy(v =&gt; (v.done ? 1 : 0))
+        )(todos)}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ),
+  [<span class="hljs-string">"todos"</span>]
+)
+</code></pre>
+<p>And that's it. You have created your first nDapp with Next Dapp!</p>
+<h2><a class="anchor" aria-hidden="true" id="the-complete-code"></a><a href="#the-complete-code" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>The Complete Code</h2>
+<p>If you remove the style definitions, the app code is quite short and simple.</p>
+<h3><a class="anchor" aria-hidden="true" id="ndinitjs"></a><a href="#ndinitjs" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>/nd/init.js</code></h3>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">todos</span>: [{ <span class="hljs-attr">task</span>: <span class="hljs-string">"Add Todos to This List"</span>, <span class="hljs-attr">key</span>: <span class="hljs-number">1</span> }]
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="ndcustomjs"></a><a href="#ndcustomjs" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>/nd/custom.js</code></h3>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { findIndex, propEq, append, assocPath } <span class="hljs-keyword">from</span> <span class="hljs-string">"ramda"</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> markDone = <span class="hljs-function">(<span class="hljs-params">{ props: { todos }, val: { todo }, set }</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> index = findIndex(propEq(<span class="hljs-string">"key"</span>, todo.key))(todos)
+  <span class="hljs-keyword">set</span>(assocPath([index, "done"], true)(todos), "todos")
+}
+markDone.props = ["todos"]
+
+export const addTodo = ({ props: { todos }, <span class="hljs-attr">val</span>: { newTask }, <span class="hljs-keyword">set</span> }) =&gt;
+  <span class="hljs-keyword">set</span>(append({ task: newTask, <span class="hljs-attr">key</span>: <span class="hljs-built_in">Date</span>.now() })(todos), <span class="hljs-string">"todos"</span>)
+addTodo.props = [<span class="hljs-string">"todos"</span>]
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="pagesindexjs"></a><a href="#pagesindexjs" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>/pages/index.js</code></h3>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { bind } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+<span class="hljs-keyword">import</span> { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+<span class="hljs-keyword">import</span> { o, map, addIndex, sortBy } <span class="hljs-keyword">from</span> <span class="hljs-string">"ramda"</span>
+
+<span class="hljs-keyword">const</span> btn = {
+  <span class="hljs-attr">width</span>: <span class="hljs-string">"50px"</span>,
+  <span class="hljs-attr">cursor</span>: <span class="hljs-string">"pointer"</span>,
+  <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">"#ddd"</span>,
+  <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>,
+  <span class="hljs-attr">justifyContent</span>: <span class="hljs-string">"center"</span>,
+  <span class="hljs-attr">alignItems</span>: <span class="hljs-string">"center"</span>,
+  <span class="hljs-attr">padding</span>: <span class="hljs-string">"5px"</span>
+}
+
+<span class="hljs-keyword">const</span> style = {
+  <span class="hljs-attr">container</span>: { <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>, <span class="hljs-attr">justifyContent</span>: <span class="hljs-string">"center"</span> },
+  <span class="hljs-attr">todos</span>: {
+    <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">"300px"</span>,
+    <span class="hljs-attr">flexDirection</span>: <span class="hljs-string">"column"</span>,
+    <span class="hljs-attr">margin</span>: <span class="hljs-string">"20px"</span>
+  },
+  <span class="hljs-attr">newTask</span>: { <span class="hljs-attr">width</span>: <span class="hljs-string">"300px"</span>, <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>, <span class="hljs-attr">marginBottom</span>: <span class="hljs-string">"10px"</span> },
+  <span class="hljs-attr">input</span>: { <span class="hljs-attr">width</span>: <span class="hljs-string">"250px"</span>, <span class="hljs-attr">padding</span>: <span class="hljs-string">"5px 10px"</span> },
+  <span class="hljs-attr">add</span>: { ...btn },
+  <span class="hljs-attr">todo</span>: { <span class="hljs-attr">width</span>: <span class="hljs-string">"300px"</span>, <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>, <span class="hljs-attr">margin</span>: <span class="hljs-string">"2px 0"</span> },
+  <span class="hljs-attr">task</span>: {
+    <span class="hljs-attr">width</span>: <span class="hljs-string">"250px"</span>,
+    <span class="hljs-attr">padding</span>: <span class="hljs-string">"5px 10px"</span>,
+    <span class="hljs-attr">display</span>: <span class="hljs-string">"flex"</span>,
+    <span class="hljs-attr">alignItems</span>: <span class="hljs-string">"center"</span>,
+    <span class="hljs-attr">background</span>: <span class="hljs-string">"#eee"</span>
+  },
+  <span class="hljs-attr">emptyBtn</span>: {
+    <span class="hljs-attr">width</span>: <span class="hljs-string">"50px"</span>,
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">"#ddd"</span>,
+    <span class="hljs-attr">padding</span>: <span class="hljs-string">"5px"</span>
+  },
+  <span class="hljs-attr">btn</span>: { ...btn }
+}
+
+<span class="hljs-keyword">const</span> isBlank = <span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> <span class="hljs-regexp">/^\s*$/</span>.test(val)
+
+<span class="hljs-keyword">const</span> NewTask = bind(
+  <span class="hljs-function">(<span class="hljs-params">{ init }</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> fn = init()
+    <span class="hljs-keyword">const</span> [newTask, setNewTask] = useState(<span class="hljs-string">""</span>)
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.newTask}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+          <span class="hljs-attr">style</span>=<span class="hljs-string">{style.input}</span>
+          <span class="hljs-attr">value</span>=<span class="hljs-string">{newTask}</span>
+          <span class="hljs-attr">onChange</span>=<span class="hljs-string">{e</span> =&gt;</span> {
+            setNewTask(e.target.value)
+          }}
+        /&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+          <span class="hljs-attr">style</span>=<span class="hljs-string">{style.add}</span>
+          <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> {
+            if (!isBlank(newTask)) {
+              fn.addTodo({ newTask })
+              setNewTask("")
+            }
+          }}
+        &gt;
+          Add
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  },
+  [<span class="hljs-string">"addTodo"</span>]
+)
+
+<span class="hljs-keyword">const</span> TodoDone = <span class="hljs-function">(<span class="hljs-params">{ todo }</span>) =&gt;</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todo}</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">s</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.task}</span>&gt;</span>{todo.task}<span class="hljs-tag">&lt;/<span class="hljs-name">s</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.emptyBtn}</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+)
+
+<span class="hljs-keyword">const</span> TodoUndone = bind(
+  <span class="hljs-function">(<span class="hljs-params">{ init, todo }</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> fn = init()
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todo}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.task}</span>&gt;</span>{todo.task}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.btn}</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> fn.markDone({ todo })}&gt;
+          Done
+        <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  },
+  [<span class="hljs-string">"markDone"</span>]
+)
+
+<span class="hljs-keyword">const</span> Todo = <span class="hljs-function">(<span class="hljs-params">{ todo, todos }</span>) =&gt;</span>
+  todo.done ? <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">TodoDone</span> <span class="hljs-attr">todo</span>=<span class="hljs-string">{todo}</span> /&gt;</span></span> : <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">TodoUndone</span> <span class="hljs-attr">todo</span>=<span class="hljs-string">{todo}</span> /&gt;</span></span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ todos, set }</span>) =&gt;</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.container}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style.todos}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">NewTask</span> /&gt;</span>
+        {o(
+          map(v =&gt; <span class="hljs-tag">&lt;<span class="hljs-name">Todo</span> <span class="hljs-attr">todo</span>=<span class="hljs-string">{v}</span> /&gt;</span>),
+          sortBy(v =&gt; (v.done ? 1 : 0))
+        )(todos)}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ),
+  [<span class="hljs-string">"todos"</span>]
+)
+</code></pre>
+<blockquote>
+<p>We didn't you the powerful <code>Tracker</code> and <code>Computed Values</code> in this tutorial. But Next Dapp has more tricks up it's sleeves. Check out the <a href="/next-dapp/docs/quick-start">Quick Start</a> for what it's capable of.</p>
+</blockquote>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/next-dapp/docs/quick-start"><span class="arrow-prev">← </span><span>Quick Start</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#create-an-app-and-run-locally">Create an App and Run Locally</a></li><li><a href="#define-todos-global-state">Define <code>todos</code> global state</a></li><li><a href="#predefined-styles">Predefined Styles</a></li><li><a href="#bind-and-show-todos"><code>bind</code> and show <code>todos</code></a></li><li><a href="#a-new-task-input-form">A New Task <code>input</code> form</a></li><li><a href="#add-todo-global-function">Add Todo Global Function</a></li><li><a href="#todo-component">Todo Component</a></li><li><a href="#mark-done-global-function">Mark Done Global Function</a></li><li><a href="#the-complete-code">The Complete Code</a><ul class="toc-headings"><li><a href="#ndinitjs"><code>/nd/init.js</code></a></li><li><a href="#ndcustomjs"><code>/nd/custom.js</code></a></li><li><a href="#pagesindexjs"><code>/pages/index.js</code></a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/next-dapp/" class="nav-home"><img src="/next-dapp/img/favicon.ico" alt="Next Dapp" width="66" height="58"/></a><div><h5>Docs</h5><a href="/next-dapp/docs/en/quick-start">Tutorial</a><a href="/next-dapp/docs/en/api">API Reference</a></div><div><h5>Community</h5><a href="https://twitter.com/warashibemarket" target="_blank" rel="noreferrer noopener">Twitter</a></div><div><h5>More</h5><a href="https://blog.warashibe.market" target="_blank">Blog</a><a href="https://oss.warashibe.market" target="_blank">OSS Lab</a><a href="https://bit.dev/warashibe/nextdapp">Bit</a><a href="https://github.com/warashibe">GitHub</a><a class="github-button" href="https://github.com/warashibe/next-dapp" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright"><a target="_blank" href="https://warashibe.market" style="color:inherit">Copyright © 2020 Warashibe, Inc.</a></section></footer></div></body></html>
