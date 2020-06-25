@@ -1,0 +1,6 @@
+{
+  "core": true,
+  "funcs": [ "login", "logout", "deleteAccount", "watchUser" ],
+  "props": [ "user", "user_init" ],
+  "components": []
+}
