@@ -1,0 +1,5 @@
+{
+  "core": true,
+  "funcs": [ "getURL" ],
+  "props": [ "url" ]
+}

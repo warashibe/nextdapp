@@ -1,0 +1,15 @@
+{
+  "name": "@bit/warashibe.nextdapp.util",
+  "version": "0.0.3",
+  "homepage": "https://bit.dev/warashibe/nextdapp/util",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {
+    "ramda": "^0.27.0"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "bit": {
+    "env": {}
+  }
+}

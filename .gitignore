@@ -1,4 +1,5 @@
 nd/conf.*
+pages/.dev
 !nd/conf.sample.js
 firebase/functions/env.json
 .bit

@@ -4,6 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@bit/warashibe.nextdapp.firebase": "file:./nd/firebase",
+    "@bit/warashibe.nextdapp.util": "file:./nd/util",
+    "firebase": "^7.15.4",
     "isomorphic-fetch": "^2.2.1",
     "next": "^9.4.4",
     "next-offline": "^5.0.2",

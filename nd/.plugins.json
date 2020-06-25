@@ -1,1 +1,1 @@
-{}
+{"util":{"core":true,"funcs":["getURL"],"props":["url"],"name":"warashibe.nextdapp/util","key":"util","namespace":null},"firebase":{"core":true,"funcs":["initFB","db"],"props":["isFB"],"deps":["util"],"name":"warashibe.nextdapp/firebase","key":"firebase","namespace":null}}

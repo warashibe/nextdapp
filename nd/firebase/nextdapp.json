@@ -1,0 +1,6 @@
+{
+  "core": true,
+  "funcs": [ "initFB", "db" ],
+  "props": [ "isFB" ],
+  "deps": [ "util" ]
+}
