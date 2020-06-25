@@ -8,4 +8,6 @@ import { init as util } from "nd/util"
 mergeProps("util", util, true, null)
 import { init as firebase } from "nd/firebase"
 mergeProps("firebase", firebase, true, null)
+import { init as account } from "nd/account"
+mergeProps("account", account, true, null)
 export default props
