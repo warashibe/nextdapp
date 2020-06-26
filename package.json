@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@bit/warashibe.nextdapp.account": "file:./nd/account",
     "@bit/warashibe.nextdapp.firebase": "file:./nd/firebase",
     "@bit/warashibe.nextdapp.util": "file:./nd/util",
     "firebase": "^7.15.4",
@@ -15,7 +16,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "recoil": "^0.0.10",
-    "@bit/warashibe.nextdapp.account": "file:./nd/account"
+    "web3": "^1.2.9",
+    "@bit/warashibe.nextdapp.web3": "file:./nd/web3"
   },
   "scripts": {
     "dev": "next",
