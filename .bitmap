@@ -85,5 +85,38 @@
         "origin": "IMPORTED",
         "originallySharedDir": "nd/util"
     },
+    "warashibe.nextdapp/web3@0.0.2": {
+        "files": [
+            {
+                "name": "IERC20.json",
+                "relativePath": "IERC20.json",
+                "test": false
+            },
+            {
+                "name": "index.js",
+                "relativePath": "index.js",
+                "test": false
+            },
+            {
+                "name": "init.js",
+                "relativePath": "init.js",
+                "test": false
+            },
+            {
+                "name": "nextdapp.json",
+                "relativePath": "nextdapp.json",
+                "test": false
+            },
+            {
+                "name": "web3.js",
+                "relativePath": "web3.js",
+                "test": false
+            }
+        ],
+        "mainFile": "index.js",
+        "rootDir": "nd/web3",
+        "origin": "IMPORTED",
+        "originallySharedDir": "nd/web3"
+    },
     "version": "14.7.6"
 }
