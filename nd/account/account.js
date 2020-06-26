@@ -11,6 +11,7 @@ import {
 } from "ramda"
 
 import { xNil } from "nd/util"
+import { initFB } from "nd/firebase"
 
 const err = (fn, ctx) => async (...args) => {
   let ret = null
@@ -60,8 +61,10 @@ const userUpdate = async ({ u, set, global: { db } }) => {
 }
 
 export const watchUser = async ({ val, set, conf, global }) => {
-  global.fb.firebase.auth().onAuthStateChanged(async u => {
-    if (!logging) await userUpdate({ u, set, global })
+  initFB({ set, global, conf }).then(fb => {
+    fb.firebase.auth().onAuthStateChanged(async u => {
+      if (!logging) await userUpdate({ u, set, global })
+    })
   })
 }
 watchUser.props = ["user", "user_init"]
