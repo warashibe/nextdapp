@@ -10,4 +10,6 @@ import { init as firebase } from "nd/firebase"
 mergeProps("firebase", firebase, true, null)
 import { init as account } from "nd/account"
 mergeProps("account", account, true, null)
+import { init as web3 } from "nd/web3"
+mergeProps("web3", web3, true, null)
 export default props
