@@ -5,7 +5,6 @@
   "license": "MIT",
   "dependencies": {
     "@bit/warashibe.nextdapp.account": "file:./nd/account",
-    "@bit/warashibe.nextdapp.firebase": "file:./nd/firebase",
     "@bit/warashibe.nextdapp.util": "file:./nd/util",
     "firebase": "^7.15.4",
     "isomorphic-fetch": "^2.2.1",
@@ -17,7 +16,8 @@
     "react-dom": "^16.13.1",
     "recoil": "^0.0.10",
     "web3": "^1.2.9",
-    "@bit/warashibe.nextdapp.web3": "file:./nd/web3"
+    "@bit/warashibe.nextdapp.web3": "file:./nd/web3",
+    "@bit/warashibe.nextdapp.fb": "file:./nd/fb"
   },
   "scripts": {
     "dev": "next",
