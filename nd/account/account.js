@@ -11,7 +11,7 @@ import {
 } from "ramda"
 
 import { xNil } from "nd/util"
-import { initFB } from "nd/firebase"
+import { initFB } from "nd/fb"
 
 const err = (fn, ctx) => async (...args) => {
   let ret = null
@@ -165,10 +165,9 @@ const _login_with = async ({
       alert(res.token.err)
       return
     }
-    const [error, user] = await err(
-      auth.signInWithCustomToken,
-      auth
-    )(res.token.token)
+    const [error, user] = await err(auth.signInWithCustomToken, auth)(
+      res.token.token
+    )
     if (xNil(err)) {
       alert("something went wrong")
       return
