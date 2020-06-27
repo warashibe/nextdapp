@@ -1,9 +1,11 @@
 {
-  "name": "@bit/warashibe.nextdapp.account",
-  "version": "0.0.6",
-  "homepage": "https://bit.dev/warashibe/nextdapp/account",
+  "name": "@bit/warashibe.nextdapp.fb",
+  "version": "0.0.2",
+  "homepage": "https://bit.dev/warashibe/nextdapp/fb",
   "main": "index.js",
   "dependencies": {
+    "firebase": "7.15.5",
+    "firestore-sweet": "^0.4.9",
     "ramda": "^0.27.0"
   },
   "devDependencies": {},
