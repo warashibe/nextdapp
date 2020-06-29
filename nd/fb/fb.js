@@ -17,12 +17,12 @@ class FB {
     } catch (e) {}
     try {
       const config = {
-        apiKey: this.conf.firebase.key,
-        authDomain: `${this.conf.firebase.id}.firebaseapp.com`,
-        databaseURL: `https://${this.conf.firebase.id}.firebaseio.com`,
-        projectId: this.conf.firebase.id,
-        storageBucket: `${this.conf.firebase.id}.appspot.com`,
-        messagingSenderId: this.conf.firebase.sender,
+        apiKey: this.conf.fb.key,
+        authDomain: `${this.conf.fb.id}.firebaseapp.com`,
+        databaseURL: `https://${this.conf.fb.id}.firebaseio.com`,
+        projectId: this.conf.fb.id,
+        storageBucket: `${this.conf.fb.id}.appspot.com`,
+        messagingSenderId: this.conf.fb.sender,
         timestampsInSnapshots: true
       }
       require("firebase/firestore")
