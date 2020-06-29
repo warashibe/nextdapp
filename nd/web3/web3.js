@@ -29,6 +29,8 @@ export const ETHEREUM_NETWORKS = {
   "42": "kovan"
 }
 
+export const isAddress = address => window.web3.utils.isAddress(address)
+
 export const toWei = amount => window.web3.utils.toWei(amount)
 
 export const fromWei = amount => window.web3.utils.fromWei(amount)
