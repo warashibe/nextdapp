@@ -1,6 +1,6 @@
 {
   "name": "@bit/warashibe.nextdapp.fb",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://bit.dev/warashibe/nextdapp/fb",
   "main": "index.js",
   "dependencies": {
