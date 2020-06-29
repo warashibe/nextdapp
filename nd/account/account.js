@@ -1,4 +1,5 @@
 import {
+  is,
   propOr,
   apply,
   isNil,
@@ -36,7 +37,10 @@ let logging = false
 let conf, steem_client
 
 const name_map = {
-  "twitter.com": "twitter"
+  "twitter.com": "twitter",
+  "facebook.com": "facebook",
+  "google.com": "google",
+  "github.com": "github"
 }
 
 const reverse_name_map = invertObj(name_map)
@@ -51,19 +55,51 @@ const link_converter = {
         image: add.profile.profile_image_url_https.replace(/_normal/, "")
       },
       _u
+    ),
+  "facebook.com": (_u, add) =>
+    mergeLeft(
+      {
+        name: add.profile.name,
+        image: hasPath(["profile", "picture", "data", "url"])(add)
+          ? add.profile.picture.data.url
+          : undefined
+      },
+      _u
+    ),
+  "google.com": (_u, add) =>
+    mergeLeft({ name: add.profile.name, image: add.profile.picture }, _u),
+  "github.com": (_u, add) =>
+    mergeLeft(
+      {
+        username: add.username,
+        name: add.profile.name,
+        about: add.profile.bio
+      },
+      _u
     )
 }
 
-const userUpdate = async ({ u, set, global: { db } }) => {
-  const user = isNil(u) ? null : await db.get("users", u.uid)
+const userUpdate = async ({ u, set, global: { db, account_nodb } }) => {
+  const user = isNil(u)
+    ? null
+    : account_nodb
+    ? { uid: u.uid, name: u.displayName }
+    : await db.get("users", u.uid)
   logging = false
   set({ user: user, user_init: true })
 }
 
-export const watchUser = async ({ val, set, conf, global }) => {
+export const watchUser = async ({
+  val: { nodb = false, cb },
+  set,
+  conf,
+  global
+}) => {
+  global.account_nodb = nodb
   initFB({ set, global, conf }).then(fb => {
     fb.firebase.auth().onAuthStateChanged(async u => {
       if (!logging) await userUpdate({ u, set, global })
+      if (is(Function)(cb)) cb(u)
     })
   })
 }
@@ -73,11 +109,19 @@ export const logout = async ({ val, global: { fb } }) => {
   const auth = await fb.firebase.auth()
   const [error] = await err(auth.signOut, auth)()
   logAlert(error, error, "something went wrong")
+  return [error]
 }
 
 const user_fields = ["name", "image", "about", "uid", "username", "id"]
 
-const _login = async ({ user, provider, set, _add = {}, global }) => {
+const _login = async ({
+  user,
+  provider,
+  set,
+  _add = {},
+  global,
+  val: { nodb }
+}) => {
   logging = true
   if (hasPath(["user", "uid"])(user)) {
     await global.db.tx("users", user.user.uid, async ({ data, t, ref }) => {
@@ -113,7 +157,7 @@ const _login = async ({ user, provider, set, _add = {}, global }) => {
         }
       }
       _u = pickBy(identity)(_u)
-      await global.db.upsert(_u, "users", _u.uid)
+      if (nodb !== true) await global.db.upsert(_u, "users", _u.uid)
     })
     await userUpdate({ u: user.user, set, global })
   }
@@ -128,15 +172,20 @@ const getProvider = ({ provider, fb }) => {
 const login_with = {}
 
 export const login = async ({
-  val: { provider },
+  val: { provider, nodb = false },
   set,
   props,
   conf,
   global
 }) => {
   if (xNil(login_with[provider])) {
-    await login_with[provider]({ set, props, conf, global })
-    return
+    return await login_with[provider]({
+      set,
+      props,
+      conf,
+      global,
+      val: { nodb }
+    })
   }
   const _provider = getProvider({ provider: provider, fb: global.fb })
   const auth = await global.fb.firebase.auth()
@@ -144,8 +193,15 @@ export const login = async ({
   if (xNil(error)) {
     alert("something went wrong")
   } else {
-    await _login({ user, provider: reverse_name_map[provider], set, global })
+    await _login({
+      user,
+      provider: reverse_name_map[provider],
+      set,
+      global,
+      val: { nodb }
+    })
   }
+  return [error, user]
 }
 
 const _login_with = async ({
@@ -153,7 +209,8 @@ const _login_with = async ({
   props,
   login_url,
   provider,
-  global: { fb }
+  global: { fb },
+  val: { nodb }
 }) => {
   if (hasPath(["value", "user", "uid"])(props)) {
     login_url += `&uid=${props.user.uid}`
@@ -165,9 +222,10 @@ const _login_with = async ({
       alert(res.token.err)
       return
     }
-    const [error, user] = await err(auth.signInWithCustomToken, auth)(
-      res.token.token
-    )
+    const [error, user] = await err(
+      auth.signInWithCustomToken,
+      auth
+    )(res.token.token)
     if (xNil(err)) {
       alert("something went wrong")
       return
@@ -176,18 +234,26 @@ const _login_with = async ({
       providerId: reverse_name_map[provider],
       uid: user.uid
     })
-    _login({ user, provider: reverse_name_map[provider], set, _add: res.user })
+    _login({
+      user,
+      provider: reverse_name_map[provider],
+      set,
+      _add: res.user,
+      val: { nodb }
+    })
   }
 }
 
 export const deleteAccount = async ({
   val: { user },
   set,
-  global: { db, fb }
+  global: { db, fb, account_nodb }
 }) => {
-  await db.tx("users", user.uid, async ({ t, ref, data }) => {
-    return await t.update(ref, { status: "deleted" })
-  })
+  if (account_nodb !== true) {
+    await db.tx("users", user.uid, async ({ t, ref, data }) => {
+      return await t.update(ref, { status: "deleted" })
+    })
+  }
   let _user = fb.firebase.auth().currentUser
   await _user.delete()
 }
