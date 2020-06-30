@@ -25,5 +25,6 @@ Next Dapp plugins are managed with [Bit](https://bit.dev/warashibe/nextdapp), bu
 * [Tomoya Nagasawa](https://github.com/ocrybit)
 * [Yuki Sato](https://github.com/youxiberlin)
 * [Dai Kimura](https://github.com/dmamira)
+* [Hoosan](https://github.com/hoosan)
 
 
