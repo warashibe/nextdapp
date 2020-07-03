@@ -1,0 +1,172 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Building Your Own Plugins · Next Dapp Alpha</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Next Dapp utilizes [**Bit**](https://bit.dev/) for plugin management instead of NPM / Git due to its light-weighted nature of component based packaging."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Building Your Own Plugins · Next Dapp Alpha"/><meta property="og:type" content="website"/><meta property="og:url" content="https://warashibe.github.io/next-dapp/"/><meta property="og:description" content="Next Dapp utilizes [**Bit**](https://bit.dev/) for plugin management instead of NPM / Git due to its light-weighted nature of component based packaging."/><meta property="og:image" content="https://warashibe.github.io/next-dapp/img/next_dapp_logo_large.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://warashibe.github.io/next-dapp/img/next_dapp_logo_large.png"/><link rel="shortcut icon" href="/next-dapp/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/next-dapp/js/scrollSpy.js"></script><link rel="stylesheet" href="/next-dapp/css/main.css"/><script src="/next-dapp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/next-dapp/"><img class="logo" src="/next-dapp/img/favicon.ico" alt="Next Dapp Alpha"/><h2 class="headerTitleWithLogo">Next Dapp Alpha</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/next-dapp/docs/quick-start" target="_self">Tutorial</a></li><li class="siteNavGroupActive"><a href="/next-dapp/docs/plugins" target="_self">Plugins</a></li><li class=""><a href="/next-dapp/docs/bind" target="_self">API</a></li><li class=""><a href="https://github.com/warashibe/next-dapp" target="_self">Github</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Tutorial</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Tutorial</h3><ul class=""><li class="navListItem"><a class="navItem" href="/next-dapp/docs/quick-start">Quick Start</a></li><li class="navListItem"><a class="navItem" href="/next-dapp/docs/plugins">Plugins</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/next-dapp/docs/build-plugins">Building Plugins</a></li><li class="navListItem"><a class="navItem" href="/next-dapp/docs/todo-app">Todo App Example</a></li><li class="navListItem"><a class="navItem" href="/next-dapp/docs/wallet-app">Wallet App Example</a></li><li class="navListItem"><a class="navItem" href="/next-dapp/docs/how-to-contribute">How to Contribute to Docs</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Building Your Own Plugins</h1></header><article><div><span><p>Next Dapp utilizes <a href="https://bit.dev/"><strong>Bit</strong></a> for plugin management instead of NPM / Git due to its light-weighted nature of component based packaging.</p>
+<h2><a class="anchor" aria-hidden="true" id="set-up-bit"></a><a href="#set-up-bit" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Set up Bit</h2>
+<p>Install <code>bit-bin</code> (Bit CLI Tools) globally if you haven't done so.</p>
+<pre><code class="hljs css language-bash">yarn global add bit-bin
+</code></pre>
+<p>You also need to sign up for <a href="https://bit.dev/"><strong>Bit</strong></a> and <a href="https://bit.dev/~create-collection"><strong>create a collection</strong></a> to manage your own plugins.</p>
+<p>Log in to bit via your command line terminal as well.</p>
+<pre><code class="hljs css language-bash">bit login
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="create-a-bare-minimum-plugin"></a><a href="#create-a-bare-minimum-plugin" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Create a Bare Minimum Plugin</h2>
+<p>The easiest way to get started is to create an App and set up a are minimum plugin inside the new project.</p>
+<pre><code class="hljs css language-bash">nextdapp create myapp
+<span class="hljs-built_in">cd</span> myapp
+yarn
+</code></pre>
+<p>Create a directory with your plugin name under <code>/nd/[plugin_name]</code>.</p>
+<pre><code class="hljs css language-bash">mkdir nd/myplugin
+</code></pre>
+<p>You at least need two files in your plugin directory. You will export states, functions and components from <code>index.js</code> and define them in <code>nextdapp.json</code> to tell Next Dapp what your plugin exports. As long as you export things in <code>index.js</code>, the file structure of the plugin directory has no restrictions.</p>
+<ul>
+<li><code>nd/[plugin_name]/index.js</code></li>
+<li><code>nd/[plugin_name]/nextdapp.json</code></li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="define-global-states"></a><a href="#define-global-states" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Define Global States</h2>
+<p>You can define global states for your plugin by exporting <code>init</code> from <code>index.js</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> init = {
+  <span class="hljs-attr">my_state_1</span>: <span class="hljs-number">1</span>,
+  <span class="hljs-attr">my_state_2</span>: <span class="hljs-number">2</span>,
+  <span class="hljs-attr">my_state_3</span>: <span class="hljs-number">0</span>
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="define-global-functions"></a><a href="#define-global-functions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Define Global Functions</h2>
+<p>You can also export <a href="/next-dapp/docs/global-functions">global functions</a> for your plugin from <code>index.js</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> myfunc = <span class="hljs-function">(<span class="hljs-params">{ props: { my_state_1, my_state_2 }, set }</span>) =&gt;</span> {
+  <span class="hljs-keyword">set</span>(my_state_1 + my_state_2, "my_state_3")
+}
+myfunc.props = ["my_state_1", "my_state_2"]
+</code></pre>
+<blockquote>
+<p>You don't have to define everything in <code>index.js</code>. Use other files and export things into <code>index.js</code>, then export those from <code>index.js</code>. See how other plugins chain up <code>export</code> into <code>index.js</code> for your reference.</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="nextdappjson"></a><a href="#nextdappjson" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>nextdapp.json</code></h2>
+<p>Define the states and the functions you exported from <code>index.js</code> in <code>nextdapp.json</code>.</p>
+<h3><a class="anchor" aria-hidden="true" id="core"></a><a href="#core" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>core</code></h3>
+<p>If the <code>core</code> is set <code>true</code>, your plugin is considered to be a core plugin and the states and functions are not going to be suffixed with your plugin name. So <code>my_state_1</code> stays <code>my_state_1</code>, <code>myfunc</code> stays <code>myfunc</code> and so on.</p>
+<p>If the <code>core</code> is set <code>false</code>, your states and functions will be namespaced and suffixed with your plugin name, thus, <code>my_state_1</code> becomes <code>my_state_1$myplugin</code>, <code>myfunc</code> becomes <code>myfunc$myplugin</code> and so on.</p>
+<p>The reason for namespacing is that plugins install global states and functions so the shared names always have risk of name collisions with other plugins.</p>
+<blockquote>
+<p>You are free to use <code>&quot;core&quot;: true</code> for your convenience, but try not to use the names in the Next Dapp official plugins. There are ways to avoid name collisions even if your plugins are labeled <code>core</code>, we will explain that later.</p>
+</blockquote>
+<pre><code class="hljs css language-json">{
+  "core": true,
+  "props: [ "my_state_1", "my_state_2", "my_state_3" ],
+  "funcs: [ "myfunc" ]
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="refresh-plugins"></a><a href="#refresh-plugins" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Refresh Plugins</h2>
+<p>Once you export and define states and functions, go back to the app root directory and refresh plugins. Refreshing plugins doesn't install or uninstall anything but just reads the directory tree and update plugins according to the current <code>nextdapp.json</code> files.</p>
+<pre><code class="hljs css language-bash">nextdapp refresh
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="try-out-your-own-plugin"></a><a href="#try-out-your-own-plugin" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Try Out Your Own Plugin</h2>
+<p>Let's see if your plugin is actually installed. Modify <code>/pages/index.js</code>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { useEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+<span class="hljs-keyword">import</span> { bind } <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> bind(
+  <span class="hljs-function">(<span class="hljs-params">{ my_state_1, my_state_2, my_state_3, init }</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> { myfunc } = init()
+    useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      <span class="hljs-comment">/* myfunc() adds my_state_1 and my_state2 and set it to my_state_3 */</span>
+      myfunc() 
+    }, [])
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        {my_state_1} : {my_state_2} : {my_state_3}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  },
+  [<span class="hljs-string">"my_state_1"</span>, <span class="hljs-string">"my_state_2"</span>, <span class="hljs-string">"my_state_3"</span>, <span class="hljs-string">"myfunc"</span>] <span class="hljs-comment">/* bind plugin defined stuff */</span>
+)
+</code></pre>
+<p>If you see <code>1 : 2 : 3</code>, it all works!</p>
+<h2><a class="anchor" aria-hidden="true" id="share-your-plugin"></a><a href="#share-your-plugin" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Share Your Plugin</h2>
+<p>Now that you have built your first plugin, let's share it with the world!</p>
+<p>Assuming you have set up a collection on <a href="https://bit.dev/~create-collection">Bit</a> to upload your Next Dapp plugins, first <code>add</code> the plugin directory.</p>
+<pre><code class="hljs css language-bash">bit add nd/myplugin
+</code></pre>
+<p>Then <code>tag</code> your newly added component with a version.</p>
+<blockquote>
+<p>If you use node packages in your plugin, there might be errors due to dependency issues, you can use <code>--ignore-missing-dependencies</code> flag for now.</p>
+</blockquote>
+<pre><code class="hljs css language-bash">bit tag myplugin 0.0.1 --ignore-missing-dependencies
+</code></pre>
+<p>Finally, <code>export</code> your collection with <code>[your_bit_username].[your_bit_collection]</code></p>
+<pre><code class="hljs css language-bash">bit <span class="hljs-built_in">export</span> ocrybit.nextdapp
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="install-your-plugin-from-bit"></a><a href="#install-your-plugin-from-bit" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Install Your Plugin from Bit</h2>
+<p>To install your plugin from Bit, <code>add</code> <code>[your_bit_username].[your_bit_collection]/[plugin_name]</code>.</p>
+<pre><code class="hljs">nextdapp <span class="hljs-keyword">add</span><span class="bash"> ocrybit.nextdapp/myplugin</span>
+</code></pre>
+<p>If your collection is public, other people can install your plugin in the same way.</p>
+<h2><a class="anchor" aria-hidden="true" id="make-your-plugin-namespace-proof"></a><a href="#make-your-plugin-namespace-proof" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Make Your Plugin Namespace Proof</h2>
+<p>As explained <a href="/next-dapp/docs/nextdapp-cli#add-plugins">here</a>, plugins can be namespaced at installation, which may break the state names used in your plugin. For example if you set <code>&quot;core&quot;: true</code>, and somebody installs your plugin with a namespace, <code>my_state_1</code> becomes <code>my_state_1$namespace</code> and your plugin won't work anymore. So to protect the plugins from such cases we have <code>ns</code> name wrapper.</p>
+<p>First instantiate the wrapper with the plugin name. Then wrap all the state names with it. <code>ns</code> automatically resolves the names for you regardless of how they are namespaced. If somebody namespaces your plugin with <code>great_plugin</code>, <code>$(&quot;my_state_1&quot;)</code> resolves to <code>my_state_1$great_plugin</code> and your function continues to work fine.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> {ns} <span class="hljs-keyword">from</span> <span class="hljs-string">"nd"</span>
+<span class="hljs-keyword">const</span> $ = ns(<span class="hljs-string">"myplugin"</span>)
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> myfunc = <span class="hljs-function">(<span class="hljs-params">{ props, set }</span>) =&gt;</span> {
+  <span class="hljs-keyword">set</span>(props[$("my_state_1")] + props[$("my_state_2")], $("my_state_3"))
+}
+myfunc.props = [$("my_state_1"), $("my_state_2")]
+</code></pre>
+<blockquote>
+<p>As long as you plan to use your plugins privately, you may not need to worry about namespaces and wrap everything with <code>ns / $</code>.</p>
+</blockquote>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/next-dapp/docs/plugins"><span class="arrow-prev">← </span><span>Plugins</span></a><a class="docs-next button" href="/next-dapp/docs/todo-app"><span>Todo App Example</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#set-up-bit">Set up Bit</a></li><li><a href="#create-a-bare-minimum-plugin">Create a Bare Minimum Plugin</a></li><li><a href="#define-global-states">Define Global States</a></li><li><a href="#define-global-functions">Define Global Functions</a></li><li><a href="#nextdappjson"><code>nextdapp.json</code></a><ul class="toc-headings"><li><a href="#core"><code>core</code></a></li></ul></li><li><a href="#refresh-plugins">Refresh Plugins</a></li><li><a href="#try-out-your-own-plugin">Try Out Your Own Plugin</a></li><li><a href="#share-your-plugin">Share Your Plugin</a></li><li><a href="#install-your-plugin-from-bit">Install Your Plugin from Bit</a></li><li><a href="#make-your-plugin-namespace-proof">Make Your Plugin Namespace Proof</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/next-dapp/" class="nav-home"><img src="/next-dapp/img/favicon.ico" alt="Next Dapp Alpha" width="66" height="58"/></a><div><h5>Docs</h5><a href="/next-dapp/docs/quick-start">Quick Start</a><a href="/next-dapp/docs/plugins">Plugins</a><a href="/next-dapp/docs/todo-app">Todo App Example</a><a href="/next-dapp/docs/nextdapp-cli">API Reference</a></div><div><h5>Community</h5><a href="https://twitter.com/warashibemarket" target="_blank" rel="noreferrer noopener">Twitter</a><h5 style="margin-top:20px">Contributors</h5><a style="display:inline-block;margin:5px 7px" href="https://github.com/youxiberlin" target="_blank" rel="noreferrer noopener" title="youxiberlin"><img src="https://avatars0.githubusercontent.com/u/7786031?s=35" style="width:35px;height:35px;border-radius:50%"/></a><a style="display:inline-block;margin:5px 7px" href="https://github.com/dmamira" target="_blank" rel="noreferrer noopener" title="dmamira"><img src="https://avatars1.githubusercontent.com/u/49590399?s=35" style="width:35px;height:35px;border-radius:50%"/></a><a style="display:inline-block;margin:5px 7px" href="https://github.com/hoosan" target="_blank" rel="noreferrer noopener" title="hoosan"><img src="https://avatars1.githubusercontent.com/u/40290137?s=35" style="width:35px;height:35px;border-radius:50%"/></a><a style="display:inline-block;margin:5px 7px" href="https://github.com/ocrybit" target="_blank" rel="noreferrer noopener" title="ocrybit"><img src="https://avatars3.githubusercontent.com/u/40726926?s=35" style="width:35px;height:35px;border-radius:50%"/></a></div><div><h5>More</h5><a href="https://blog.warashibe.market" target="_blank">Blog</a><a href="https://bit.dev/warashibe/nextdapp">Bit Plugins</a><a href="https://github.com/warashibe/next-dapp">GitHub</a><a class="github-button" href="https://github.com/warashibe/next-dapp" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright"><a target="_blank" href="https://warashibe.market" style="color:inherit">Copyright © 2020 Warashibe, Inc.</a></section></footer></div></body></html>
