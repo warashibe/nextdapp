@@ -18,7 +18,8 @@
     "react-dom": "^16.13.1",
     "recoil": "^0.0.10",
     "web3": "^1.2.9",
-    "@bit/warashibe.nextdapp.web3": "file:./nd/web3"
+    "@bit/warashibe.nextdapp.web3": "file:./nd/web3",
+    "@bit/warashibe.nextdapp.core": "file:./nd/core"
   },
   "scripts": {
     "dev": "next",

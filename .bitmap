@@ -29,6 +29,69 @@
         "origin": "IMPORTED",
         "originallySharedDir": "nd/account"
     },
+    "warashibe.nextdapp/core@0.0.4": {
+        "files": [
+            {
+                "name": "Conf.js",
+                "relativePath": "Conf.js",
+                "test": false
+            },
+            {
+                "name": "Tracker.js",
+                "relativePath": "Tracker.js",
+                "test": false
+            },
+            {
+                "name": "_app.js",
+                "relativePath": "_app.js",
+                "test": false
+            },
+            {
+                "name": "atoms.js",
+                "relativePath": "atoms.js",
+                "test": false
+            },
+            {
+                "name": "bind.js",
+                "relativePath": "bind.js",
+                "test": false
+            },
+            {
+                "name": "func.js",
+                "relativePath": "func.js",
+                "test": false
+            },
+            {
+                "name": "funcs.js",
+                "relativePath": "funcs.js",
+                "test": false
+            },
+            {
+                "name": "index.js",
+                "relativePath": "index.js",
+                "test": false
+            },
+            {
+                "name": "nextdapp.json",
+                "relativePath": "nextdapp.json",
+                "test": false
+            },
+            {
+                "relativePath": "ns.js",
+                "test": false,
+                "name": "ns.js"
+            },
+            {
+                "name": "setter.js",
+                "relativePath": "setter.js",
+                "test": false
+            }
+        ],
+        "mainFile": "index.js",
+        "rootDir": "nd/core",
+        "origin": "IMPORTED",
+        "originallySharedDir": "nd/core"
+    },
     "warashibe.nextdapp/fb@0.0.3": {
         "files": [
             {
@@ -118,5 +181,5 @@
         "origin": "IMPORTED",
         "originallySharedDir": "nd/web3"
     },
-    "version": "14.7.6"
+    "version": "14.8.2"
 }

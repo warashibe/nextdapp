@@ -1,3 +1,4 @@
+export { default as ns } from "nd/core/ns"
 export { default as bind } from "nd/core/bind"
 export { default as atoms } from "nd/core/atoms"
 export { default as funcs } from "nd/core/funcs"
