@@ -1,5 +1,10 @@
 import { is, has, assocPath, isNil, forEach } from "ramda"
-import { useRecoilCallback, atom, useRecoilState } from "recoil"
+import {
+  useRecoilTransactionObserver_UNSTABLE,
+  useRecoilCallback,
+  atom,
+  useRecoilState
+} from "recoil"
 import { atoms, funcs } from "nd"
 
 const addFuncProps = (arr, obj, dup_funcs) => {
@@ -28,7 +33,8 @@ const bind_states = arr => {
 
 export default _states => {
   const binder = bind_states(_states)
-  const cb = useRecoilCallback(
+  const updated = {}
+  const setter = useRecoilCallback(
     ({ snapshot: { getPromise }, set }) => async ({ name, val }) => {
       name = is(Array)(name)
         ? name.length === 1
@@ -40,19 +46,36 @@ export default _states => {
       if (is(Array)(name)) {
         if (!has(name[0])(atoms))
           atoms[name[0]] = atom({ key: name[0], default: {} })
-        set(
-          atoms[name[0]],
-          assocPath(name.slice(1), val)(await getPromise(atoms[name[0]]))
-        )
+        const new_val = assocPath(
+          name.slice(1),
+          val
+        )(await getPromise(atoms[name[0]]))
+        set(atoms[name[0]], new_val)
+        updated[name[0]] = new_val
       } else {
         const states = isNil(name) ? val : { [name]: val }
         for (const k in states) {
           if (!has(k)(atoms)) atoms[k] = atom({ key: k, default: null })
           set(atoms[k], states[k])
+          updated[k] = states[k]
         }
       }
     }
   )
-  const set = (val, name) => cb({ val, name })
-  return { binder, set }
+  useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
+    for (let k in atoms) {
+      updated[k] = snapshot.getLoadable(atoms[k]).contents
+    }
+  })
+  const getter = useRecoilCallback(
+    ({ snapshot: { getLoadable } }) => ({ name }) =>
+      has(name)(atoms)
+        ? isNil(updated[name])
+          ? getLoadable(atoms[name]).contents
+          : updated[name]
+        : null
+  )
+  const set = (val, name) => setter({ val, name })
+  const get = name => getter({ name })
+  return { binder, set, get }
 }

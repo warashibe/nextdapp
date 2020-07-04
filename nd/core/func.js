@@ -14,18 +14,18 @@ const func = (arr = [], fn) => {
     }
   }
   const _fn = () => {
-    const { binder, set } = setter(arr)
+    const { binder, set, get } = setter(arr)
     return _val => {
       const args = {
         global,
         conf: conf,
         val: _val || {},
         set,
+        get,
         props: map(prop("get"))(binder)
       }
-      const _fn = fn => {
-        return val => fn(mergeLeft({ val: val, fn: _fn }, clone(args)))
-      }
+      const _fn = fn => val =>
+        fn(mergeLeft({ val: val, fn: _fn, binder: binder }, args))
       return fn(mergeLeft({ fn: _fn }, args))
     }
   }
