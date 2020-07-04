@@ -103,9 +103,7 @@ export default (Component, _arr = [], track) => {
     return (
       <Component
         tracker={tracker}
-        init={() => {
-          return mapObjIndexed((v, k) => v())(pick(_funcs)(funcs))
-        }}
+        init={() => mapObjIndexed((v, k) => v())(pick(_funcs)(funcs))}
         conf={conf}
         global={global}
         set={set}

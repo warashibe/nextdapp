@@ -29,7 +29,7 @@
         "origin": "IMPORTED",
         "originallySharedDir": "nd/account"
     },
-    "warashibe.nextdapp/core@0.0.4": {
+    "warashibe.nextdapp/core@0.0.5": {
         "files": [
             {
                 "name": "Conf.js",

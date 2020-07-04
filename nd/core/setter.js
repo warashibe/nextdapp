@@ -1,21 +1,31 @@
 import { is, has, assocPath, isNil, forEach } from "ramda"
 import { useRecoilCallback, atom, useRecoilState } from "recoil"
-import { atoms } from "nd"
+import { atoms, funcs } from "nd"
 
-const bind_states = arr => {
-  let obj = {}
-  forEach(v => {
-    if (!has(v)(atoms)) {
+const addFuncProps = (arr, obj, dup_funcs) => {
+  for (const v of arr || []) {
+    if (!has(v)(atoms) && !has(v)(funcs)) {
       atoms[v] = atom({
         key: v,
         default: null
       })
+    } else if (has(v)(funcs) && isNil(dup_funcs[v])) {
+      dup_funcs[v] = true
+      addFuncProps(funcs[v].props, obj, dup_funcs)
     }
-    const hook = useRecoilState(atoms[v])
-    obj[v] = { set: hook[1], get: hook[0] }
-  })(arr)
+    if (has(v)(atoms)) {
+      const hook = useRecoilState(atoms[v])
+      obj[v] = { set: hook[1], get: hook[0] }
+    }
+  }
+}
+const bind_states = arr => {
+  let obj = {}
+  let dup_funcs = {}
+  addFuncProps(arr, obj, dup_funcs)
   return obj
 }
+
 export default _states => {
   const binder = bind_states(_states)
   const cb = useRecoilCallback(
@@ -24,8 +34,8 @@ export default _states => {
         ? name.length === 1
           ? name[0]
           : name.length === 0
-            ? null
-            : name
+          ? null
+          : name
         : name
       if (is(Array)(name)) {
         if (!has(name[0])(atoms))
