@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Troubleshooting · Next Dapp Alpha</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Always use the Latest Version"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Troubleshooting · Next Dapp Alpha"/><meta property="og:type" content="website"/><meta property="og:url" content="https://warashibe.github.io/next-dapp/"/><meta property="og:description" content="## Always use the Latest Version"/><meta property="og:image" content="https://warashibe.github.io/next-dapp/img/next_dapp_logo_large.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://warashibe.github.io/next-dapp/img/next_dapp_logo_large.png"/><link rel="shortcut icon" href="/next-dapp/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/next-dapp/js/scrollSpy.js"></script><link rel="stylesheet" href="/next-dapp/css/main.css"/><script src="/next-dapp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/next-dapp/"><img class="logo" src="/next-dapp/img/favicon.ico" alt="Next Dapp Alpha"/><h2 class="headerTitleWithLogo">Next Dapp Alpha</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/next-dapp/docs/quick-start" target="_self">Tutorial</a></li><li class="siteNavGroupActive"><a href="/next-dapp/docs/plugins" target="_self">Plugins</a></li><li class=""><a href="/next-dapp/docs/bind" target="_self">API</a></li><li class=""><a href="https://github.com/warashibe/next-dapp" target="_self">Github</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Tutorial</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Tutorial</h3><ul class=""><li class="navListItem"><a class="navItem" href="/next-dapp/docs/quick-start">Quick Start</a></li><li class="navListItem"><a class="navItem" href="/next-dapp/docs/plugins">Plugins</a></li><li class="navListItem"><a class="navItem" href="/next-dapp/docs/build-plugins">Building Plugins</a></li><li class="navListItem"><a class="navItem" href="/next-dapp/docs/todo-app">Todo App Example</a></li><li class="navListItem"><a class="navItem" href="/next-dapp/docs/wallet-app">Wallet App Example</a></li><li class="navListItem"><a class="navItem" href="/next-dapp/docs/how-to-contribute">How to Contribute to Docs</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/next-dapp/docs/troubleshoot">Troubleshooting</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Troubleshooting</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="always-use-the-latest-version"></a><a href="#always-use-the-latest-version" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Always use the Latest Version</h2>
+<p>Next Dapp is still in alpha and changing rapidly. So the chances are your troubles have been resolved in the latest versions. To update Next Dapp CLI Tools,</p>
+<pre><code class="hljs css language-bash">yarn global upgrade nextdapp --latest
+</code></pre>
+<p>Plugins can be updated simply by re-adding.</p>
+<pre><code class="hljs css language-bash">nextdapp add fb
+</code></pre>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="nextdapp-add-hangs"></a><a href="#nextdapp-add-hangs" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>nextdapp add</code> hangs</h2>
+<p>There seems to be cases <code>nextdapp add [plugin]</code> hangs with the warning below.</p>
+<pre><code class="hljs css language-bash"><span class="hljs-built_in">help</span> us prioritize new features and bug fixes by enabling us to collect anonymous statistics about your usage. sharing anonymous usage information is completely voluntary and helps us improve Bit and build a better product.
+<span class="hljs-keyword">for</span> more information see analytics documentation - https://docs.bit.dev/docs/conf-analytics
+would you like to <span class="hljs-built_in">help</span> Bit with anonymous usage analytics? [yes(y)/no(n)]:  (yes) 
+(node:16712) Warning: Accessing non-existent property <span class="hljs-string">'padLevels'</span> of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show <span class="hljs-built_in">where</span> the warning was created)
+</code></pre>
+<p>If you encounter this, a dirty fix is installing associated bit components outside your app directory and retry <code>nextdapp add</code> in your app directory again. For example, if you are stuck installing <code>fb</code> plugin, go out of the app directory and do below.</p>
+<pre><code class="hljs css language-bash">nextdapp create myapp
+<span class="hljs-built_in">cd</span> myapp
+bit init
+bit import warashibe.nextdapp/fb
+</code></pre>
+<p>Then go back to your app directory and retry installing <code>fb</code> plugin.</p>
+<pre><code class="hljs css language-bash">nextdapp add fb
+</code></pre>
+<blockquote>
+<p>We manage Next Dapp core plugins on <a href="https://bit.dev/warashibe/nextdapp">Bit</a>.</p>
+</blockquote>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="i-cant-deploy-to-vercel"></a><a href="#i-cant-deploy-to-vercel" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>I can't deploy to Vercel</h2>
+<p>Sometimes deployment to Vercel fails due to missing dependencies for plugins. Make sure you have installed all the required node packages listed in the plugins docs. For example <a href="/next-dapp/docs/plugin-fb"><strong>fb plugin</strong></a> requires <code>firebase</code> and <code>google-auth-library</code> to be installed to the main app (not to the plugin directory).</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="discord-community-channel"></a><a href="#discord-community-channel" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Discord Community Channel</h2>
+<p>If you are stuck using Next Dapp, we have a place for you to come ask questions.</p>
+<p><a href="https://discord.com/invite/MvSsm8x"><strong>Next Dapp Discord</strong></a></p>
+<p>You can also search or post issues in the github repositories.</p>
+<ul>
+<li><p><a href="https://github.com/warashibe/next-dapp/issues"><strong>Next Dapp Main Issues</strong></a></p></li>
+<li><p><a href="https://github.com/warashibe/nextdapp/issues"><strong>Next Dapp CLI Tools Issues</strong></a></p></li>
+</ul>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/next-dapp/docs/how-to-contribute"><span class="arrow-prev">← </span><span>How to Contribute to Docs</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#always-use-the-latest-version">Always use the Latest Version</a></li><li><a href="#nextdapp-add-hangs"><code>nextdapp add</code> hangs</a></li><li><a href="#i-cant-deploy-to-vercel">I can't deploy to Vercel</a></li><li><a href="#discord-community-channel">Discord Community Channel</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/next-dapp/" class="nav-home"><img src="/next-dapp/img/favicon.ico" alt="Next Dapp Alpha" width="66" height="58"/></a><div><h5>Docs</h5><a href="/next-dapp/docs/quick-start">Quick Start</a><a href="/next-dapp/docs/plugins">Plugins</a><a href="/next-dapp/docs/todo-app">Todo App Example</a><a href="/next-dapp/docs/nextdapp-cli">API Reference</a><a href="/next-dapp/docs/troubleshoot">Troubleshooting</a></div><div><h5>Community</h5><a href="https://discord.com/invite/MvSsm8x" target="_blank" rel="noreferrer noopener">Discord</a><h5 style="margin-top:20px">Contributors</h5><a style="display:inline-block;margin:5px 7px" href="https://github.com/ocrybit" target="_blank" rel="noreferrer noopener" title="ocrybit"><img src="https://avatars3.githubusercontent.com/u/40726926?s=35" style="width:35px;height:35px;border-radius:50%"/></a><a style="display:inline-block;margin:5px 7px" href="https://github.com/youxiberlin" target="_blank" rel="noreferrer noopener" title="youxiberlin"><img src="https://avatars0.githubusercontent.com/u/7786031?s=35" style="width:35px;height:35px;border-radius:50%"/></a><a style="display:inline-block;margin:5px 7px" href="https://github.com/dmamira" target="_blank" rel="noreferrer noopener" title="dmamira"><img src="https://avatars1.githubusercontent.com/u/49590399?s=35" style="width:35px;height:35px;border-radius:50%"/></a><a style="display:inline-block;margin:5px 7px" href="https://github.com/hoosan" target="_blank" rel="noreferrer noopener" title="hoosan"><img src="https://avatars1.githubusercontent.com/u/40290137?s=35" style="width:35px;height:35px;border-radius:50%"/></a></div><div><h5>More</h5><a href="https://blog.warashibe.market" target="_blank">Blog</a><a href="https://bit.dev/warashibe/nextdapp">Bit Plugins</a><a href="https://github.com/warashibe/next-dapp">GitHub</a><a class="github-button" href="https://github.com/warashibe/next-dapp" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright"><a target="_blank" href="https://warashibe.market" style="color:inherit">Copyright © 2020 Warashibe, Inc.</a></section></footer></div></body></html>
