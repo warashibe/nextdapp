@@ -88,7 +88,7 @@ export default (Component, _arr = [], track) => {
         console.log(v)
       }
     })(arr)
-    const { set, binder } = setter(_props)
+    const { set, get, binder } = setter(_props)
     let tracker = null
     if (is(String)(track)) {
       const track_name = `${track}$tracker`
@@ -107,6 +107,7 @@ export default (Component, _arr = [], track) => {
         conf={conf}
         global={global}
         set={set}
+        get={get}
         {...mapObjIndexed((v, k) => useRecoilValue(v))(_tracks)}
         {...map(v => v.get)(binder)}
         {...props}
