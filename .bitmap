@@ -148,7 +148,7 @@
         "origin": "IMPORTED",
         "originallySharedDir": "nd/util"
     },
-    "warashibe.nextdapp/web3@0.0.5": {
+    "warashibe.nextdapp/web3@0.0.6": {
         "files": [
             {
                 "name": "IERC20.json",

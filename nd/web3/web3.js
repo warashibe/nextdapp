@@ -102,14 +102,15 @@ export const initWeb3 = async ({ val: { network, balances }, set, fn }) => {
   return
 }
 
-const listenTransaction = async ({ method, args, eth, from }) => {
+const listenTransaction = async ({ method, args, eth, from, to, value }) => {
   let hashFunc = is(Function)(args[args.length - 1]) ? args.pop() : null
   const obj = is(Object)(args[args.length - 1]) ? args.pop() : {}
   hashFunc = is(Function)(obj.transactionHash) ? obj.transactionHash : hashFunc
+  let _sender = { from }
+  if (xNil(to)) _sender.to = to
+  if (xNil(value)) _sender.value = value
   const sender = o(
-    mergeRight({
-      from: from
-    }),
+    mergeRight(_sender),
     pick(["from", "to", "value", "gas", "gasPrice", "data", "nonce"])
   )(obj)
 
@@ -163,10 +164,22 @@ export const erc20 = ({ val: { token, address }, conf, fn }) => {
 
 export const eth = ({ fn, get }) => {
   let web3js = {
+    balanceOf: address =>
+      window.web3.eth.getBalance(address || get("web3_address")),
     getBalance: address =>
       window.web3.eth.getBalance(address || get("web3_address"))
   }
   web3js.transfer = async (...args) => {
+    return await listenTransaction({
+      eth: true,
+      to: args[0],
+      value: args[1],
+      method: window.web3.eth.sendTransaction,
+      args: args.slice(2),
+      from: get("web3_address")
+    })
+  }
+  web3js.sendTransaction = async (...args) => {
     return await listenTransaction({
       eth: true,
       method: window.web3.eth.sendTransaction,
