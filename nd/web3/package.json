@@ -1,6 +1,6 @@
 {
   "name": "@bit/warashibe.nextdapp.web3",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "homepage": "https://bit.dev/warashibe/nextdapp/web3",
   "main": "index.js",
   "dependencies": {},
