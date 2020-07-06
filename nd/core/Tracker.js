@@ -1,7 +1,19 @@
 import React, { useEffect } from "react"
+import md5 from "md5"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { bind, atoms } from "nd"
-import { has, clone, equals, concat, uniq, o, difference, isEmpty } from "ramda"
+import {
+  sortBy,
+  has,
+  clone,
+  equals,
+  concat,
+  uniq,
+  o,
+  difference,
+  isEmpty,
+  isNil
+} from "ramda"
 
 const Tracker_ = props => {
   const fn = props.init()
@@ -47,23 +59,26 @@ const Tracker_ = props => {
   }, arr)
   return null
 }
+const getHash = props =>
+  md5(`${sortBy(v => v)(props.watch).join("-")}-${props.func}`)
 
 export default props => {
-  if (!has("name")(props) || !has("watch")(props) || !has("func")(props)) {
-    console.log(`Tracker needs at least "name", "watch" and "func" parameters.`)
+  if (!has("watch")(props) || !has("func")(props)) {
+    console.log(`Tracker needs at least "watch" and "func" parameters.`)
     return null
   }
+  const name = isNil(props.name) ? getHash(props) : props.name
   const Component = bind(
     Tracker_,
     [
       {
-        [props.name]: [
+        [name]: [
           props.func,
           concat(props.props || props.watch, props.func.props || [])
         ]
       }
     ],
-    props.name
+    name
   )
-  return <Component {...props} />
+  return <Component {...props} name={name} />
 }
