@@ -5,11 +5,14 @@
   "license": "MIT",
   "dependencies": {
     "@bit/warashibe.nextdapp.account": "file:./nd/account",
+    "@bit/warashibe.nextdapp.core": "file:./nd/core",
     "@bit/warashibe.nextdapp.fb": "file:./nd/fb",
     "@bit/warashibe.nextdapp.util": "file:./nd/util",
+    "@bit/warashibe.nextdapp.web3": "file:./nd/web3",
     "firebase": "^7.15.4",
     "google-auth-library": "^6.0.2",
     "isomorphic-fetch": "^2.2.1",
+    "md5": "^2.2.1",
     "next": "^9.4.4",
     "next-offline": "^5.0.2",
     "normalize.css": "^8.0.1",
@@ -17,9 +20,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "recoil": "^0.0.10",
-    "web3": "^1.2.9",
-    "@bit/warashibe.nextdapp.web3": "file:./nd/web3",
-    "@bit/warashibe.nextdapp.core": "file:./nd/core"
+    "web3": "^1.2.9"
   },
   "scripts": {
     "dev": "next",
