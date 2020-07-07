@@ -4,9 +4,9 @@
     "warashibe.functions/account@0.0.3": {
         "files": [
             {
+                "name": "index.js",
                 "relativePath": "nd/account/index.js",
-                "test": false,
-                "name": "index.js"
+                "test": false
             }
         ],
         "mainFile": "nd/account/index.js",
