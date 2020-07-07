@@ -1,14 +1,17 @@
 {
   "name": "@bit/warashibe.nextdapp.core",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "homepage": "https://bit.dev/warashibe/nextdapp/core",
   "main": "index.js",
   "componentId": {
     "scope": "warashibe.nextdapp",
     "name": "core",
-    "version": "0.0.3"
+    "version": "0.0.9"
   },
-  "dependencies": {},
+  "dependencies": {
+    "md5": "2.2.1",
+    "isomorphic-fetch": "2.2.1"
+  },
   "devDependencies": {},
   "peerDependencies": {
     "ramda": "^0.27.0",

@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read: if true;
+      allow write: if request.auth.uid == uid;
+    }
+    match /wallets/{id} {
+      allow read: if true;
+      allow create: if request.auth.uid != null;
+      allow delete: if request.auth.uid == resource.data.uid;
+    }
+    match /items/{id} {
+      allow read: if true;
+      allow create: if request.auth.uid != null;
+      allow update: if request.auth.uid != null;
+      allow delete: if request.auth.uid == resource.data.uid;
+    }
+  }
+}
