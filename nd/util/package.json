@@ -3,6 +3,11 @@
   "version": "0.0.3",
   "homepage": "https://bit.dev/warashibe/nextdapp/util",
   "main": "index.js",
+  "componentId": {
+    "scope": "warashibe.nextdapp",
+    "name": "util",
+    "version": "0.0.3"
+  },
   "dependencies": {},
   "devDependencies": {},
   "peerDependencies": {
