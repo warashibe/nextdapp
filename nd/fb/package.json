@@ -3,6 +3,11 @@
   "version": "0.0.3",
   "homepage": "https://bit.dev/warashibe/nextdapp/fb",
   "main": "index.js",
+  "componentId": {
+    "scope": "warashibe.nextdapp",
+    "name": "fb",
+    "version": "0.0.3"
+  },
   "dependencies": {
     "firebase": "7.15.5",
     "firestore-sweet": "^0.4.9",

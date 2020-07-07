@@ -1,13 +1,7 @@
 import React from "react"
 import { global, conf, funcs, atoms } from "nd"
 
-import {
-  useRecoilState,
-  useRecoilCallback,
-  selector,
-  useRecoilValue,
-  atom
-} from "recoil"
+import { selector, useRecoilValue, atom } from "recoil"
 
 import {
   keys,
