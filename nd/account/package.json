@@ -6,7 +6,7 @@
   "componentId": {
     "scope": "warashibe.nextdapp",
     "name": "account",
-    "version": "0.0.9"
+    "version": "0.0.11"
   },
   "dependencies": {
     "base64url": "3.0.1",
