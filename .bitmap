@@ -97,7 +97,7 @@
         "origin": "IMPORTED",
         "originallySharedDir": "nd/core"
     },
-    "warashibe.nextdapp/fb@0.0.3": {
+    "warashibe.nextdapp/fb@0.0.5": {
         "files": [
             {
                 "name": "fb.js",
