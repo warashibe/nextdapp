@@ -8,12 +8,20 @@ import {
   identity,
   mergeLeft,
   invertObj,
-  curryN
+  curryN,
+  includes
 } from "ramda"
 
 import { xNil } from "nd/util"
 import { initFB } from "nd/fb"
+import { setCookie, parseCookies, destroyCookie } from "nookies"
+import { ns } from "nd"
+const $ = ns("account")
 
+const NodeRSA = require("node-rsa")
+const base64url = require("base64url")
+const sha256 = require("js-sha256")
+const shortid = require("shortid")
 const err = (fn, ctx) => async (...args) => {
   let ret = null
   let err = null
@@ -40,7 +48,8 @@ const name_map = {
   "twitter.com": "twitter",
   "facebook.com": "facebook",
   "google.com": "google",
-  "github.com": "github"
+  "github.com": "github",
+  "alis.to": "alis"
 }
 
 const reverse_name_map = invertObj(name_map)
@@ -76,6 +85,16 @@ const link_converter = {
         about: add.profile.bio
       },
       _u
+    ),
+  "alis.to": (_u, add) =>
+    mergeLeft(
+      {
+        name: add.user_display_name,
+        image: add.icon_image_url,
+        about: add.self_introduction,
+        username: add.user_id
+      },
+      _u
     )
 }
 
@@ -83,8 +102,8 @@ const userUpdate = async ({ u, set, global: { db, account_nodb } }) => {
   const user = isNil(u)
     ? null
     : account_nodb
-    ? { uid: u.uid, name: u.displayName }
-    : await db.get("users", u.uid)
+      ? { uid: u.uid, name: u.displayName }
+      : await db.get("users", u.uid)
   logging = false
   set({ user: user, user_init: true })
 }
@@ -169,7 +188,73 @@ const getProvider = ({ provider, fb }) => {
   ]()
 }
 
-const login_with = {}
+const getData = async (db, conf, url) => {
+  const toRSAPublic = key =>
+    `-----BEGIN PUBLIC KEY-----\n${key}\n-----END PUBLIC KEY-----`
+  const toRSAPrivate = key =>
+    `-----BEGIN RSA PRIVATE KEY-----\n${key}\n-----END RSA PRIVATE KEY-----`
+  function fixedEncodeURIComponent(str) {
+    return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+      return "%" + c.charCodeAt(0).toString(16)
+    })
+  }
+  const key = new NodeRSA({ b: 512 })
+  const key2 = new NodeRSA(toRSAPublic(conf.rsa.public))
+  const pub = key.exportKey("public")
+  const text = "Hello RSA!"
+  const encrypted = key2.encrypt(pub, "base64")
+  const public_key = key.exportKey("public")
+  const id = shortid.generate()
+  const encrypted_id = key2.encrypt(id, "base64")
+  db.set({ date: Date.now(), public_key: encrypted }, "crypt", id)
+  const _getData = async url => {
+    return await new Promise(async (res, rej) => {
+      let once = false
+      let to = null
+      let ret = {}
+      const unsubscribe = await db.on("crypt", id, async doc => {
+        if (doc !== null && xNil(doc.value)) {
+          once = true
+          ret.data = JSON.parse(key.decrypt(doc.value, "utf8"))
+          clearTimeout(to)
+          await unsubscribe()
+          if (xNil(ret.response)) {
+            res(ret)
+          }
+        }
+      })
+      to = setTimeout(async () => {
+        try {
+          await unsubscribe()
+          if (xNil(ret.response)) {
+            res(ret)
+          }
+        } catch (e) {}
+      }, 20000)
+      ret.response = await fetch(
+        `${url}&crypt_id=${encodeURIComponent(encrypted_id)}`
+      ).then(response => response.json())
+      if (xNil(ret.data)) {
+        res(ret)
+      }
+    })
+  }
+  return await _getData(url)
+}
+
+const login_with = {
+  alis: async ({ conf }) => {
+    const code_verifier = get_code_verifier()
+    const code_challenge = get_code_challenge(code_verifier)
+    const purl = `https://alis.to/oauth-authenticate?client_id=${
+      conf.alis.client_id
+    }&redirect_uri=${encodeURIComponent(
+      conf.alis.redirect_uri
+    )}&scope=write&code_challenge=${code_challenge}`
+    setCookie(null, "alis_verifier", code_verifier, { path: "/" })
+    window.location.href = purl
+  }
+}
 
 export const login = async ({
   val: { provider, nodb = false },
@@ -209,24 +294,24 @@ const _login_with = async ({
   props,
   login_url,
   provider,
-  global: { fb },
-  val: { nodb }
+  global: { fb, db },
+  val: { nodb },
+  conf
 }) => {
   if (hasPath(["value", "user", "uid"])(props)) {
     login_url += `&uid=${props.user.uid}`
   }
-  const res = await fetch(login_url).then(response => response.json())
-  if (xNil(res.user)) {
+  const _res = await getData(db, conf, login_url)
+  if (xNil(_res.response.err) || xNil(_res.data.err)) {
+    alert(_res.response.err || _res.data.err)
+    return
+  }
+  if (xNil(_res.data.user)) {
     const auth = await fb.firebase.auth()
-    if (hasPath(["token", "err"])(res) && xNil(res.token.err)) {
-      alert(res.token.err)
-      return
-    }
-    const [error, user] = await err(
-      auth.signInWithCustomToken,
-      auth
-    )(res.token.token)
-    if (xNil(err)) {
+    const [error, user] = await err(auth.signInWithCustomToken, auth)(
+      _res.data.token
+    )
+    if (xNil(error)) {
       alert("something went wrong")
       return
     }
@@ -235,13 +320,15 @@ const _login_with = async ({
       uid: user.uid
     })
     _login({
+      global: { db, fb },
       user,
       provider: reverse_name_map[provider],
       set,
-      _add: res.user,
+      _add: _res.data.user,
       val: { nodb }
     })
   }
+  return
 }
 
 export const deleteAccount = async ({
@@ -251,9 +338,67 @@ export const deleteAccount = async ({
 }) => {
   if (account_nodb !== true) {
     await db.tx("users", user.uid, async ({ t, ref, data }) => {
+      for (let l in data.links || {}) {
+        if (includes(l)(["steem", "alis"])) {
+          await db.delete(`usermap_${l}`, data.links[l].username)
+        }
+      }
       return await t.update(ref, { status: "deleted" })
     })
   }
   let _user = fb.firebase.auth().currentUser
   await _user.delete()
+}
+
+const checkUser = async props => {
+  return await new Promise(res => {
+    setInterval(async () => {
+      if (props.user_init === false) {
+        res(await checkUser(props))
+      } else {
+        res(props.user)
+      }
+    }, 500)
+  })
+}
+
+function get_code_challenge(str) {
+  const hash = sha256.arrayBuffer(str)
+  return base64url(hash)
+}
+
+function get_code_verifier() {
+  const buf = Buffer.alloc(32)
+  for (let i = 0; i < buf.length; i++) {
+    const random_num = Math.floor(Math.random() * 256)
+    buf.writeUInt8(random_num, i)
+  }
+  return base64url(buf)
+}
+
+export const check_alis = async ({
+  val: { router },
+  props,
+  set,
+  global,
+  conf
+}) => {
+  const code = router.query.code
+  if (isNil(code)) return
+  const cookies = parseCookies()
+  const alis_verifier = cookies.alis_verifier
+  let user = await checkUser(props)
+  let login_url = `/api/${$()}/alis-oauth?code=${code}&verifier=${
+    cookies.alis_verifier
+  }`
+  await _login_with({
+    conf,
+    global,
+    login_url,
+    set,
+    props,
+    provider: "alis",
+    val: { nodb: false }
+  })
+  router.replace(router.pathname, router.pathname, { shallow: true })
 }
