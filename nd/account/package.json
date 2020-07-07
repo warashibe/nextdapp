@@ -1,6 +1,6 @@
 {
   "name": "@bit/warashibe.nextdapp.account",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "homepage": "https://bit.dev/warashibe/nextdapp/account",
   "main": "index.js",
   "componentId": {
