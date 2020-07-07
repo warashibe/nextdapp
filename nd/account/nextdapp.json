@@ -4,5 +4,6 @@
   "props": [ "user", "user_init" ],
   "api": { "apiAlisOauth": "alis-oauth" },
   "env": [ "ALIS_CLIENT_SECRET" ],
+  "functions": [ "login", "crypt" ],
   "components": []
 }
