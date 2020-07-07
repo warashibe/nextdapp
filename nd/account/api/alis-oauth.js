@@ -10,12 +10,13 @@ const toParams = params =>
     .join("&")
 
 import conf from "nd/conf"
+import ns from "nd/core/ns"
+const $ = ns("account")
 const NodeRSA = require("node-rsa")
 const toRSAPublic = key =>
   `-----BEGIN PUBLIC KEY-----\n${key}\n-----END PUBLIC KEY-----`
 const toRSAPrivate = key =>
   `-----BEGIN RSA PRIVATE KEY-----\n${key}\n-----END RSA PRIVATE KEY-----`
-
 export default async (req, res) => {
   const key = new NodeRSA(toRSAPublic(conf.rsa.public))
   key.importKey(
@@ -43,6 +44,7 @@ export default async (req, res) => {
         code_verifier: query.verifier
       })
     }).then(r => r.json())
+    console.log(r)
     if (xNil(r.error_message)) {
       res.end(JSON.stringify(r))
     } else {
@@ -72,7 +74,7 @@ export default async (req, res) => {
         const base_url = hasPath(["functions", "base_url"])(conf)
           ? conf.functions.base_url
           : `https://${conf.fb.region}-${conf.fb.id}.cloudfunctions.net`
-        const href = `${base_url}/login?data=${encodeURIComponent(
+        const href = `${base_url}/${$("login")}?data=${encodeURIComponent(
           obj
         )}&signature=${encodeURIComponent(sign)}`
         const reg = await fetch(href).then(r => r.json())
@@ -90,7 +92,6 @@ export default async (req, res) => {
       }
     }
   } catch (e) {
-    console.log(e)
-    res.end(JSON.stringify(e))
+    res.send({ err: "unknown err" })
   }
 }
