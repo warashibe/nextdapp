@@ -3,6 +3,13 @@ pages/.dev
 !nd/conf.sample.js
 firebase/functions/env.json
 firebase/key.json
+firebase/functions/.runtimeconfig.json
+firebase/functions/.bit
+firebase-debug.log*
+firebase/.firebaserc
+firebase/firebase-debug.log
+firebase/functions/firebase-debug.log
+
 .bit
 
 packages

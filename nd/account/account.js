@@ -234,6 +234,7 @@ const getData = async (db, conf, url) => {
       ret.response = await fetch(
         `${url}&crypt_id=${encodeURIComponent(encrypted_id)}`
       ).then(response => response.json())
+      console.log(ret.response)
       if (xNil(ret.data)) {
         res(ret)
       }
@@ -302,11 +303,15 @@ const _login_with = async ({
     login_url += `&uid=${props.user.uid}`
   }
   const _res = await getData(db, conf, login_url)
-  if (xNil(_res.response.err) || xNil(_res.data.err)) {
-    alert(_res.response.err || _res.data.err)
+  if (hasPath(["response", "err"])(_res) && xNil(_res.response.err)) {
+    alert(_res.response.err)
     return
   }
-  if (xNil(_res.data.user)) {
+  if (hasPath(["data", "err"])(_res) && xNil(_res.data.err)) {
+    alert(_res.data.err)
+    return
+  }
+  if (hasPath(["data", "user"])(_res) && xNil(_res.data.user)) {
     const auth = await fb.firebase.auth()
     const [error, user] = await err(auth.signInWithCustomToken, auth)(
       _res.data.token
@@ -391,6 +396,7 @@ export const check_alis = async ({
   let login_url = `/api/${$()}/alis-oauth?code=${code}&verifier=${
     cookies.alis_verifier
   }`
+  console.log(login_url)
   await _login_with({
     conf,
     global,
