@@ -1,6 +1,8 @@
 {
   "core": true,
-  "funcs": [ "login", "logout", "deleteAccount", "watchUser" ],
+  "funcs": [ "login", "logout", "deleteAccount", "watchUser","check_alis" ],
   "props": [ "user", "user_init" ],
+  "api": { "apiAlisOauth": "alis-oauth" },
+  "env": [ "ALIS_CLIENT_SECRET" ],
   "components": []
 }
