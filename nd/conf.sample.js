@@ -1,5 +1,10 @@
 import { mergeAll } from "ramda"
 let local = {}
+let auto = {}
+
+try {
+  auto = require("nd/conf.auto.json")
+} catch (e) {}
 
 try {
   local = require("nd/conf.local")
@@ -15,4 +20,4 @@ const prod = {
     "theme-color": "#03414D"
   }
 }
-module.exports = mergeAll([prod, local])
+module.exports = mergeAll([auto, prod, local])
