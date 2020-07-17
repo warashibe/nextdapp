@@ -1,4 +1,4 @@
 // nextdapp-start
-exports.login = require("./nd/account/index").login
-exports.crypt = require("./nd/account/index").crypt
+exports.login = require("./account/index").login
+exports.crypt = require("./account/index").crypt
 // nextdapp-end
