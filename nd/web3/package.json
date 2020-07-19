@@ -1,12 +1,12 @@
 {
   "name": "@bit/warashibe.nextdapp.web3",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "homepage": "https://bit.dev/warashibe/nextdapp/web3",
   "main": "index.js",
   "componentId": {
     "scope": "warashibe.nextdapp",
     "name": "web3",
-    "version": "0.0.7"
+    "version": "0.0.9"
   },
   "dependencies": {},
   "devDependencies": {},
