@@ -38,21 +38,18 @@ export const fromWei = amount => window.web3.utils.fromWei(amount)
 const setETH = async ({
   val: { network, new_address },
   set,
-  props,
   conf,
-  global
+  global,
+  get
 }) => {
   let web3_address = null
   let current_network = null
   let balance = null
-  console.log(window.web3.currentProvider)
-  console.log("were....")
   if (complement(isNil)(window.web3.currentProvider)) {
     current_network =
       window.web3.currentProvider.networkVersion ||
       window.web3.currentProvider._network
     if (current_network === (network || conf.web3.network)) {
-      console.log(window.web3.currentProvider.selectedAddress)
       web3_address =
         new_address ||
         window.web3.currentProvider.selectedAddress ||
@@ -71,10 +68,10 @@ const setETH = async ({
     }
   }
 
-  if (complement(isNil)(web3_address) && isNil(props.address_in_use)) {
+  if (complement(isNil)(web3_address) && isNil(get("address_in_use"))) {
     obj.address_in_use = "eth"
   } else if (isNil(web3_address)) {
-    obj.address_in_use = isNil(props.auth_selected) ? null : "auth"
+    obj.address_in_use = isNil(get("auth_selected")) ? null : "auth"
   }
 
   global.web3_address = web3_address
@@ -84,13 +81,7 @@ const setETH = async ({
   return obj
 }
 
-export const initWeb3 = async ({
-  val: { network, balances },
-  props,
-  set,
-  conf,
-  global
-}) => {
+export const initWeb3 = async ({ val: { network, balances }, conf, fn }) => {
   if (window.ethereum) {
     window.web3 = new Web3(window.ethereum)
     try {
@@ -106,22 +97,17 @@ export const initWeb3 = async ({
     )
   }
   if (complement(isNil)(window.web3)) {
-    setETH({ val: { network }, set, props, conf, global })
+    fn(setETH)({ network })
     if (!isNil(window.web3.currentProvider.publicConfigStore)) {
       window.web3.currentProvider.publicConfigStore.on("update", c => {
-        setETH({ val: { network }, set, props, conf, global })
+        fn(setETH)({ network })
       })
     } else if (!isNil(window.ethereum)) {
       window.ethereum.on("chainChanged", c => window.location.reload())
-      window.ethereum.on("accountsChanged", accounts => {
-        setETH({
-          val: { network, new_address: accounts[0] },
-          set,
-          props,
-          conf,
-          global
-        })
-      })
+      window.ethereum.on("message", c => fn(setETH)({ network }))
+      window.ethereum.on("accountsChanged", accounts =>
+        fn(setETH)({ network, new_address: accounts[0] })
+      )
     }
   } else {
     set(true, "web3_init")
@@ -129,18 +115,14 @@ export const initWeb3 = async ({
   return
 }
 
-export const contract = ({
-  val: { abi, address },
-  props,
-  set,
-  conf,
-  global
-}) => {
+export const contract = ({ val: { abi, address }, get }) => {
   const contract = new window.web3.eth.Contract(abi, address)
   let methods = {}
   for (let v of abi) {
     if (v.type === "function" && v.constant) {
-      methods[v.name] = (...args) => contract.methods[v.name](...args).call()
+      methods[v.name] = (...args) => {
+        return contract.methods[v.name](...args).call()
+      }
     } else if (v.type === "function" && v.constant !== true) {
       methods[v.name] = async (...args) => {
         let hashFunc = is(Function)(args[args.length - 1]) ? args.pop() : null
@@ -150,7 +132,7 @@ export const contract = ({
           : hashFunc
         const sender = o(
           mergeRight({
-            from: props.web3_address
+            from: get("web3_address")
           }),
           pick(["from", "to", "value", "gas", "gasPrice", "data", "nonce"])
         )(obj)
@@ -180,26 +162,11 @@ export const contract = ({
   }
   return methods
 }
-contract.props = ["web3_address"]
 
-export const erc20 = ({
-  val: { token, address },
-  props,
-  set,
-  conf,
-  global
-}) => {
+export const erc20 = ({ val: { token, address }, conf, fn }) => {
   const contract_address =
     xNil(token) && hasPath(["web3", "erc20", token])(conf)
       ? conf.web3.erc20[token]
       : address
-  return contract({
-    val: { abi: abi_erc20, address: contract_address },
-    props,
-    set,
-    conf,
-    global
-  })
+  return fn(contract)({ abi: abi_erc20, address: contract_address })
 }
-
-erc20.props = ["web3_address"]
