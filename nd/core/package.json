@@ -1,6 +1,6 @@
 {
   "name": "@bit/warashibe.nextdapp.core",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "homepage": "https://bit.dev/warashibe/nextdapp/core",
   "main": "index.js",
   "componentId": {
