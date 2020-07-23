@@ -127,7 +127,7 @@ export default (Component, _arr = [], track) => {
               console.log(`unknow binding type`)
               console.log(v)
             }
-          })(_arr)
+          })(_arr || [])
           return mapObjIndexed((v, k) => v())(pick(_funcs)(funcs))
         }}
         $={$}
