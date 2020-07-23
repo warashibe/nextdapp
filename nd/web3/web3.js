@@ -81,7 +81,12 @@ const setETH = async ({
   return obj
 }
 
-export const initWeb3 = async ({ val: { network, balances }, conf, fn }) => {
+export const initWeb3 = async ({
+  val: { network, balances },
+  conf,
+  fn,
+  set
+}) => {
   if (window.ethereum) {
     window.web3 = new Web3(window.ethereum)
     try {
@@ -115,48 +120,52 @@ export const initWeb3 = async ({ val: { network, balances }, conf, fn }) => {
   return
 }
 
+const listenTransaction = async ({ method, args, eth, from, to, value }) => {
+  let hashFunc = is(Function)(args[args.length - 1]) ? args.pop() : null
+  const obj = is(Object)(args[args.length - 1]) ? args.pop() : {}
+  hashFunc = is(Function)(obj.transactionHash) ? obj.transactionHash : hashFunc
+  let _sender = { from }
+  if (xNil(to)) _sender.to = to
+  if (xNil(value)) _sender.value = value
+  const sender = o(
+    mergeRight(_sender),
+    pick(["from", "to", "value", "gas", "gasPrice", "data", "nonce"])
+  )(obj)
+
+  let receipt = null
+  let err = null
+  let hash = null
+  try {
+    receipt = await (eth ? method(sender) : method(...args).send(sender))
+      .on("transactionHash", async hash => {
+        hash = hash
+        if (is(Function)(hashFunc)) hashFunc(hash)
+      })
+      .on("confirmation", async (number, receipt) => {
+        if (is(Function)(obj.confirmation)) obj.confirmation(number, receipt)
+      })
+      .on("error", async error => {
+        if (is(Function)(obj.error)) obj.error(error)
+      })
+  } catch (e) {
+    err = e
+  }
+  return [err, receipt]
+}
+
 export const contract = ({ val: { abi, address }, get }) => {
   const contract = new window.web3.eth.Contract(abi, address)
   let methods = {}
   for (let v of abi) {
     if (v.type === "function" && v.constant) {
-      methods[v.name] = (...args) => {
-        return contract.methods[v.name](...args).call()
-      }
+      methods[v.name] = (...args) => contract.methods[v.name](...args).call()
     } else if (v.type === "function" && v.constant !== true) {
       methods[v.name] = async (...args) => {
-        let hashFunc = is(Function)(args[args.length - 1]) ? args.pop() : null
-        const obj = is(Object)(args[args.length - 1]) ? args.pop() : {}
-        hashFunc = is(Function)(obj.transactionHash)
-          ? obj.transactionHash
-          : hashFunc
-        const sender = o(
-          mergeRight({
-            from: get("web3_address")
-          }),
-          pick(["from", "to", "value", "gas", "gasPrice", "data", "nonce"])
-        )(obj)
-        let receipt = null
-        let err = null
-        let hash = null
-        try {
-          receipt = await contract.methods[v.name](...args)
-            .send(sender)
-            .on("transactionHash", async hash => {
-              hash = hash
-              if (is(Function)(hashFunc)) hashFunc(hash)
-            })
-            .on("confirmation", async (number, receipt) => {
-              if (is(Function)(obj.confirmation))
-                obj.confirmation(number, receipt)
-            })
-            .on("error", async error => {
-              if (is(Function)(obj.error)) obj.error(error)
-            })
-        } catch (e) {
-          err = e
-        }
-        return [err, receipt]
+        return await listenTransaction({
+          method: contract.methods[v.name],
+          args,
+          from: get("web3_address")
+        })
       }
     }
   }
@@ -169,4 +178,33 @@ export const erc20 = ({ val: { token, address }, conf, fn }) => {
       ? conf.web3.erc20[token]
       : address
   return fn(contract)({ abi: abi_erc20, address: contract_address })
+}
+
+export const eth = ({ fn, get }) => {
+  let web3js = {
+    balanceOf: address =>
+      window.web3.eth.getBalance(address || get("web3_address")),
+    getBalance: address =>
+      window.web3.eth.getBalance(address || get("web3_address"))
+  }
+  web3js.transfer = async (...args) => {
+    return await listenTransaction({
+      eth: true,
+      to: args[0],
+      value: args[1],
+      method: window.web3.eth.sendTransaction,
+      args: args.slice(2),
+      from: get("web3_address")
+    })
+  }
+  web3js.sendTransaction = async (...args) => {
+    return await listenTransaction({
+      eth: true,
+      method: window.web3.eth.sendTransaction,
+      args,
+      from: get("web3_address")
+    })
+  }
+
+  return web3js
 }
