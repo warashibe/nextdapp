@@ -1,0 +1,10 @@
+{
+  "docs": {
+    "Tutorial": ["quick-start", "plugins", "build-plugins", "todo-app", "wallet-app", "how-to-contribute", "troubleshoot", "updates"]
+  },
+  "api": {
+    "CLI Tools": ["nextdapp-cli"],
+    "Core": ["bind", "set", "global-states", "global-functions", "computed-values", "tracker", "global", "conf", "env"],
+    "Plugins": ["plugin-util", "plugin-fb", "plugin-account", "plugin-web3"]
+  }
+}
