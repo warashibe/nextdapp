@@ -1,5 +1,0 @@
-{
-  "core": true,
-  "funcs": [ "initWeb3", "erc20", "contract", "eth" ],
-  "props": [ "web3_init", "web3_address", "web3_updated", "web3_network", "eth_balance" ]
-}
