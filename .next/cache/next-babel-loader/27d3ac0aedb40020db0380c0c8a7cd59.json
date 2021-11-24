@@ -1,1 +1,0 @@
-{"ast":null,"code":"export default {\n  isFB: false\n};","map":{"version":3,"sources":["/home/basque/hide/next-dapp/nd/fb/init.js"],"names":["isFB"],"mappings":"AAAA,eAAe;AACbA,EAAAA,IAAI,EAAE;AADO,CAAf","sourcesContent":["export default {\n  isFB: false\n}\n"]},"metadata":{},"sourceType":"module"}
