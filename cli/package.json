@@ -1,0 +1,23 @@
+{
+  "name": "nextdapp",
+  "version": "0.14.2",
+  "main": "./lib/index.js",
+  "bin": "bin/index.js",
+  "scripts": {
+    "build": "babel src --out-dir lib && babel src-bin --out-dir bin"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.10.2",
+    "command-exists": "^1.2.9",
+    "fs-extra": "^9.0.0",
+    "node-rsa": "^1.0.8",
+    "ramda": "^0.27.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.1",
+    "@babel/core": "^7.10.2",
+    "@babel/plugin-transform-runtime": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-react": "^7.10.1"
+  }
+}
