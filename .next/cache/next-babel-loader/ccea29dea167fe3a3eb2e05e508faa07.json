@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default {\n  test: 3\n};","map":{"version":3,"sources":["/home/basque/hide/next-dapp/nd/init.js"],"names":["test"],"mappings":"AAAA,eAAe;AACbA,EAAAA,IAAI,EAAE;AADO,CAAf","sourcesContent":["export default {\n  test: 3\n}\n"]},"metadata":{},"sourceType":"module"}
