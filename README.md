@@ -8,18 +8,16 @@ Next Dapp plugins are managed with [Bit](https://bit.dev/warashibe/nextdapp), bu
 
 ## Documentation
 
-[https://warashibe.github.io/next-dapp/](https://warashibe.github.io/next-dapp/)
+[https://nextdapp.org](https://nextdapp.org)
 
-## Sample Apps using Next Dapp
-[https://next-dapp.warashibe.market](https://next-dapp.warashibe.market)
-
-## Related Repositories
-* [Next Dapp Main Repository](https://github.com/warashibe/next-dapp)
-* [Next Dapp CLI Tools](https://github.com/warashibe/nextdapp)
-* [Next Dapp Docs](https://github.com/warashibe/next-dapp-docs)
+## Who Uses NextDapp
+[HiÐΞ](https://hide.ac)
+[hideaki.](https://hideaki.warashibe.market)
+[JPYD Stablecoin](https://jpy.dog)
+[Anytoken Pay.](https://kovan.pay.warashibe.market)
 
 ## LICENSE
-[MIT License](https://github.com/warashibe/next-dapp/blob/master/LICENSE)
+[MIT License](https://github.com/warashibe/nextdapp/blob/master/LICENSE)
 
 ## Contributors (including Docs and Plugins)
 * [Tomoya Nagasawa](https://github.com/ocrybit)
