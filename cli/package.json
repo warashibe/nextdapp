@@ -1,6 +1,6 @@
 {
   "name": "nextdapp",
-  "version": "0.14.2",
+  "version": "0.15.1",
   "main": "./lib/index.js",
   "bin": "bin/index.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "@babel/runtime": "^7.10.2",
     "command-exists": "^1.2.9",
     "fs-extra": "^9.0.0",
+    "minimist": "^1.2.5",
     "node-rsa": "^1.0.8",
     "ramda": "^0.27.0"
   },
