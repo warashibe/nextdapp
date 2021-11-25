@@ -21,6 +21,12 @@ var _util = require("./util");
 
 var _generateKeys = _interopRequireDefault(require("./generateKeys"));
 
+var msgExit = function msgExit(msg) {
+  var code = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  console.error("".concat(code === 0 ? "Success" : "Error", ": ").concat(msg));
+  process.exit(code);
+};
+
 var _default = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(dist) {
     var target_path, app_path, code;
@@ -31,46 +37,39 @@ var _default = /*#__PURE__*/function () {
             target_path = _path["default"].resolve(dist);
 
             if (!_fsExtra["default"].existsSync(target_path)) {
-              _context.next = 6;
+              _context.next = 5;
               break;
             }
 
-            console.error("Error: directory exists.");
-            process.exit();
-            _context.next = 20;
+            msgExit("directory exists.", 1);
+            _context.next = 17;
             break;
 
-          case 6:
+          case 5:
             if ((0, _commandExists.sync)("git")) {
-              _context.next = 11;
+              _context.next = 9;
               break;
             }
 
-            console.error("Error: git is not installed.");
-            process.exit();
-            _context.next = 20;
+            msgExit("git is not installed.", 1);
+            _context.next = 17;
             break;
 
-          case 11:
+          case 9:
             app_path = "https://github.com/warashibe/next-dapp-bare.git";
-            _context.next = 14;
+            _context.next = 12;
             return (0, _util.spawnp)("git", ["clone", "--depth=1", app_path, target_path]);
 
-          case 14:
+          case 12:
             code = _context.sent;
-
-            if (code !== 0) {
-              console.error("clone error");
-              process.exit();
-            }
+            if (code !== 0) msgExit("clone error");
 
             _fsExtra["default"].copySync("".concat(target_path, "/nd/conf.sample.js"), "".concat(target_path, "/nd/conf.js"));
 
-            console.log("Success: A next-dapp project has been created at ".concat(target_path, "."));
             (0, _generateKeys["default"])(dist, true);
-            process.exit();
+            msgExit("A next-dapp project has been created at ".concat(target_path, "."));
 
-          case 20:
+          case 17:
           case "end":
             return _context.stop();
         }
