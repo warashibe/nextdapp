@@ -3,13 +3,12 @@ import fs from "fs-extra"
 import { sync as commandExists } from "command-exists"
 import { spawnp } from "./util"
 import generateKeys from "./generateKeys"
-
 const msgExit = (msg, code = 0) => {
   console.error(`${code === 0 ? "Success" : "Error"}: ${msg}`)
   process.exit(code)
 }
 
-export default async dist => {
+export default async (dist, template) => {
   const target_path = path.resolve(dist)
   if (fs.existsSync(target_path)) {
     msgExit("directory exists.", 1)
@@ -19,7 +18,9 @@ export default async dist => {
     const code = await spawnp("git", [
       "clone",
       "--depth=1",
-      "https://github.com/warashibe/next-dapp-bare.git",
+      template === "dfinity"
+        ? "https://github.com/warashibe/nextdapp-dfinity.git"
+        : "https://github.com/warashibe/next-dapp-bare.git",
       target_path,
     ])
     if (code !== 0) msgExit(`clone error`)

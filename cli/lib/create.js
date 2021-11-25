@@ -28,8 +28,8 @@ var msgExit = function msgExit(msg) {
 };
 
 var _default = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(dist) {
-    var target_path, app_path, code;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(dist, template) {
+    var target_path, code;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -42,7 +42,7 @@ var _default = /*#__PURE__*/function () {
             }
 
             msgExit("directory exists.", 1);
-            _context.next = 17;
+            _context.next = 16;
             break;
 
           case 5:
@@ -52,15 +52,14 @@ var _default = /*#__PURE__*/function () {
             }
 
             msgExit("git is not installed.", 1);
-            _context.next = 17;
+            _context.next = 16;
             break;
 
           case 9:
-            app_path = "https://github.com/warashibe/next-dapp-bare.git";
-            _context.next = 12;
-            return (0, _util.spawnp)("git", ["clone", "--depth=1", app_path, target_path]);
+            _context.next = 11;
+            return (0, _util.spawnp)("git", ["clone", "--depth=1", template === "dfinity" ? "https://github.com/warashibe/nextdapp-dfinity.git" : "https://github.com/warashibe/next-dapp-bare.git", target_path]);
 
-          case 12:
+          case 11:
             code = _context.sent;
             if (code !== 0) msgExit("clone error");
 
@@ -69,7 +68,7 @@ var _default = /*#__PURE__*/function () {
             (0, _generateKeys["default"])(dist, true);
             msgExit("A next-dapp project has been created at ".concat(target_path, "."));
 
-          case 17:
+          case 16:
           case "end":
             return _context.stop();
         }
@@ -77,7 +76,7 @@ var _default = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function (_x) {
+  return function (_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();
