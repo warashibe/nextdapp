@@ -1,3 +1,6 @@
 [submodule "templates/bare"]
 	path = templates/bare
 	url = https://github.com/warashibe/next-dapp-bare
+[submodule "templates/dfinity"]
+	path = templates/dfinity
+	url = https://github.com/warashibe/nextdapp-dfinity
