@@ -25,20 +25,20 @@ class Footer extends React.Component {
     let contributors = [
       {
         login: "ocrybit",
-        avatar_url: "https://avatars3.githubusercontent.com/u/40726926?s=35"
+        avatar_url: "https://avatars3.githubusercontent.com/u/40726926?s=35",
       },
       {
         login: "youxiberlin",
-        avatar_url: "https://avatars0.githubusercontent.com/u/7786031?s=35"
+        avatar_url: "https://avatars0.githubusercontent.com/u/7786031?s=35",
       },
       {
         login: "dmamira",
-        avatar_url: "https://avatars1.githubusercontent.com/u/49590399?s=35"
+        avatar_url: "https://avatars1.githubusercontent.com/u/49590399?s=35",
       },
       {
         login: "hoosan",
-        avatar_url: "https://avatars1.githubusercontent.com/u/40290137?s=35"
-      }
+        avatar_url: "https://avatars1.githubusercontent.com/u/40290137?s=35",
+      },
     ]
     contributors.sort(() => Math.random() - 0.5)
 
@@ -60,6 +60,7 @@ class Footer extends React.Component {
             <a href={this.docUrl("quick-start")}>Quick Start</a>
             <a href={this.docUrl("plugins")}>Plugins</a>
             <a href={this.docUrl("todo-app")}>Todo App Example</a>
+            <a href={this.docUrl("dfinity-todo")}>DFINITY Example</a>
             <a href={this.docUrl("nextdapp-cli")}>API Reference</a>
             <a href={this.docUrl("troubleshoot")}>Troubleshooting</a>
             <a href={this.docUrl("updates")}>Updates</a>
@@ -78,7 +79,7 @@ class Footer extends React.Component {
               <a
                 style={{
                   display: "inline-block",
-                  margin: "5px 7px"
+                  margin: "5px 7px",
                 }}
                 href={`https://github.com/${v.login}`}
                 target="_blank"
