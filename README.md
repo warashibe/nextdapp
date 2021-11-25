@@ -11,9 +11,13 @@ Next Dapp plugins are managed with [Bit](https://bit.dev/warashibe/nextdapp), bu
 [https://nextdapp.org](https://nextdapp.org)
 
 ## Who Uses NextDapp
+
 [HiÐΞ](https://hide.ac)
+
 [hideaki.](https://hideaki.warashibe.market)
+
 [JPYD Stablecoin](https://jpy.dog)
+
 [Anytoken Pay.](https://kovan.pay.warashibe.market)
 
 ## LICENSE
