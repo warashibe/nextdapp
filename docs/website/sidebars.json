@@ -1,6 +1,6 @@
 {
   "docs": {
-    "Tutorial": ["quick-start", "plugins", "build-plugins", "todo-app", "wallet-app", "how-to-contribute", "troubleshoot", "updates"]
+    "Tutorial": ["quick-start", "plugins", "build-plugins", "todo-app", "wallet-app", "dfinity-todo", "how-to-contribute", "troubleshoot", "updates"]
   },
   "api": {
     "CLI Tools": ["nextdapp-cli"],
