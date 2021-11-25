@@ -1,41 +1,31 @@
 #!/usr/bin/env node
 "use strict";
 
-var command = process.argv[2];
-var name = process.argv[3];
-var namespace = process.argv[4];
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var remove = require("../lib/remove")["default"];
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
-var add = require("../lib/add")["default"];
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
-switch (command) {
-  case "keys":
-    var keys = require("../lib/generateKeys")["default"];
+var _process$argv = (0, _slicedToArray2["default"])(process.argv, 5),
+    cmd = _process$argv[2],
+    name = _process$argv[3],
+    namespace = _process$argv[4];
 
-    keys("./", name === "overwrite");
-    break;
+var _require = require("ramda"),
+    defaultTo = _require.defaultTo,
+    equals = _require.equals,
+    T = _require.T,
+    cond = _require.cond,
+    map = _require.map;
 
-  case "create":
-    var create = require("../lib/create")["default"];
+var cmds = [["keys", ["./", name === "overwrite"], "generateKeys"], ["create", [name]], ["refresh"], ["add", [name, namespace]], ["remove", [name, namespace]]];
+cond([].concat((0, _toConsumableArray2["default"])(map(function (v) {
+  return [equals(v[0]), function () {
+    var _require2;
 
-    create(name);
-    break;
-
-  case "refresh":
-    var refresh = require("../lib/refresh")["default"];
-
-    refresh();
-    break;
-
-  case "add":
-    add(name, namespace);
-    break;
-
-  case "remove":
-    remove(name, namespace);
-    break;
-
-  default:
-    console.log("command not found");
-}
+    return (_require2 = require("../lib/".concat(v[2] || v[0])))["default"].apply(_require2, (0, _toConsumableArray2["default"])(v[1] || []));
+  }];
+})(cmds)), [[T, function () {
+  return console.log("command not found: ".concat(cmd));
+}]]))(cmd);
